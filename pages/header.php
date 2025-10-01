@@ -7,7 +7,9 @@
 </head>
 <body>
     <header>
+        <tr>
         <h1> Web Bán Hàng </h1>
+</tr>
         <nav>
             <a href="index.php">Trang Chủ</a>
             <a href="product.php">Sản Phẩm</a>
