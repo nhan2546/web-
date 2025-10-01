@@ -1,26 +1,54 @@
 body {
-    font-family: Arial, sans-serif ;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0; 
+    padding-bottom: 60px; /* chừa khoảng trống để không bị footer che */
 }
-header, footer {
+
+/* Header */
+header {
+    background-color: #fb2f2f;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: center;  /* căn giữa menu */
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Footer cố định */
+footer {
     background-color: #fb2f2f;
     color: white;
     padding: 15px;
     text-align: center;
-    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
 }
+
+/* Menu */
 nav a {
     color: white;
     margin: 0 15px;
     text-decoration: none;
+    font-weight: bold;
 }
+
 main {
     padding: 20px;
+    text-align: center; /* căn chữ giữa nội dung */
 }
+
+/* Responsive cho màn hình nhỏ */
 @media (max-width: 768px) {
-    nav{
+    nav {
         display: flex;
         flex-direction: column;
+        align-items: center;
+    }
+    nav a {
+        margin: 10px 0;
     }
 }
