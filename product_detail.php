@@ -1,4 +1,4 @@
-<?php include 'header.php'; ?>
+<?php include 'pages/header.php'; ?>
 <h2>Chi Tiết Sản Phẩm</h2>
 <div class="product-detail">
     <img src="assets/images/product1.jpg" alt="Sản Phẩm 1">
@@ -8,4 +8,4 @@
     <button>Thêm Vào Giỏ</button>
     </div>
     </div>
-    <?php include 'footer.php'; ?>
+    <?php include 'pages/footer.php'; ?>

@@ -1,4 +1,4 @@
-<?php include "header.php"; ?>
+<?php include "pages/header.php"; ?>
 <h2>Giỏ Hàng Của Bạn</h2>
 <table>
     <tr>
@@ -15,4 +15,4 @@
             </tr>
             </table>
             <a href="checkout.php"><button> Thanh Toán</button></a>
-            <?php include 'footer.php'; ?>
+            <?php include 'pages/footer.php'; ?>

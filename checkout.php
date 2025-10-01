@@ -1,4 +1,4 @@
-<?php include 'header.php'; ?>
+<?php include 'pages/header.php'; ?>
 <form>
     <label>Họ Tên:</label>
     <input type="text" name="FullName"><br>
@@ -8,4 +8,4 @@
     <input type="text" name="Phone"><br>    
     <button type="submit">Xác Nhận Đặt Hàng</button>
 </form> 
-<?php include 'footer.php'; ?>
+<?php include 'pages/footer.php'; ?>

@@ -1,4 +1,4 @@
-<?php include 'header.php'; ?>
+<?php include 'pages/header.php'; ?>
 <h2>Danh Sách Sản Phẩm</h2>
 <div class="product-list">
     <div class="product-item">
@@ -19,4 +19,4 @@
 </a>
 </div>
 </div>
-<?php include 'footer.php'; ?>
+<?php include 'pages/footer.php'; ?>

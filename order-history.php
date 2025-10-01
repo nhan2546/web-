@@ -1,4 +1,4 @@
-<?php include "header.php"; ?>
+<?php include "pages/header.php"; ?>
 <table>
     <tr>
         <th>Mã Đơn Hàng</th>
@@ -19,4 +19,4 @@
                 <td>Đã Giao Hàng</td>
                 </tr>
                 </table>
-                <?php include 'footer.php'; ?>
+                <?php include 'pages/footer.php'; ?>
