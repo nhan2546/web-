@@ -14,5 +14,5 @@
             <td>11.000.000 VND</td>
             </tr>
             </table>
-            <a href="checkout.php"><button> Thanh Toán</button></a>
+            <a href="thanhtoan.php"><button> Thanh Toán</button></a>
             <?php include 'pages/footer.php'; ?>

@@ -1,6 +1,6 @@
 <?php include "pages/header.php"; ?>
 <h2>Tìm Kiếm Sản Phẩm</h2>
-<form action="search.php" method="GET">
+<form action="timkiemsanpham.php" method="GET">
     <input type="text" name="keyword" placeholder="Nhập tên sản phẩm...">
     <button type="submit">Tìm Kiếm</button>
 </form>

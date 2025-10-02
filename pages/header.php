@@ -12,8 +12,8 @@
 </tr>
         <nav>
             <a href="index.php">Trang Chủ</a>
-            <a href="product.php">Sản Phẩm</a>
-            <a href="cart.php">Giỏ Hàng</a>
+            <a href="danhsachsp.php">Sản Phẩm</a>
+            <a href="giohang.php">Giỏ Hàng</a>
             <a href="login.php">Đăng Nhập</a>
 </nav>
 </header>
