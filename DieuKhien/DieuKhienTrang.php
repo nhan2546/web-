@@ -40,13 +40,8 @@ class controller {
     // ---- SẢN PHẨM ----
     public function hienthi_sp() {
         // SanPham expects a PDO in constructor
-        if (!isset($pdo)) {
-            // try to include CSDL.php
-            if (file_exists(__DIR__ . '/../MoHinh/CSDL.php')) {
-                include_once __DIR__ . '/../MoHinh/CSDL.php';
-            }
-        }
-        $sp_model = new sanpham(isset($pdo) ? $pdo : null);
+        // SanPham in MoHinh uses internal CSDL and does not require PDO in constructor
+        $sp_model = new sanpham();
         // Danh mục model là tuỳ repo; chỉ gọi nếu class tồn tại
         $danhmuc = [];
         if (class_exists('danhmuc')) {
@@ -97,7 +92,7 @@ class controller {
         }
 
     // 3. Gọi model để thêm vào CSDL
-    $sp_model = new sanpham(isset($pdo) ? $pdo : null);
+    $sp_model = new sanpham();
         $sp_model->themsp($id_danhmuc, $name, $price, $mount, $image_name, $sale, $decribe);
 
         // 4. Chuyển hướng về trang danh sách sản phẩm
@@ -108,7 +103,7 @@ class controller {
     public function xoa_sp() {
         if (!empty($_GET['idsp_del'])) {
             $id = $_GET['idsp_del'];
-            $sp_model = new sanpham(isset($pdo) ? $pdo : null);
+            $sp_model = new sanpham();
             $sp_model->deletesp($id);
         }
         header('Location: index.php?act=hienthi_sp');
