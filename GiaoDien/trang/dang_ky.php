@@ -1,30 +1,3 @@
-<div class="container mt-3">
-    <?php
-    // Bắt đầu session ở đầu mỗi tệp cần sử dụng session
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-    }
-
-    // Hiển thị thông báo lỗi nếu có
-    if (isset($_SESSION['error_message'])) {
-        echo '<div class="alert alert-danger" role="alert">' . $_SESSION['error_message'] . '</div>';
-        // Xóa thông báo sau khi đã hiển thị để không hiện lại
-        unset($_SESSION['error_message']);
-    }
-
-    // Hiển thị thông báo thành công nếu có
-    if (isset($_SESSION['success_message'])) {
-        echo '<div class="alert alert-success" role="alert">' . $_SESSION['success_message'] . '</div>';
-        unset($_SESSION['success_message']);
-    }
-    ?>
-</div>
-<?php 
-    // Giả sử bạn có tệp header.php và footer.php trong thư mục /pages
-    // Nếu chưa có, bạn có thể tạo chúng hoặc xóa 2 dòng include đi
-    include 'pages/header.php'; 
-?>
-
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -33,7 +6,29 @@
                     <h3 class="text-center">Đăng ký tài khoản</h3>
                 </div>
                 <div class="card-body">
-                    <form action="process_register.php" method="POST">
+                    <?php
+                    if (isset($_GET['error'])) {
+                        $error_msg = '';
+                        switch ($_GET['error']) {
+                            case 'empty_fields':
+                                $error_msg = 'Vui lòng điền đầy đủ thông tin.';
+                                break;
+                            case 'password_mismatch':
+                                $error_msg = 'Mật khẩu xác nhận không khớp.';
+                                break;
+                            case 'email_exists':
+                                $error_msg = 'Email này đã được sử dụng.';
+                                break;
+                            case 'registration_failed':
+                                $error_msg = 'Đã có lỗi xảy ra. Vui lòng thử lại.';
+                                break;
+                        }
+                        if ($error_msg) {
+                            echo '<div class="alert alert-danger" role="alert">' . $error_msg . '</div>';
+                        }
+                    }
+                    ?>
+                    <form action="index.php?act=xu_ly_dang_ky" method="POST">
                         <div class="mb-3">
                             <label for="fullname" class="form-label">Họ và tên</label>
                             <input type="text" class="form-control" id="fullname" name="fullname" required>
@@ -56,13 +51,9 @@
                     </form>
                 </div>
                 <div class="card-footer text-center">
-                    <p class="mb-0">Đã có tài khoản? <a href="đăng_nhập.php">Đăng nhập ngay</a></p>
+                    <p class="mb-0">Đã có tài khoản? <a href="index.php?act=dang_nhap">Đăng nhập ngay</a></p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<?php 
-    include 'pages/footer.php'; 
-?>

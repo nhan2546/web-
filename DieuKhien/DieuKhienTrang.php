@@ -1,113 +1,64 @@
 <?php
-// Model includes (đường dẫn tương đối từ thư mục này)
+// No need to include CSDL.php here, it's handled by the main index.php
 include_once __DIR__ . '/../MoHinh/SanPham.php';
-// load DB (creates $pdo)
-if (file_exists(__DIR__ . '/../MoHinh/CSDL.php')) {
-    include_once __DIR__ . '/../MoHinh/CSDL.php';
-} elseif (file_exists(__DIR__ . '/../database/database.php')) {
-    include_once __DIR__ . '/../database/database.php';
-}
-// danhmuc model may be in MoHinh or model folder; try common locations
-if (file_exists(__DIR__ . '/../MoHinh/danhmuc.php')) {
-    include_once __DIR__ . '/../MoHinh/danhmuc.php';
-} elseif (file_exists(__DIR__ . '/../model/danhmuc.php')) {
-    include_once __DIR__ . '/../model/danhmuc.php';
-}
-if (file_exists(__DIR__ . '/../MoHinh/donhang.php')) {
-    include_once __DIR__ . '/../MoHinh/donhang.php';
-} elseif (file_exists(__DIR__ . '/../model/donhang.php')) {
-    include_once __DIR__ . '/../model/donhang.php';
-}
 
 class controller {
+    private $db;
+
+    public function __construct($pdo) {
+        $this->db = $pdo;
+    }
 
     // ---- TRANG CHỦ ----
     public function trangchu() {
-        // Thư mục view trang chủ (nếu có) - điều chỉnh đường dẫn nếu khác
-        $view = __DIR__ . '/../GiaoDien/trang/trangchu.php';
-        if (file_exists($view)) {
-            include $view;
-            return;
-        }
-        // Fallback: nếu không có view cụ thể, include file index hoặc home
-        if (file_exists(__DIR__ . '/../GiaoDien/QuanTri/bang_dieu_khien.php')) {
-            include __DIR__ . '/../GiaoDien/QuanTri/bang_dieu_khien.php';
-            return;
-        }
-        echo "Trang chủ tạm thời chưa có giao diện.";
+        include __DIR__ . '/../GiaoDien/trang/bo_cuc/dau_trang.php';
+        include __DIR__ . '/../GiaoDien/trang/trang_chu.php';
+        include __DIR__ . '/../GiaoDien/trang/bo_cuc/chan_trang.php';
     }
 
     // ---- SẢN PHẨM ----
     public function hienthi_sp() {
-        // SanPham expects a PDO in constructor
-        // SanPham in MoHinh uses internal CSDL and does not require PDO in constructor
-        $sp_model = new sanpham();
-        // Danh mục model là tuỳ repo; chỉ gọi nếu class tồn tại
-        $danhmuc = [];
-        if (class_exists('danhmuc')) {
-            $dmClass = 'danhmuc';
-            $dm_model = new $dmClass(isset($pdo) ? $pdo : null);
-            if (method_exists($dm_model, 'getDS_Danhmuc')) {
-                $danhmuc = $dm_model->getDS_Danhmuc();
-            }
-        }
-
-        $danhsach = [];
-        if (method_exists($sp_model, 'getallsanpham')) {
-            $danhsach = $sp_model->getallsanpham();
-        }
-
-    // Nạp view và truyền dữ liệu qua (danh_sach.php)
-    $view = __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php';
-        if (file_exists($view)) {
-            include $view;
-            return;
-        }
-        echo "Chưa có giao diện danh sách sản phẩm.";
+        $sp_model = new sanpham($this->db);
+        $danhsach = $sp_model->getallsanpham();
+        
+        include __DIR__ . '/../GiaoDien/trang/bo_cuc/dau_trang.php';
+        // Nạp view và truyền dữ liệu qua
+        include __DIR__ . '/../GiaoDien/trang/danh_sach_san_pham.php';
+        include __DIR__ . '/../GiaoDien/trang/bo_cuc/chan_trang.php';
     }
 
     public function xl_themsp() {
-        // 1. Nhận dữ liệu từ form (dùng ?? để tránh undefined index)
-        $id_danhmuc = $_POST['id_danhmuc'] ?? null;
+        // This logic should ideally be in an admin controller, but we'll leave it for now.
+        $id_danhmuc = $_POST['id_danhmuc'] ?? 1;
         $name = $_POST['name'] ?? '';
         $price = $_POST['price'] ?? 0;
         $mount = $_POST['mount'] ?? 0;
         $sale = $_POST['sale'] ?? 0;
         $decribe = $_POST['decribe'] ?? '';
 
-        // 2. Xử lý upload ảnh
         $image_name = "default.jpg";
-        if (!empty($_FILES['image']) && $_FILES['image']['error'] == 0) {
-            $target_dir = __DIR__ . "/../uploads/";
-            if (!is_dir($target_dir)) {
-                mkdir($target_dir, 0755, true);
-            }
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+            $target_dir = __DIR__ . "/../TaiLen/san_pham/";
             $image_name = time() . "_" . basename($_FILES["image"]["name"]);
             $target_file = $target_dir . $image_name;
 
-            // Di chuyển file vào thư mục uploads
             if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                $image_name = "default.jpg"; // Nếu lỗi thì dùng ảnh mặc định
+                $image_name = "default.jpg";
             }
         }
 
-    // 3. Gọi model để thêm vào CSDL
-    $sp_model = new sanpham();
+        $sp_model = new sanpham($this->db);
         $sp_model->themsp($id_danhmuc, $name, $price, $mount, $image_name, $sale, $decribe);
 
-        // 4. Chuyển hướng về trang danh sách sản phẩm
         header('Location: index.php?act=hienthi_sp');
-        exit;
     }
 
     public function xoa_sp() {
-        if (!empty($_GET['idsp_del'])) {
-            $id = $_GET['idsp_del'];
-            $sp_model = new sanpham();
-            $sp_model->deletesp($id);
-        }
+        // This logic should also be in an admin controller.
+        $id = $_GET['idsp_del'] ?? 0;
+        $sp_model = new sanpham($this->db);
+        $sp_model->deletesp($id);
         header('Location: index.php?act=hienthi_sp');
-        exit;
     }
 }
 ?>

@@ -38,8 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['message'] = "Thêm sản phẩm thất bại.";
     }
 
-    // 4. Chuyển hướng về trang quản lý
-    header("Location: ../manage_products.php"); // Hoặc dashboard.php
+    // 4. Chuyển hướng về trang quản lý (router admin)
+    header("Location: ../../DieuKhien/dieukhienquantri.php?act=ds_sanpham");
     exit();
 }
 ?>
