@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 session_start();
 
@@ -57,3 +58,11 @@ switch ($act) {
         break;
 }
 ?>
+=======
+<?php include 'GiaoDien/trang/bo_cuc/dau_trang.php'; ?>
+    <main>
+        <h2>Chào Mừng Đến Shop!</h2>
+        <p>Danh sách sản phẩm mới nhất sẻ hiển thị ở đây.</p>
+    </main>
+    <?php include 'GiaoDien/trang/bo_cuc/chan_trang.php'; ?>
+>>>>>>> cfdfcfd0ad0a3e4d69962ff307567b0508cc0b0b

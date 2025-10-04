@@ -1,11 +1,24 @@
-<?php include 'pages/header.php'; ?>
+<?php include 'GiaoDien/trang/bo_cuc/dau_trang.php'; ?>
 <h2>Chi Tiết Sản Phẩm</h2>
 <div class="product-detail">
-    <img src="assets/image/product1.jpg" alt="Sản Phẩm 1">
-    <h3>Iphone 14 Plus</h3>
+    <img src="images/Iphone_12_Pro_Max.png.webp" alt="Iphone 12 Pro Max 128G">
+    <h3>Iphone 12 Pro Max 128G</h3>
     <p>Giá: 11.000.000 VND</p>
     <p>Mô tả: Đây là chiếc điện thoại mới nhất của Apple với nhiều tính năng hiện đại.</p>
     <button>Thêm Vào Giỏ</button>
     </div>
+    <img src="images/Iphone_16_Pro_Max.png.webp" alt="Iphone 16 Pro Max 256G">
+    <h3>Iphone 16 Pro Max 256G</h3>
+    <p>Giá: 31.990.000 VND</p>
+    <p>Mô tả: Đây là chiếc điện thoại mới nhất của Apple với nhiều tính năng hiện đại.</p>
+    <button>Thêm Vào Giỏ</button>
     </div>
-    <?php include 'pages/footer.php'; ?>
+    <img src="images/Iphone_17_Pro_Max.jpg.webp" alt="Iphone 17 Pro Max 256G">
+    <h3>Iphone 17 Pro Max 256G</h3>
+    <p>Giá: 45.990.000 VND</p>
+    <p>Mô tả: Đây là chiếc điện thoại mới nhất của Apple với nhiều tính năng hiện đại.</p>
+    <button>Thêm Vào Giỏ</button>
+    </div>
+    </div>
+    <?php include 'GiaoDien/trang/bo_cuc/chan_trang.php'; ?>
+

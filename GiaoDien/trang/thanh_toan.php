@@ -1,4 +1,4 @@
-<?php include 'pages/header.php'; ?>
+<?php include 'GiaoDien/trang/bo_cuc/dau_trang.php'; ?>
 <form>
     <label>Họ Tên:</label>
     <input type="text" name="FullName"><br>
@@ -8,4 +8,4 @@
     <input type="text" name="Phone"><br>    
     <button type="submit">Xác Nhận Đặt Hàng</button>
 </form> 
-<?php include 'pages/footer.php'; ?>
+<?php include 'GiaoDien/trang/bo_cuc/chan_trang.php'; ?>
