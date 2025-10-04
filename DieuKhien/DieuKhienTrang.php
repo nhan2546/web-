@@ -1,64 +1,81 @@
 <?php
-// No need to include CSDL.php here, it's handled by the main index.php
-include_once __DIR__ . '/../MoHinh/SanPham.php';
+// Tệp: DieuKhien/DieuKhienTrang.php
+
+require_once __DIR__ . '/../MoHinh/SanPham.php';
+require_once __DIR__ . '/../MoHinh/DanhMuc.php';
 
 class controller {
-    private $db;
+    private $pdo; // Thuộc tính để lưu trữ kết nối CSDL
 
+    // Hàm khởi tạo, nhận kết nối CSDL từ index.php
     public function __construct($pdo) {
-        $this->db = $pdo;
+        $this->pdo = $pdo;
     }
 
-    // ---- TRANG CHỦ ----
+    // Hàm xử lý cho trang chủ
     public function trangchu() {
-        include __DIR__ . '/../GiaoDien/trang/bo_cuc/dau_trang.php';
+        // Tạo model sản phẩm, truyền kết nối CSDL vào
+        $sanpham_model = new sanpham($this->pdo); 
+        $danh_sach_san_pham = $sanpham_model->getallsanpham();
+        echo "<pre>";
+        var_dump($danh_sach_san_pham);
+        die;
         include __DIR__ . '/../GiaoDien/trang/trang_chu.php';
-        include __DIR__ . '/../GiaoDien/trang/bo_cuc/chan_trang.php';
+        include __DIR__ . 'GiaoDien/trang/bo_cuc/dau_trang.php';
+        include __DIR__ . 'GiaoDien/trang/bo_cuc/chan_trang.php';
     }
 
-    // ---- SẢN PHẨM ----
+    // Các hàm khác cho sản phẩm, danh mục...
     public function hienthi_sp() {
-        $sp_model = new sanpham($this->db);
-        $danhsach = $sp_model->getallsanpham();
-        
-        include __DIR__ . '/../GiaoDien/trang/bo_cuc/dau_trang.php';
-        // Nạp view và truyền dữ liệu qua
-        include __DIR__ . '/../GiaoDien/trang/danh_sach_san_pham.php';
-        include __DIR__ . '/../GiaoDien/trang/bo_cuc/chan_trang.php';
+        // Tương tự, tạo model và gọi hàm
+        $sanpham_model = new sanpham($this->pdo);
+        $danh_sach_san_pham = $sanpham_model->getallsanpham();
+        // ... có thể cần lấy cả danh mục ở đây
+        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php'; 
+        include __DIR__ . 'GiaoDien/trang/bo_cuc/dau_trang.php';
+        include __DIR__ . 'GiaoDien/trang/bo_cuc/chan_trang.php';
     }
-
+    
     public function xl_themsp() {
-        // This logic should ideally be in an admin controller, but we'll leave it for now.
-        $id_danhmuc = $_POST['id_danhmuc'] ?? 1;
-        $name = $_POST['name'] ?? '';
-        $price = $_POST['price'] ?? 0;
-        $mount = $_POST['mount'] ?? 0;
-        $sale = $_POST['sale'] ?? 0;
-        $decribe = $_POST['decribe'] ?? '';
-
-        $image_name = "default.jpg";
-        if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-            $target_dir = __DIR__ . "/../TaiLen/san_pham/";
-            $image_name = time() . "_" . basename($_FILES["image"]["name"]);
-            $target_file = $target_dir . $image_name;
-
-            if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                $image_name = "default.jpg";
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // 1. Lấy dữ liệu từ form
+            $name = $_POST['name'] ?? '';                     
+            // 2. Xử lý upload hình ảnh 
+            $image_url = 'default.jpg'; 
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+                $target_dir = __DIR__ . "/../TaiLen/san_pham/";
+                $image_url = basename($_FILES["image"]["name"]);
+                $target_file = $target_dir . $image_url;
+                move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+                header('Location: index.php?act=hienthi_sp');
+                exit;
             }
+
+            // 3. Tạo đối tượng model và gọi hàm thêm
+            $sanpham_model = new sanpham($this->pdo);
+            $sp = new sanpham($this->pdo); // Tạo một đối tượng sanpham để chứa dữ liệu
+            $sp->setName($name);
+            $sp->setImage($image_url);
+            // ... dùng các hàm set...() khác
+            
+            $sanpham_model->themsp($sp);
+
+            // 4. Chuyển hướng về trang danh sách sản phẩm
+            header('Location: index.php?act=hienthi_sp');
+            exit;
         }
-
-        $sp_model = new sanpham($this->db);
-        $sp_model->themsp($id_danhmuc, $name, $price, $mount, $image_name, $sale, $decribe);
-
-        header('Location: index.php?act=hienthi_sp');
     }
-
     public function xoa_sp() {
-        // This logic should also be in an admin controller.
+        // Lấy id từ URL
         $id = $_GET['idsp_del'] ?? 0;
-        $sp_model = new sanpham($this->db);
-        $sp_model->deletesp($id);
+
+        if ($id > 0) {
+            $sanpham_model = new sanpham($this->pdo);
+            $sanpham_model->xoasp($id);
+        }
+        // Chuyển hướng về trang danh sách sản phẩm
         header('Location: index.php?act=hienthi_sp');
+        exit;
     }
 }
 ?>

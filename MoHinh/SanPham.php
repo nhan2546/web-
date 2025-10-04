@@ -1,6 +1,4 @@
 <?php
-require_once 'CSDL.php';
-
 class sanpham { 
     private $id_sp = 0;
     private $name = "";
@@ -12,9 +10,14 @@ class sanpham {
     private $sale = 0;
     private $image = "";
     private $id_danhmuc = 0;
+    private $db; // Property to hold the database connection
+
+    // Constructor now accepts a PDO database connection
+    public function __construct($pdo){
+        $this->db = $pdo;
+    }
 
     /*getters và setters*/
-    public function __construct(){}
     public function setId_danhmuc($id_danhmuc){
         $this->id_danhmuc = $id_danhmuc;
     }
@@ -77,13 +80,10 @@ class sanpham {
     }
 
     /*xử lý dữ liệu */
-    // Flexible themsp: supports either themsp(sanpham $sp) or themsp($id_danhmuc, $name, $price, $mount, $image_url, $sale, $decribe)
     public function themsp(...$args){
-        // Normalize to a sanpham object
         if (count($args) === 1 && $args[0] instanceof sanpham) {
             $sp = $args[0];
         } else {
-            // Expect scalar args: id_danhmuc, name, price, mount, image_url, sale, decribe
             $id_danhmuc = $args[0] ?? 0;
             $name = $args[1] ?? '';
             $price = $args[2] ?? 0;
@@ -92,7 +92,8 @@ class sanpham {
             $sale = $args[5] ?? 0;
             $decribe = $args[6] ?? '';
 
-            $sp = new sanpham();
+            // Pass the connection when creating a new instance
+            $sp = new sanpham($this->db);
             $sp->setId_danhmuc($id_danhmuc);
             $sp->setName($name);
             $sp->setPrice($price);
@@ -102,10 +103,9 @@ class sanpham {
             $sp->setDecribe($decribe);
         }
 
-        $db = new CSDL();
         $sql = "INSERT INTO `products` (`name`, `description`, `price`, `image_url`, `stock_quantity`, `category_id`) 
                 VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $db->conn->prepare($sql);
+        $stmt = $this->db->prepare($sql);
 
         $name = $sp->getName();
         $description = $sp->getDecribe();
@@ -114,42 +114,29 @@ class sanpham {
         $stock_quantity = $sp->getMount();
         $category_id = $sp->getId_danhmuc();
         
-        $stmt->bind_param("ssdsii", $name, $description, $price, $image_url, $image_url, $category_id);
-        // Note: previous bind types didn't match entirely; keep as string/string/double/string/int/int
-        $stmt->execute();
-        $stmt->close();
+        $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id]);
     }
 
     /*lấy sản phẩm từ bản product*/
-    public function getallsanphamZ(){
-        $db = new CSDL();
-        $sql = "SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.id DESC";
-        return $db->read($sql);
-    }
-
-    // Backwards-compatible wrapper expected by controllers
     public function getallsanpham(){
-        return $this->getallsanphamZ();
+        $sql = "SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.id DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /*Lấy sản phẩm theo id*/
     public function getone_sanoham($id){
-        $db = new CSDL();
         $sql = "SELECT * FROM products WHERE id = ? LIMIT 1";
-        $stmt = $db->conn->prepare($sql);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $product = $result->fetch_assoc();
-        $stmt->close();
-        return $product;
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     /*cap nhat san pham*/
     public function capnhatsp(sanpham $sp){
-        $db = new CSDL();
         $sql = "UPDATE products SET name = ?, description = ?, price = ?, image_url = ?, stock_quantity = ?, category_id = ? WHERE id = ?";
-        $stmt = $db->conn->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $name = $sp->getName();
         $description = $sp->getDecribe();
         $price = $sp->getPrice();
@@ -157,24 +144,19 @@ class sanpham {
         $stock_quantity = $sp->getMount();
         $category_id = $sp->getId_danhmuc();
         $id = $sp->getId();
-        $stmt->bind_param("ssdsiii", $name, $description, $price, $image_url, $stock_quantity, $category_id, $id);
-        $stmt->execute();
-        $stmt->close();
+        $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id, $id]);
     }
 
     /*xoa san pham*/
-        public function xoasp($id){
-        $db = new CSDL();
+    public function xoasp($id){
         $sql = "DELETE FROM products WHERE id = ?";
-        $stmt = $db->conn->prepare($sql);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $stmt->close();
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
     }
 
-        // Backwards-compatible alias
-        public function deletesp($id){
-            return $this->xoasp($id);
-        }
+    // Backwards-compatible alias
+    public function deletesp($id){
+        return $this->xoasp($id);
+    }
 }
-?>  
+?>

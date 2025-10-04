@@ -1,66 +1,183 @@
+/* Tệp: TaiNguyen/css/style.css */
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0; 
-    padding-bottom: 60px; /* chừa khoảng trống để không bị footer che */
+    /* Tạo khoảng trống ở dưới để footer không che mất nội dung */
+    padding-bottom: 70px; 
 }
 
-/* Header */
-header {
-    background-color: #fb2f2f;
-    color: white;
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    position: relative; /* để menu có thể căn giữa */
+/* Tùy chỉnh màu cho footer của bạn */
+.footer-custom {
+    background-color: #fb2f2f; 
 }
 
-/* Tiêu đề bên trái */
-header h1 {
-    margin: 0;
+/*danh sách */
+
+body { 
+    font-family: Arial, sans-serif; 
+    background-color: #f4f7f6;
+    color: #333;
 }
 
-/* Menu căn giữa */
-nav {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
+.container { 
+    width: 90%; 
+    max-width: 1200px;
+    margin: 20px auto; 
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Footer cố định */
-footer {
-    background-color: #fb2f2f;
-    color: white;
-    padding: 15px;
+h1 { 
+    color: #333; 
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 20px; 
+}
+
+th, td { 
+    border: 1px solid #ddd; 
+    padding: 12px; 
+    text-align: left; 
+    vertical-align: middle;
+}
+
+thead th { 
+    background-color: #f2f2f2; 
+    font-weight: bold;
+}
+
+tbody tr:nth-child(even) { 
+    background-color: #f9f9f9; 
+}
+
+tbody tr:hover { 
+    background-color: #f1f1f1; 
+}
+
+.btn { 
+    display: inline-block; 
+    padding: 8px 15px;
+    font-size: 14px; 
     text-align: center;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+    text-decoration: none; 
+    color: white;
+    border-radius: 5px; 
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
 }
 
-/* Menu */
-nav a {
+.btn-info { 
+    background-color: #17a2b8; 
+}
+.btn-info:hover {
+    background-color: #138496;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 12px;
     color: white;
-    margin: 0 15px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.badge-pending { background-color: #ffc107; color: #333; }
+.badge-processing { background-color: #007bff; }
+.badge-shipped { background-color: #28a745; }
+.badge-delivered { background-color: #6c757d; }
+.badge-cancelled { background-color: #dc3545; }
+
+/*chi tiết*/
+/* Tệp: GiaoDien/QuanTri/assets/detail-style.css */
+
+/* Bố cục lưới cho các ô thông tin */
+.order-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* Kiểu dáng chung cho các ô thông tin */
+.detail-box {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.detail-box h2 {
+    margin-top: 0;
+    font-size: 18px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.detail-box p {
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+.detail-box p strong {
+    display: inline-block;
+    width: 120px; /* Đảm bảo các nhãn thẳng hàng */
+    color: #555;
+}
+
+/* Kiểu cho ảnh sản phẩm trong bảng */
+.product-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 15px;
+    border: 1px solid #eee;
+}
+
+/* Liên kết quay lại */
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #007bff;
     text-decoration: none;
     font-weight: bold;
 }
 
-main {
-    padding: 20px;
+.back-link:hover {
+    text-decoration: underline;
 }
 
-/* Responsive cho màn hình nhỏ */
-@media (max-width: 768px) {
-    nav {
-        position: static;
-        transform: none;
-        flex-direction: column;
-        align-items: center;
-    }
-    nav a {
-        margin: 10px 0;
-    }
+/* Kiểu cho form cập nhật */
+.update-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.update-form select, 
+.update-form button {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.update-form button {
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.update-form button:hover {
+    background-color: #218838;
 }

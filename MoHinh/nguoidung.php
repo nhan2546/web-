@@ -25,10 +25,20 @@ class NguoiDung {
         
         return $stmt->execute();
     }
-
+    /*
+    @param string $email;
+    @param string $password;
+    @return array|false Thông tin người dùng nếu đăng nhập thành công, ngược lại trả về false.
+     */
     public function login($email, $password) {
+        //tìm người dùng
+        $sql = 'SELECT * FROM users WHERE email = ?';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
         $user = $this->findUserByEmail($email);
-
+        
+        // tìm thấy người dùng xác thực mật khẩu 
         if ($user && password_verify($password, $user['password'])) {
             return $user;
         }

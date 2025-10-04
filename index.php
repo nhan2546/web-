@@ -1,8 +1,12 @@
 <?php
 session_start();
 
-// Include the database connection first, as it's needed by controllers
-include_once __DIR__ . '/MoHinh/CSDL.php';
+// Load the CSDL class definition
+require_once __DIR__ . '/MoHinh/CSDL.php';
+
+// Create a single database connection object
+$db = new CSDL();
+$pdo = $db->conn; // Get the connection for dependency injection
 
 // Load controller implementations
 include_once __DIR__ . '/DieuKhien/DieuKhienTrang.php';

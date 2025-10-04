@@ -71,16 +71,23 @@ class DieuKhienXacThuc {
             $userModel = new NguoiDung($this->db);
             $user = $userModel->login($email, $password);
 
+            
             if ($user) {
+                // đăng nhập thành công lưu thông tin 
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_fullname'] = $user['fullname'];
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_role'] = $user['role'];
 
-                header('Location: index.php?act=trangchu');
+                // Chuyển hướng dựa trên vai trò
+                if ($user['role'] === 'admin' || $user['role'] === 'staff') {
+                    header('Location: admin.php');
+                    exit;
+                }
+                header('Location: index.php?act=admin');
                 exit;
             } else {
-                header('Location: index.php?act=dang_nhap&error=invalid_credentials');
+                header('Location: index.php?act=trangchu&error=invalid_credentials');
                 exit;
             }
         }
