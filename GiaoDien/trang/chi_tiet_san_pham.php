@@ -7,6 +7,18 @@
     <p>Mô tả: Đây là chiếc điện thoại mới nhất của Apple với nhiều tính năng hiện đại.</p>
     <button>Thêm Vào Giỏ</button>
     </div>
+    <img src="images/Iphone_16_Pro_Max.png.webp" alt="Iphone 16 Pro Max 256G">
+    <h3>Iphone 16 Pro Max 256G</h3>
+    <p>Giá: 31.990.000 VND</p>
+    <p>Mô tả: Đây là chiếc điện thoại mới nhất của Apple với nhiều tính năng hiện đại.</p>
+    <button>Thêm Vào Giỏ</button>
+    </div>
+    <img src="images/Iphone_17_Pro_Max.jpg.webp" alt="Iphone 17 Pro Max 256G">
+    <h3>Iphone 17 Pro Max 256G</h3>
+    <p>Giá: 45.990.000 VND</p>
+    <p>Mô tả: Đây là chiếc điện thoại mới nhất của Apple với nhiều tính năng hiện đại.</p>
+    <button>Thêm Vào Giỏ</button>
+    </div>
     </div>
     <?php include 'GiaoDien/trang/bo_cuc/chan_trang.php'; ?>
 

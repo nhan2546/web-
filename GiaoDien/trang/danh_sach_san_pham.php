@@ -1,4 +1,4 @@
-<?php include 'pages/header.php'; ?>
+<?php include 'GiaoDien/trang/bo_cuc/dau_trang.php'; ?>
 <h2>Danh Sách Sản Phẩm</h2>
 <div class="product-list">
     <div class="product-item">
@@ -19,4 +19,4 @@
 </a>
 </div>
 </div>
-<?php include 'pages/footer.php'; ?>
+<?php include 'GiaoDien/trang/bo_cuc/chan_trang.php'; ?>

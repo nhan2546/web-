@@ -1,4 +1,4 @@
-<?php include "pages/header.php"; ?>
+<?php include "GiaoDien/trang/bo_cuc/dau_trang.php"; ?>
 <table>
     <tr>
         <th>Mã Đơn Hàng</th>
@@ -19,4 +19,4 @@
                 <td>Đã Giao Hàng</td>
                 </tr>
                 </table>
-                <?php include 'pages/footer.php'; ?>
+                <?php include 'GiaoDien/trang/bo_cuc/chan_trang.php'; ?>

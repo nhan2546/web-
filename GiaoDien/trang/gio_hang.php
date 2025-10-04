@@ -1,4 +1,4 @@
-<?php include "pages/header.php"; ?>
+<?php include "GiaoDien/trang/bo_cuc/dau_trang.php"; ?>
 <h2>Giỏ Hàng Của Bạn</h2>
 <table>
     <tr>
@@ -15,4 +15,4 @@
             </tr>
             </table>
             <a href="thanhtoan.php"><button> Thanh Toán</button></a>
-            <?php include 'pages/footer.php'; ?>
+            <?php include 'GiaoDien/trang/bo_cuc/chan_trang.php'; ?>
