@@ -1,4 +1,6 @@
 <?php include "GiaoDien/trang/bo_cuc/dau_trang.php"; ?>
+<?php include 'TaiNguyen/css/style.css'; ?>
+
 <h2>Giỏ Hàng Của Bạn</h2>
 <table>
     <tr>
@@ -14,5 +16,5 @@
             <td>11.000.000 VND</td>
             </tr>
             </table>
-            <a href="thanhtoan.php"><button> Thanh Toán</button></a>
+            <a href="thanh_toan.php"><button> Thanh Toán</button></a>
             <?php include 'GiaoDien/trang/bo_cuc/chan_trang.php'; ?>
