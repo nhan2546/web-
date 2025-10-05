@@ -18,9 +18,7 @@ class controller {
         $sanpham_model = new sanpham($this->pdo); 
         $danh_sach_san_pham = $sanpham_model->getallsanpham();
         // Hiển thị trang chủ với danh sách sản phẩm
-        include __DIR__ . '/../GiaoDien/trang/bo_cuc/dau_trang.php';
         include __DIR__ . '/../GiaoDien/trang/trang_chu.php';
-        include __DIR__ . '/../GiaoDien/trang/bo_cuc/chan_trang.php';
     }
 
     // Các hàm khác cho sản phẩm, danh mục...

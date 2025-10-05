@@ -1,33 +1,5 @@
 
 <?php include 'GiaoDien/trang/bo_cuc/dau_trang.php'; ?>
- <main>
-        <h2>Chào Mừng Đến Shop!</h2>
-<!doctype html>
-<html lang="vi">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Trang chủ - ClickShop</title>
-  <link rel="stylesheet" href="TaiNguyen/css/style.css">
-
-</head>
-<body>
-<header class="topbar">
-  <div class="container">
-    <a class="brand" href="index.php">CLICKSHOP</a>
-    <form class="search" onsubmit="gotoSearch(event)">
-      <input id="q" placeholder="Bạn cần tìm gì...">
-      <button>Tìm</button>
-    </form>
-    <nav class="nav">
-      <a href="timkiemsanpham.php">Tìm kiếm sản phẩm</a>
-      <a href="GiaoDien/trang/gio_hang.php">Giỏ hàng</a>
-    </nav>
-  </div>
-</header>
-</script>
-</body>
-</html>
 <?php
 
 // Load the CSDL class definition (creates a PDO connection)
@@ -84,5 +56,4 @@ switch ($act) {
         break;
 }
 ?>
-   
-
+  
