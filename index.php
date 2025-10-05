@@ -1,28 +1,25 @@
-<<<<<<< HEAD
 <?php
 session_start();
 
-// Load the CSDL class definition
+// Load the CSDL class definition (creates a PDO connection)
 require_once __DIR__ . '/MoHinh/CSDL.php';
-
-// Create a single database connection object
+// Create database connection and get PDO
 $db = new CSDL();
-$pdo = $db->conn; // Get the connection for dependency injection
+$pdo = $db->conn;
 
 // Load controller implementations
 include_once __DIR__ . '/DieuKhien/DieuKhienTrang.php';
-include_once __DIR__ . '/DieuKhien/DieuKhienXacThuc.php';
+include_once __DIR__ . '/DieuKhien/dieukhienxacthuc.php';
 
 // Instantiate controllers, passing the PDO connection object
 $c = new controller($pdo);
 $authController = new DieuKhienXacThuc($pdo);
 
-// Get the action from the URL, default to 'trangchu'
+// Determine action
 $act = $_GET['act'] ?? 'trangchu';
 
-// Route the request to the appropriate controller method
 switch ($act) {
-    // --- Page/Product Actions ---
+    // Page/Product Actions
     case 'trangchu':
         $c->trangchu();
         break;
@@ -36,7 +33,7 @@ switch ($act) {
         $c->xoa_sp();
         break;
 
-    // --- Authentication Actions ---
+    // Authentication Actions
     case 'dang_nhap':
         $authController->hien_thi_dang_nhap();
         break;
@@ -52,17 +49,41 @@ switch ($act) {
     case 'dang_xuat':
         $authController->dang_xuat();
         break;
-    
+
     default:
         $c->trangchu();
         break;
 }
 ?>
-=======
 <?php include 'GiaoDien/trang/bo_cuc/dau_trang.php'; ?>
+<?php include 'GiaoDien/trang/bo_cuc/chan_trang.php'; ?>
     <main>
         <h2>Chào Mừng Đến Shop!</h2>
         <p>Danh sách sản phẩm mới nhất sẻ hiển thị ở đây.</p>
-    </main>
-    <?php include 'GiaoDien/trang/bo_cuc/chan_trang.php'; ?>
->>>>>>> cfdfcfd0ad0a3e4d69962ff307567b0508cc0b0b
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Trang chủ - ClickShop (frontend)</title>
+  <link rel="stylesheet" href="TaiNguyen/css/style.css">
+
+</head>
+<body>
+<header class="topbar">
+  <div class="container">
+    <a class="brand" href="index.html">CLICKSHOP</a>
+    <form class="search" onsubmit="gotoSearch(event)">
+      <input id="q" placeholder="Bạn cần tìm gì...">
+      <button>Tìm</button>
+    </form>
+    <nav class="nav">
+      <a href="timkiemsanpham.php">Tìm kiếm sản phẩm</a>
+      <a href="GiaoDien/trang/gio_hang.php">Giỏ hàng</a>
+    </nav>
+  </div>
+</header>
+</script>
+</body>
+</html>
+<?php include 'GiaoDien/trang/bo_cuc/chan_trang.php'; ?>

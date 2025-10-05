@@ -17,12 +17,10 @@ class controller {
         // Tạo model sản phẩm, truyền kết nối CSDL vào
         $sanpham_model = new sanpham($this->pdo); 
         $danh_sach_san_pham = $sanpham_model->getallsanpham();
-        echo "<pre>";
-        var_dump($danh_sach_san_pham);
-        die;
+        // Hiển thị trang chủ với danh sách sản phẩm
+        include __DIR__ . '/../GiaoDien/trang/bo_cuc/dau_trang.php';
         include __DIR__ . '/../GiaoDien/trang/trang_chu.php';
-        include __DIR__ . 'GiaoDien/trang/bo_cuc/dau_trang.php';
-        include __DIR__ . 'GiaoDien/trang/bo_cuc/chan_trang.php';
+        include __DIR__ . '/../GiaoDien/trang/bo_cuc/chan_trang.php';
     }
 
     // Các hàm khác cho sản phẩm, danh mục...
@@ -32,8 +30,8 @@ class controller {
         $danh_sach_san_pham = $sanpham_model->getallsanpham();
         // ... có thể cần lấy cả danh mục ở đây
         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php'; 
-        include __DIR__ . 'GiaoDien/trang/bo_cuc/dau_trang.php';
-        include __DIR__ . 'GiaoDien/trang/bo_cuc/chan_trang.php';
+        include __DIR__ . '/../GiaoDien/trang/bo_cuc/dau_trang.php';
+        include __DIR__ . '/../GiaoDien/trang/bo_cuc/chan_trang.php';
     }
     
     public function xl_themsp() {

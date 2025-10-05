@@ -1,9 +1,4 @@
-/* Tệp: TaiNguyen/css/style.css */
 
-body {
-    /* Tạo khoảng trống ở dưới để footer không che mất nội dung */
-    padding-bottom: 70px; 
-}
 
 /* Tùy chỉnh màu cho footer của bạn */
 .footer-custom {
@@ -16,6 +11,8 @@ body {
     font-family: Arial, sans-serif; 
     background-color: #f4f7f6;
     color: #333;
+    padding-bottom: 70px;
+
 }
 
 .container { 
@@ -155,23 +152,21 @@ tbody tr:hover {
 .back-link:hover {
     text-decoration: underline;
 }
-<<<<<<< HEAD
 
 /* Kiểu cho form cập nhật */
 .update-form {
     display: flex;
     align-items: center;
     gap: 10px;
-=======
+}    
 /* Danh sách sản phẩm*/
-.product-list {
+.danh_sach_san_pham {
     flex-wrap: wrap;
-    display: flex;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
     margin-top: 20px;
     justify-content: center;
-     padding: 20px;   
+    padding: 20px;   
 }
 /* Card sản phẩm*/
 .card {
@@ -231,7 +226,7 @@ tbody tr:hover {
     nav a {
         margin: 10px 0;
     }
->>>>>>> cfdfcfd0ad0a3e4d69962ff307567b0508cc0b0b
+
 }
 
 .update-form select, 
