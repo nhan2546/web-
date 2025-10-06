@@ -1,6 +1,5 @@
 /* Layout để footer dính đáy */
-html,
-body {
+html, body {
     height: 100%;
     margin: 0;
     padding: 0;
@@ -19,7 +18,7 @@ body {
     flex: 1;
 }
 
-/* Header / Footer */
+/* Header và Footer */
 .main-header {
     background: #fb2f2f;
     color: #fff;
@@ -68,7 +67,7 @@ body {
     filter: brightness(.95);
 }
 
-/* Tiêu đề, bảng… (giữ nguyên) */
+/* Tiêu đề, bảng  (giữ nguyên) */
 h1 {
     color: #333;
     border-bottom: 2px solid #eee;
@@ -208,8 +207,8 @@ tbody tr:hover {
     text-decoration: underline;
 }
 
-/* Danh sách sản phẩm (SỬA: dùng grid đúng chuẩn) */
-.danh_sach_san_pham {
+/* Danh sách sản phẩm */
+.product-grid {
     display: grid;
     /* thêm */
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
