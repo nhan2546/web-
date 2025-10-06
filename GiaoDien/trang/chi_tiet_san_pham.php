@@ -1,4 +1,6 @@
-<?php include __DIR__.'/GiaoDien/trang/bo_cuc/dau_trang.php'; ?>
+<?php include __DIR__ . "/bo_cuc/dau_trang.php"; ?>
+
+    <div class="container">
 <h2>Chi Tiết Sản Phẩm</h2>
     <div class="product-detail">
      <img src="images/Iphone_12_Pro_Max.png.webp" alt="Iphone 12 Pro Max 128G">
@@ -22,5 +24,5 @@
      <button>Thêm Vào Giỏ</button>
     </div>
     </div>
-    <?php include __DIR__.'/GiaoDien/trang/bo_cuc/chan_trang.php'; ?>
+   <?php include __DIR__ . "/bo_cuc/chan_trang.php"; ?>
 

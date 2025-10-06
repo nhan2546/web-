@@ -155,6 +155,28 @@ tbody tr:hover {
     background: #dc3545;
 }
 
+.navbar {
+    margin-top: 10px;
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin: 0;
+}
+
+.nav-list a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.nav-list a:hover {
+    text-decoration: underline;
+}
 /* Chi tiết */
 .order-details-grid {
     display: grid;

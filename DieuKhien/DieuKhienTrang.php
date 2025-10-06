@@ -26,10 +26,8 @@ class controller {
         // Tương tự, tạo model và gọi hàm
         $sanpham_model = new sanpham($this->pdo);
         $danh_sach_san_pham = $sanpham_model->getallsanpham();
-<<<<<<< HEAD
         // Sửa lỗi: Hiển thị view dành cho khách hàng
         include __DIR__ . '/../GiaoDien/trang/danh_sach_san_pham.php';
-=======
         // ... có thể cần lấy cả danh mục ở đây
         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php'; 
     }
@@ -74,7 +72,6 @@ class controller {
         // Chuyển hướng về trang danh sách sản phẩm
         header('Location: index.php?act=hienthi_sp');
         exit;
->>>>>>> a8227a42aaecbafd1e96c92348545c4fe029d36d
     }
 }
 ?>
