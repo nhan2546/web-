@@ -1,20 +1,19 @@
 /* Layout để footer dính đáy */
 html, body {
-    height: 100%;
     margin: 0;
     padding: 0;
+    height: 100%;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
     background: #f4f7f6;
     color: #333;
     font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 .main {
-    flex: 1;
+    flex: 1 0 auto;
 }
 .main-header {
     background: #e74c3c; /* Màu đỏ dịu mắt hơn */
