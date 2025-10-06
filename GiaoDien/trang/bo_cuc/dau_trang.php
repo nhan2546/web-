@@ -8,8 +8,9 @@
     <link href="TaiNguyen/css/style.css" rel="stylesheet">
 </head>
 <body>
-    
-<main class="main">
-    
-</main>
+    <header class="main-header">
+        <h1> Shop Táo Ngon</h1>
+    </header>
+    <main class="main">
+    </main>
 </body>
