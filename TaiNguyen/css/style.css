@@ -17,23 +17,14 @@ body {
 .main {
     flex: 1;
 }
-
-/* Header và Footer */
-.main-header {
-    background: #fb2f2f;
-    color: #fff;
-    padding: 14px 20px;
-    text-align: center;
-    font-weight: 800;
-    letter-spacing: .5px;
-}
-
 .footer-custom {
     background: #fb2f2f;
     color: #fff;
     text-align: center;
     padding: 15px;
 }
+/* Header và Footer */
+/* Quy tắc .main-header đã được xóa vì nó đã tồn tại trong bootstrap.min.css */
 
 /* Ô tìm kiếm */
 .search-row {
@@ -42,6 +33,7 @@ body {
     margin: 12px 0 20px;
 }
 
+/* Ô tìm kiếm - Điều chỉnh để hoạt động với cấu trúc Bootstrap mới */
 .search-form {
     display: flex;
     gap: 8px;
@@ -50,6 +42,7 @@ body {
 .search-form input {
     padding: 8px 10px;
     border: 1px solid #ccc;
+    border: 1px solid #ccc !important; /* Ghi đè bootstrap nếu cần */
     border-radius: 6px;
 }
 
@@ -57,10 +50,13 @@ body {
     padding: 8px 10px;
     border: 0;
     border-radius: 6px;
+    border-radius: 6px !important; /* Ghi đè bootstrap nếu cần */
     background: #fb2f2f;
     color: #fff;
     font-weight: 700;
     cursor: pointer;
+    /* Loại bỏ các style của Bootstrap không mong muốn nếu có */
+    border-color: transparent !important;
 }
 
 .search-form button:hover {
@@ -267,11 +263,4 @@ tbody tr:hover {
 
 .card button:hover {
     background: #e63946;
-}
-
-/* Responsive */
-@media (max-width:768px) {
-    .search-row {
-        justify-content: stretch;
-    }
 }

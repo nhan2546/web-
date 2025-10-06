@@ -31,11 +31,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="index.php?act=dang_ky">Đăng ký</a>
                     </li>
-                    <div class="search-section">
-  <form onsubmit="gotoSearch(event)">
-    <input id="q" placeholder="Bạn cần tìm gì...">
-    <button>Tìm</button>
-  </form>
                 <?php endif; ?>
             </ul>
         </div>

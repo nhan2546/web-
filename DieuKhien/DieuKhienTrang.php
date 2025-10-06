@@ -28,8 +28,6 @@ class controller {
         $danh_sach_san_pham = $sanpham_model->getallsanpham();
         // ... có thể cần lấy cả danh mục ở đây
         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php'; 
-        include __DIR__ . '/../GiaoDien/trang/bo_cuc/dau_trang.php';
-        include __DIR__ . '/../GiaoDien/trang/bo_cuc/chan_trang.php';
     }
     
     public function xl_themsp() {

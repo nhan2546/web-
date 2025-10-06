@@ -6,3 +6,9 @@
     font-weight: 800;
     letter-spacing: .5px;
 }
+/* Responsive */
+@media (max-width:768px) {
+    .search-row {
+        justify-content: stretch;
+    }
+}
