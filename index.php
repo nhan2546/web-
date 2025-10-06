@@ -1,8 +1,5 @@
-
-<body>
-    <?php include __DIR__.'/GiaoDien/trang/bo_cuc/dau_trang.php' ; ?>
-    <main class="main">
 <?php
+session_start(); // Bắt đầu session ở đầu tệp để các biến session hoạt động
 // Load the CSDL class definition
 require_once __DIR__ . '/MoHinh/CSDL.php';
 // Create database connection and get PDO
@@ -19,6 +16,9 @@ $authController = new DieuKhienXacThuc($pdo);
 
 // Determine action
 $act = $_GET['act'] ?? 'trangchu';
+
+// Include header
+include __DIR__.'/GiaoDien/trang/bo_cuc/dau_trang.php';
 
 switch ($act) {
     // Page/Product Actions
@@ -52,6 +52,6 @@ switch ($act) {
 }
 ?>
 
-</main>
-    <?php include __DIR__.'/GiaoDien/trang/bo_cuc/chan_trang.php'; ?>
-</body>
+<?php
+include __DIR__.'/GiaoDien/trang/bo_cuc/chan_trang.php';
+?>

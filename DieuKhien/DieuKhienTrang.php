@@ -26,10 +26,7 @@ class controller {
         // Tương tự, tạo model và gọi hàm
         $sanpham_model = new sanpham($this->pdo);
         $danh_sach_san_pham = $sanpham_model->getallsanpham();
-        // Sửa lỗi: Hiển thị view dành cho khách hàng
         include __DIR__ . '/../GiaoDien/trang/danh_sach_san_pham.php';
-        // ... có thể cần lấy cả danh mục ở đây
-        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php'; 
     }
     
     public function xl_themsp() {
