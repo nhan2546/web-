@@ -1,7 +1,6 @@
 
 <?php include 'GiaoDien/trang/bo_cuc/dau_trang.php'; ?>
 <?php
-
 // Load the CSDL class definition (creates a PDO connection)
 require_once __DIR__ . '/MoHinh/CSDL.php';
 // Create database connection and get PDO
@@ -56,4 +55,5 @@ switch ($act) {
         break;
 }
 ?>
+<?php include 'GiaoDien/trang/bo_cuc/chan_trang.php'; ?>
   

@@ -6,8 +6,5 @@
     <input id="q" placeholder="Bạn cần tìm gì...">
     <button>Tìm</button>
   </form>
-  <nav>
-    <a href="timkiemsanpham.php">Tìm kiếm sản phẩm</a>
-    <a href="GiaoDien/trang/gio_hang.php">Giỏ hàng</a>
-  </nav>
+
 </div>
