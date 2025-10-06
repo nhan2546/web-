@@ -61,5 +61,48 @@ class DieuKhienQuanTri {
     public function dashboard() {
         include __DIR__ . '/../GiaoDien/QuanTri/bang_dieu_khien.php';
     }
+
+    // Chức năng: Xử lý thêm sản phẩm mới
+    public function xl_themsp() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // 1. Lấy dữ liệu từ form
+            $name = $_POST['name'] ?? '';
+            // Thêm các trường khác như price, description...
+            // $price = $_POST['price'] ?? 0;
+            // $description = $_POST['description'] ?? '';
+
+            // 2. Xử lý upload hình ảnh
+            $image_url = 'default.jpg';
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+                $target_dir = __DIR__ . "/../TaiLen/san_pham/";
+                // Đảm bảo thư mục tồn tại
+                if (!is_dir($target_dir)) {
+                    mkdir($target_dir, 0777, true);
+                }
+                $image_url = basename($_FILES["image"]["name"]);
+                $target_file = $target_dir . $image_url;
+                move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+            }
+
+            // 3. Tạo đối tượng model và gọi hàm thêm
+            $sanpham_model = new sanpham($this->pdo);
+            $sanpham_model->themsp($name, $image_url /*, các biến khác */);
+
+            // 4. Chuyển hướng về trang danh sách sản phẩm của admin
+            header('Location: admin.php?act=ds_sanpham&success=added');
+            exit;
+        }
+    }
+
+    // Chức năng: Xử lý xóa sản phẩm
+    public function xoa_sp() {
+        $id = $_GET['id'] ?? 0;
+        if ($id > 0) {
+            $sanpham_model = new sanpham($this->pdo);
+            $sanpham_model->xoasp($id);
+        }
+        header('Location: admin.php?act=ds_sanpham&success=deleted');
+        exit;
+    }
 }
 ?>
