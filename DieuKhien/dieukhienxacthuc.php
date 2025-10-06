@@ -84,10 +84,10 @@ class DieuKhienXacThuc {
                     header('Location: admin.php');
                     exit;
                 }
-                header('Location: index.php?act=admin');
+                header('Location: index.php?act=trangchu'); // Sửa lỗi: Chuyển hướng người dùng thường về trang chủ
                 exit;
             } else {
-                header('Location: index.php?act=trangchu&error=invalid_credentials');
+                header('Location: index.php?act=dang_nhap&error=invalid_credentials');
                 exit;
             }
         }

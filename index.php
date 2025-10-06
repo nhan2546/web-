@@ -1,7 +1,9 @@
 
 <?php include 'GiaoDien/trang/bo_cuc/dau_trang.php'; ?>
+<?php session_start(); // Bắt đầu session ở đầu tệp ?>
+<?php include 'GiaoDien/trang/bo_cuc/dau_trang.php'; ?>
 <?php
-// Load the CSDL class definition (creates a PDO connection)
+// Load the CSDL class definition
 require_once __DIR__ . '/MoHinh/CSDL.php';
 // Create database connection and get PDO
 $db = new CSDL();
@@ -25,12 +27,6 @@ switch ($act) {
         break;
     case 'hienthi_sp':
         $c->hienthi_sp();
-        break;
-    case 'xl_themsp':
-        $c->xl_themsp();
-        break;
-    case 'deletesp':
-        $c->xoa_sp();
         break;
 
     // Authentication Actions
