@@ -7,12 +7,26 @@ class NguoiDung {
     }
 
     public function findUserByEmail($email) {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
+        $sql = "SELECT * FROM users WHERE email = :email LIMIT 1";
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
+    public function registerFromGoogle($fullname, $email){
+        $random_password = bin2hex(random_bytes(16));
+        $hashed_password = password_hash($random_password, PASSWORD_DEFAULT);
+        // Insert into users table with default role 'customer'
+        $sql = "INSERT INTO users (fullname, email, password, role) VALUES (:fullname, :email, :password, 'customer')";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':fullname', $fullname);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $hashed_password);
+        if ($stmt->execute()) {
+            return $this->db->lastInsertId();
+        }
+        return false;
+    }
     public function register($fullname, $email, $password) {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         
