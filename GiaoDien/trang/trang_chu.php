@@ -1,12 +1,6 @@
 
-<h2>Chào Mừng Đến Shop!</h2>
-<p>Danh sách sản phẩm mới nhất sẽ hiển thị ở đây.</p>
-
-<div class="search-section">
-  <form onsubmit="gotoSearch(event)">
-    <input id="q" placeholder="Bạn cần tìm gì...">
-    <button>Tìm</button>
-  </form>
+<h2 class="text-center mt-m"> Chào Mừng Đến Shop!</h2>
+<p class="text-center mt-4">Danh sách sản phẩm mới nhất sẽ hiển thị ở đây.</p>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark"> <div class="container-fluid">
         <a class="navbar-brand" href="index.php?act=trangchu">Trang Chủ</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,9 +31,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="index.php?act=dang_ky">Đăng ký</a>
                     </li>
+                    <div class="search-section">
+  <form onsubmit="gotoSearch(event)">
+    <input id="q" placeholder="Bạn cần tìm gì...">
+    <button>Tìm</button>
+  </form>
                 <?php endif; ?>
             </ul>
         </div>
     </div>
 </nav>
-</div>
