@@ -7,9 +7,9 @@
     <link href="TaiNguyen/css/bootstrap.min.css" rel="stylesheet">
     <link href="TaiNguyen/css/style.css" rel="stylesheet">
 </head>
-<body class="page">
-    <header class="main-header">
-        <div class="brand">Shop Táo Ngon</div>
-</header>
-
+<body>
+    
 <main class="main">
+    
+</main>
+</body>

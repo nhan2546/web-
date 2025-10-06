@@ -26,8 +26,55 @@ class controller {
         // Tương tự, tạo model và gọi hàm
         $sanpham_model = new sanpham($this->pdo);
         $danh_sach_san_pham = $sanpham_model->getallsanpham();
+<<<<<<< HEAD
         // Sửa lỗi: Hiển thị view dành cho khách hàng
         include __DIR__ . '/../GiaoDien/trang/danh_sach_san_pham.php';
+=======
+        // ... có thể cần lấy cả danh mục ở đây
+        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php'; 
+    }
+    
+    public function xl_themsp() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // 1. Lấy dữ liệu từ form
+            $name = $_POST['name'] ?? '';                     
+            // 2. Xử lý upload hình ảnh 
+            $image_url = 'default.jpg'; 
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+                $target_dir = __DIR__ . "/../TaiLen/san_pham/";
+                $image_url = basename($_FILES["image"]["name"]);
+                $target_file = $target_dir . $image_url;
+                move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+                header('Location: index.php?act=hienthi_sp');
+                exit;
+            }
+
+            // 3. Tạo đối tượng model và gọi hàm thêm
+            $sanpham_model = new sanpham($this->pdo);
+            $sp = new sanpham($this->pdo); // Tạo một đối tượng sanpham để chứa dữ liệu
+            $sp->setName($name);
+            $sp->setImage($image_url);
+            // ... dùng các hàm set...() khác
+            
+            $sanpham_model->themsp($sp);
+
+            // 4. Chuyển hướng về trang danh sách sản phẩm
+            header('Location: index.php?act=hienthi_sp');
+            exit;
+        }
+    }
+    public function xoa_sp() {
+        // Lấy id từ URL
+        $id = $_GET['idsp_del'] ?? 0;
+
+        if ($id > 0) {
+            $sanpham_model = new sanpham($this->pdo);
+            $sanpham_model->xoasp($id);
+        }
+        // Chuyển hướng về trang danh sách sản phẩm
+        header('Location: index.php?act=hienthi_sp');
+        exit;
+>>>>>>> a8227a42aaecbafd1e96c92348545c4fe029d36d
     }
 }
 ?>

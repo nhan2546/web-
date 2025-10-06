@@ -1,5 +1,12 @@
+<?php ini_set('display_errors', 1);
+error_reporting(E_ALL); ?>
+<?php session_start(); ?>
 
+<<<<<<< HEAD
 <?php session_start(); // Bắt đầu session ở đầu tệp ?>
+=======
+<?php include __DIR__.'/GiaoDien/trang/bo_cuc/dau_trang.php' ; ?>
+>>>>>>> a8227a42aaecbafd1e96c92348545c4fe029d36d
 <?php
 // Load the CSDL class definition
 require_once __DIR__ . '/MoHinh/CSDL.php';
@@ -49,3 +56,8 @@ switch ($act) {
         break;
 }
 ?>
+<<<<<<< HEAD
+=======
+<?php include __DIR__.'/GiaoDien/trang/bo_cuc/chan_trang.php'; ?>
+  
+>>>>>>> a8227a42aaecbafd1e96c92348545c4fe029d36d

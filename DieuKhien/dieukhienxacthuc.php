@@ -10,18 +10,13 @@ class DieuKhienXacThuc {
 
     // Hiển thị form đăng nhập
     public function hien_thi_dang_nhap() {
-        include __DIR__ . '/../GiaoDien/trang/bo_cuc/dau_trang.php';
         include __DIR__ . '/../GiaoDien/trang/dang_nhap.php';
-        include __DIR__ . '/../GiaoDien/trang/bo_cuc/chan_trang.php';
     }
 
     // Hiển thị form đăng ký
     public function hien_thi_dang_ky() {
-        include __DIR__ . '/../GiaoDien/trang/bo_cuc/dau_trang.php';
         include __DIR__ . '/../GiaoDien/trang/dang_ky.php';
-        include __DIR__ . '/../GiaoDien/trang/bo_cuc/chan_trang.php';
     }
-
     // Xử lý logic đăng ký
     public function xu_ly_dang_ky() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
