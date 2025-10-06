@@ -26,7 +26,17 @@ body {
 }
 .main-header{
     background: #fb2f2f;
-    color: ;
+    color:#fff ;
+    padding: 14px 20px;
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: .5px;
+}
+.main-footer{
+    background: #fb2f2f;
+    color: #fff;
+    text-align: center;
+    padding: 14px 16px;
 }
 .container { 
     width: 90%; 
