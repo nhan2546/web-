@@ -28,6 +28,21 @@ switch ($act) {
     case 'hienthi_sp':
         $c->hienthi_sp();
         break;
+    case 'chi_tiet_san_pham':
+        $c->chi_tiet_san_pham();
+        break;
+    case 'gio_hang':
+        // Chỉ cần include file view giỏ hàng
+        include __DIR__.'/GiaoDien/trang/gio_hang.php';
+        break;
+    case 'thanh_toan':
+        // Chỉ cần include file view thanh toán
+        include __DIR__.'/GiaoDien/trang/thanh_toan.php';
+        break;
+    case 'xu_ly_dat_hang':
+        // TODO: Thêm logic xử lý đặt hàng ở đây
+        echo "Cảm ơn bạn đã đặt hàng!";
+        break;
 
     // Authentication Actions
     case 'dang_nhap':

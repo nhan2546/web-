@@ -29,6 +29,31 @@ class controller {
         include __DIR__ . '/../GiaoDien/trang/danh_sach_san_pham.php';
     }
     
+    public function chi_tiet_san_pham() {
+        // 1. Lấy ID sản phẩm từ URL
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+        // Nếu không có ID hợp lệ, chuyển hướng về trang sản phẩm
+        if ($id <= 0) {
+            header('Location: index.php?act=hienthi_sp');
+            exit;
+        }
+
+        // 2. Khởi tạo model và lấy thông tin sản phẩm
+        $sanpham_model = new sanpham($this->pdo);
+        $san_pham = $sanpham_model->getSanPhamById($id); // Giả định bạn đã có hàm này trong Model
+
+        // 3. Nếu không tìm thấy sản phẩm, chuyển hướng
+        if (!$san_pham) {
+            // Bạn có thể tạo một trang lỗi 404 ở đây
+            header('Location: index.php?act=hienthi_sp');
+            exit;
+        }
+
+        // 4. Hiển thị view với dữ liệu sản phẩm đã lấy được
+        include __DIR__ . '/../GiaoDien/trang/chi_tiet_san_pham.php';
+    }
+
     public function xl_themsp() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // 1. Lấy dữ liệu từ form

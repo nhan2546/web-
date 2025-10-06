@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <h2 class="mb-4">Thông tin thanh toán</h2>
-            <form>
+            <form action="index.php?act=xu_ly_dat_hang" method="POST">
                 <div class="mb-3">
                     <label for="FullName" class="form-label">Họ Tên:</label>
                     <input type="text" id="FullName" name="FullName" class="form-control" required>
