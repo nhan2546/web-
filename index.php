@@ -56,7 +56,7 @@ switch ($act) {
         break;
     case 'xu_ly_dat_hang':
         // TODO: Thêm logic xử lý đặt hàng ở đây
-        echo "Cảm ơn bạn đã đặt hàng!";
+        echo " Đặt Hàng Thành Công!";
         break;
 
     // Authentication Actions

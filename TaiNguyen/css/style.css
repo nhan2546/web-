@@ -628,6 +628,20 @@ tbody tr:hover {
 .divider-text::before { left: 0; }
 .divider-text::after { right: 0; }
 
+/* Nút Đăng nhập với Facebook */
+.btn-facebook {
+    background-color: #1877F2;
+    border: 1px solid #1877F2;
+    color: #fff;
+    padding: 12px;
+    font-weight: 500;
+    border-radius: 8px;
+}
+.btn-facebook:hover {
+    background-color: #166fe5;
+    color: #fff;
+}
+
 /* Nút Đăng nhập với Google */
 .btn-google {
     background-color: #fff;
@@ -638,7 +652,27 @@ tbody tr:hover {
     border-radius: 8px;
 }
 .btn-google:hover {
-    background-color: #f8f9fa;
+    background-color: #f1f1f1;
+}
+
+/* Nút Đăng nhập bằng số điện thoại */
+.btn-phone {
+    background-color: #25D366;
+    border: 1px solid #25D366;
+    color: #fff;
+    padding: 12px;
+    font-weight: 500;
+    border-radius: 8px;
+}
+.btn-phone:hover {
+    background-color: #1ebe5a;
+    color: #fff;
+}
+
+/* Đảm bảo các nút social có chiều rộng bằng nhau khi ở trên cùng một hàng */
+.social-login-buttons.d-md-flex > .btn {
+    flex: 1;
+    text-align: center;
 }
 
 /* Phần chân của form (chứa link chuyển đổi giữa đăng nhập/đăng ký) */

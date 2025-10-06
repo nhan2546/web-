@@ -47,8 +47,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 break;
             case 'email':
             case 'forgot-email':
-                isValid = validateEmail(field.value);
-                message = 'Vui lòng nhập một địa chỉ email hợp lệ.';
+                if (field.value.trim() === '') {
+                    isValid = false;
+                    message = 'Vui lòng nhập địa chỉ email.';
+                } else {
+                    isValid = validateEmail(field.value);
+                    message = 'Vui lòng nhập một địa chỉ email hợp lệ.';
+                }
                 break;
             case 'password':
                 isValid = field.value.length >= 6;
@@ -87,15 +92,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- GẮN SỰ KIỆN VALIDATE CHO CÁC FORM ---
     const formsToValidate = document.querySelectorAll('#login-form, #register-form, #payment-form, #forgot-password-form');
 
+    // Đảm bảo form được reset trạng thái validation khi tải lại trang (tránh lỗi do cache)
+    formsToValidate.forEach(form => {
+        form.classList.remove('was-validated');
+        form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    });
+
+
     formsToValidate.forEach(form => {
         const fields = form.querySelectorAll('input[required]');
-
-        // Validate khi người dùng rời khỏi một ô input (blur)
-        fields.forEach(field => {
-            field.addEventListener('blur', function () {
-                validateField(this);
-            });
-        });
 
         // Validate khi người dùng đang gõ (input) nếu ô đó đã báo lỗi
         fields.forEach(field => {

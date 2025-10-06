@@ -46,12 +46,27 @@
                     </div>
                 </form>
                 <div class="divider-text">hoặc</div>
-                <div class="d-grid">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-between gap-md-3 social-login-buttons">
+                    <!-- Nút Đăng nhập với Facebook -->
+                    <a href="index.php?act=login_facebook" class="btn btn-facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16" style="vertical-align: -2px; margin-right: 8px;">
+                            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                        </svg>
+                        Đăng nhập với Facebook
+                    </a>
+                    <!-- Nút Đăng nhập với Google -->
                     <a href="<?php echo $google_login_url ?? 'https://accounts.google.com/v3/signin/identifier?dsh=S-1053462655%3A1759761351987161&flowEntry=ServiceLogin&flowName=GlifWebSignIn&ifkv=AfYwgwVmp6ePggGNb6Hb9MBYUvF5SdXZ6fKLB3eGXNhYpG-lZAHoQBDeJiZrNGXH38UVsKt_EV0_'; ?>" class="btn btn-google">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-google" viewBox="0 0 16 16" style="vertical-align: -2px; margin-right: 8px;">
                             <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.25C2.999 7.58 2.5 8.983 2.5 10.5s.499 2.92 1.008 3.584C4.14 15.592 5.913 16.5 8 16.5c1.834 0 3.356-.922 4.19-2.215l.002-.002c.787-1.31 1.3-2.955 1.3-4.785a9.426 9.426 0 0 0-.055-1.958H8V6.558h7.545z"/>
                         </svg>
                         Đăng nhập với Google
+                    </a>
+                    <!-- Nút Đăng nhập bằng SĐT -->
+                    <a href="index.php?act=login_phone" class="btn btn-phone">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16" style="vertical-align: -2px; margin-right: 8px;">
+                            <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.28 1.465l-2.135 2.136a11.942 11.942 0 0 0 5.583 5.583l2.136-2.135a1.465 1.465 0 0 1 1.465.28l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                        </svg>
+                        Đăng nhập bằng số điện thoại
                     </a>
                 </div>
                 <div class="auth-form-footer text-center">
