@@ -1,5 +1,5 @@
- 
-<div class="container mt-5">
+<div class="form-container-wrapper">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card">
@@ -57,4 +57,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>

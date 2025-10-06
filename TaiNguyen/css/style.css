@@ -13,9 +13,16 @@ body {
     color: #333;
     font-family: Arial, sans-serif;
 }
-
 .main {
     flex: 1;
+}
+.main-header {
+    background: #fb2f2f;
+    color: #fff;
+    padding: 14px 20px;
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: .5px;
 }
 .footer-custom {
     background: #fb2f2f;
@@ -24,7 +31,6 @@ body {
     padding: 15px;
 }
 /* Header và Footer */
-/* Quy tắc .main-header đã được xóa vì nó đã tồn tại trong bootstrap.min.css */
 
 /* Ô tìm kiếm */
 .search-row {
@@ -263,4 +269,19 @@ tbody tr:hover {
 
 .card button:hover {
     background: #e63946;
+}
+
+/* Căn giữa form đăng nhập/đăng ký */
+.form-container-wrapper {
+    flex-grow: 1; /* Đảm bảo container này lấp đầy không gian còn lại */
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    width: 100%;
+}
+/* Responsive */
+@media (max-width:768px) {
+    .search-row {
+        justify-content: stretch;
+    }
 }
