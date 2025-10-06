@@ -24,12 +24,6 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Thêm bóng đổ nhẹ */
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
 .header-content {
     display: flex;
     flex-direction: row; /* Đưa các mục header lên cùng một hàng */
@@ -47,10 +41,9 @@ body {
     color: inherit; /* Kế thừa màu từ .main-header */
 }
 
-/* --- Header Search (phong cách 24h Store) --- */
+/* --- Header Search --- */
 .header-search-container {
-    /* Bỏ flex-grow để nó không chiếm hết không gian */
-    /* padding: 0 40px; */
+     padding: 0 40px;
 }
 
 .header-search-form {
@@ -345,10 +338,6 @@ tbody tr:hover {
     transition: transform .2s ease-in-out;
 }
 
-.card:hover {
-    transform: translateY(-5px);
-}
-
 .product-grid img {
     width: 100%;
     max-width: 250px;
@@ -382,14 +371,6 @@ tbody tr:hover {
 
 .product-grid button:hover {
     background: #c0392b; /* Thêm hiệu ứng hover đậm hơn */
-}
-
-
-/* Responsive */
-@media (max-width:768px) {
-    .search-row {
-        justify-content: stretch;
-    }
 }
 
 /* Giới hạn chiều rộng nội dung chính để tăng lề hai bên */
@@ -464,8 +445,368 @@ tbody tr:hover {
 }
 
 .cart-summary {
-    background: #f00d0d;
+    background: #f8f9fa; /* Sửa lại màu nền cho hài hòa */
     padding: 20px;
     border-radius: 8px;
     border: 1px solid #eee;
+}
+
+/* --- Tùy chỉnh màu nút --- */
+
+/* Ghi đè màu nút .btn-primary (nút Đăng nhập) */
+.btn-primary {
+    background-color: #e74c3c; 
+    border-color: #e74c3c;
+}
+
+.btn-primary:hover {
+    background-color: #c0392b; /* Màu đỏ đậm hơn khi di chuột */
+    border-color: #b93628;
+}
+
+/* Ghi đè màu nút .btn-danger (nút Google) */
+.btn-danger {
+    background-color: #4285F4; /* Màu xanh của Google */
+    border-color: #4285F4;
+}
+.btn-danger:hover {
+    background-color: #357ae8; /* Màu xanh đậm hơn khi di chuột */
+    border-color: #2a6de4;
+}
+
+/* --- Các nút liên hệ nổi --- */
+.contact-float {
+    position: fixed;
+    bottom: 80px; /* Tăng khoảng cách với đáy để không che footer */
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1000;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: white;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease-in-out, background-color 0.2s;
+}
+
+.contact-item:hover {
+    transform: scale(1.1);
+}
+
+.contact-item.zalo {
+    background-color: #0068ff;
+}
+.contact-item.zalo img {
+    width: 32px;
+    height: 32px;
+}
+.contact-item.phone {
+    background-color: #e74c3c; /* Màu đỏ chủ đạo */
+}
+
+/* --- Trang Đăng nhập / Đăng ký --- */
+.auth-page-wrapper {
+    padding: 50px 0;
+    flex-grow: 1; /* Đảm bảo nó chiếm không gian còn lại */
+}
+
+.auth-form-title {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #e74c3c;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.auth-form-container .form-control {
+    border-radius: 8px;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.auth-form-container .form-control:focus {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 0.25rem rgba(231, 76, 60, 0.25);
+}
+
+.auth-form-container .btn-primary {
+    padding: 12px;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+.divider-text {
+    text-align: center;
+    margin: 20px 0;
+    color: #6c757d;
+    position: relative;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+.divider-text::before,
+.divider-text::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 38%;
+    height: 1px;
+    background-color: #dee2e6;
+}
+
+.divider-text::before { left: 0; }
+.divider-text::after { right: 0; }
+
+.btn-google {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    color: #333;
+    padding: 12px;
+    font-weight: 500;
+    border-radius: 8px;
+}
+.btn-google:hover {
+    background-color: #f8f9fa;
+}
+
+.auth-form-footer {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+.forgot-password-link {
+    font-size: 16px;
+    text-decoration: none;
+    color: #434343;
+}
+
+/* --- General Admin Layout --- */
+:root {
+    --admin-bg: #f4f7f6;
+    --sidebar-bg: #2c3e50;
+    --sidebar-width: 250px;
+    --text-light: #ecf0f1;
+    --text-muted: #95a5a6;
+    --primary-color: #3498db;
+    --border-color: #e5e9f2;
+}
+
+body.admin-body {
+    background-color: var(--admin-bg);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #34495e;
+}
+
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* --- Sidebar --- */
+.admin-sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 100;
+}
+
+.sidebar-brand {
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 20px 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar-nav-item a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    color: var(--text-light);
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+    font-size: 16px;
+}
+
+.sidebar-nav-item a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav-item.active a {
+    background-color: var(--primary-color);
+    color: #fff;
+    font-weight: bold;
+}
+
+.sidebar-nav-item a svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* --- Main Content --- */
+.admin-main-content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-header {
+    background-color: #fff;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.user-profile {
+    color: #34495e;
+}
+
+.admin-page-content {
+    padding: 30px;
+    flex-grow: 1;
+}
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #2c3e50;
+}
+
+/* --- Components --- */
+.admin-card {
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    margin-bottom: 20px;
+}
+
+.admin-card-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.admin-card-body {
+    padding: 20px;
+}
+
+/* Dashboard Cards */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.dashboard-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.dashboard-card .card-title {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+.dashboard-card .card-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* Table Styles */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th, .admin-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #34495e;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.admin-table .action-buttons a {
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+/* Button Styles */
+.admin-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.admin-btn-primary {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+.admin-btn-primary:hover {
+    background-color: #2980b9;
+    color: #fff;
+}
+
+.admin-btn-danger {
+    background-color: #e74c3c;
+    color: #fff;
+}
+.admin-btn-danger:hover {
+    background-color: #c0392b;
+    color: #fff;
 }

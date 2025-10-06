@@ -67,8 +67,8 @@
                 <a class="nav-link dropdown-toggle" href="#" id="phoneDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Điện thoại</a>
                 </li>
                 <li><a href="index.php?act=danhmuc&id=2">Laptop</a></li>
-                <li><a href="index.php?act=danhmuc&id=3">Đồng hồ</a></li>
-                <li><a href="index.php?act=danhmuc&id=4">Máy cũ</a></li>
+                <li><a href="index.php?act=danhmuc&id=3">Đồng hồ Thông Minh</a></li>
+                <li><a href="index.php?act=danhmuc&id=4">Thu Máy cũ</a></li>
                 <li><a href="index.php?act=danhmuc&id=5">Phụ kiện</a></li>
             </ul>
         </div>

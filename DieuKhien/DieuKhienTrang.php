@@ -2,98 +2,106 @@
 // Tệp: DieuKhien/DieuKhienTrang.php
 
 require_once __DIR__ . '/../MoHinh/SanPham.php';
-require_once __DIR__ . '/../MoHinh/DanhMuc.php';
 
 class controller {
-    private $pdo; // Thuộc tính để lưu trữ kết nối CSDL
+    private $pdo;
 
-    // Hàm khởi tạo, nhận kết nối CSDL từ index.php
     public function __construct($pdo) {
         $this->pdo = $pdo;
+        // Khởi tạo giỏ hàng nếu chưa có
+        if (!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
     }
 
-    // Hàm xử lý cho trang chủ
     public function trangchu() {
-        // Tạo model sản phẩm, truyền kết nối CSDL vào
-        $sanpham_model = new sanpham($this->pdo); 
-        $danh_sach_san_pham = $sanpham_model->getallsanpham();
-        // Hiển thị trang chủ với danh sách sản phẩm
-        include __DIR__ . '/../GiaoDien/trang/trang_chu.php';
+        // Lấy một vài sản phẩm để hiển thị trên trang chủ (ví dụ)
+        $sp_model = new sanpham($this->pdo);
+        $danh_sach_san_pham = $sp_model->getallsanpham(8); // Lấy 8 sản phẩm
+        include __DIR__.'/../GiaoDien/trang/trang_chu.php';
     }
 
-    // Các hàm khác cho sản phẩm, danh mục...
     public function hienthi_sp() {
-        // Tương tự, tạo model và gọi hàm
-        $sanpham_model = new sanpham($this->pdo);
-        $danh_sach_san_pham = $sanpham_model->getallsanpham();
-        include __DIR__ . '/../GiaoDien/trang/danh_sach_san_pham.php';
+        $sp_model = new sanpham($this->pdo);
+        $danh_sach_san_pham = $sp_model->getallsanpham();
+        include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
     }
-    
+
     public function chi_tiet_san_pham() {
-        // 1. Lấy ID sản phẩm từ URL
-        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-
-        // Nếu không có ID hợp lệ, chuyển hướng về trang sản phẩm
-        if ($id <= 0) {
-            header('Location: index.php?act=hienthi_sp');
-            exit;
-        }
-
-        // 2. Khởi tạo model và lấy thông tin sản phẩm
-        $sanpham_model = new sanpham($this->pdo);
-        $san_pham = $sanpham_model->getSanPhamById($id); // Giả định bạn đã có hàm này trong Model
-
-        // 3. Nếu không tìm thấy sản phẩm, chuyển hướng
-        if (!$san_pham) {
-            // Bạn có thể tạo một trang lỗi 404 ở đây
-            header('Location: index.php?act=hienthi_sp');
-            exit;
-        }
-
-        // 4. Hiển thị view với dữ liệu sản phẩm đã lấy được
-        include __DIR__ . '/../GiaoDien/trang/chi_tiet_san_pham.php';
+        $id = $_GET['id'] ?? 0;
+        $sp_model = new sanpham($this->pdo);
+        $san_pham = $sp_model->getsanphambyid($id);
+        include __DIR__.'/../GiaoDien/trang/chi_tiet_san_pham.php';
     }
 
-    public function xl_themsp() {
+    public function tim_kiem_san_pham() {
+        $keyword = $_GET['keyword'] ?? '';
+        $sp_model = new sanpham($this->pdo);
+        $danh_sach_san_pham = $sp_model->timKiemSanPham($keyword);
+        // Sử dụng một view riêng để hiển thị kết quả
+        include __DIR__.'/../GiaoDien/trang/ket_qua_tim_kiem.php';
+    }
+
+    // --- CÁC HÀM XỬ LÝ GIỎ HÀNG ---
+
+    public function them_vao_gio() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // 1. Lấy dữ liệu từ form
-            $name = $_POST['name'] ?? '';                     
-            // 2. Xử lý upload hình ảnh 
-            $image_url = 'default.jpg'; 
-            if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-                $target_dir = __DIR__ . "/../TaiLen/san_pham/";
-                $image_url = basename($_FILES["image"]["name"]);
-                $target_file = $target_dir . $image_url;
-                move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
-                header('Location: index.php?act=hienthi_sp');
-                exit;
+            $id = $_POST['id'];
+            $name = $_POST['name'];
+            $image_url = $_POST['image_url'];
+            $price = $_POST['price'];
+            $quantity = $_POST['quantity'] ?? 1;
+
+            // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
+            if (isset($_SESSION['cart'][$id])) {
+                // Nếu có, tăng số lượng
+                $_SESSION['cart'][$id]['quantity'] += $quantity;
+            } else {
+                // Nếu chưa, thêm mới
+                $_SESSION['cart'][$id] = [
+                    'id' => $id,
+                    'name' => $name,
+                    'image_url' => $image_url,
+                    'price' => $price,
+                    'quantity' => $quantity
+                ];
             }
-
-            // 3. Tạo đối tượng model và gọi hàm thêm
-            $sanpham_model = new sanpham($this->pdo);
-            $sp = new sanpham($this->pdo); // Tạo một đối tượng sanpham để chứa dữ liệu
-            $sp->setName($name);
-            $sp->setImage($image_url);
-            // ... dùng các hàm set...() khác
-            
-            $sanpham_model->themsp($sp);
-
-            // 4. Chuyển hướng về trang danh sách sản phẩm
-            header('Location: index.php?act=hienthi_sp');
-            exit;
         }
+        // Chuyển hướng người dùng về trang giỏ hàng
+        header('Location: index.php?act=gio_hang');
+        exit();
     }
-    public function xoa_sp() {
-        // Lấy id từ URL
-        $id = $_GET['idsp_del'] ?? 0;
 
-        if ($id > 0) {
-            $sanpham_model = new sanpham($this->pdo);
-            $sanpham_model->xoasp($id);
+    public function hien_thi_gio_hang() {
+        $cart = $_SESSION['cart'] ?? [];
+        include __DIR__.'/../GiaoDien/trang/gio_hang.php';
+    }
+
+    public function xoa_san_pham_gio_hang() {
+        $id = $_GET['id'] ?? null;
+        if ($id && isset($_SESSION['cart'][$id])) {
+            unset($_SESSION['cart'][$id]);
         }
-        // Chuyển hướng về trang danh sách sản phẩm
-        header('Location: index.php?act=hienthi_sp');
-        exit;
+        header('Location: index.php?act=gio_hang');
+        exit();
+    }
+
+    public function cap_nhat_gio_hang() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['quantities'])) {
+                foreach ($_POST['quantities'] as $id => $quantity) {
+                    $quantity = (int)$quantity;
+                    if ($quantity > 0 && isset($_SESSION['cart'][$id])) {
+                        $_SESSION['cart'][$id]['quantity'] = $quantity;
+                    } else if ($quantity <= 0 && isset($_SESSION['cart'][$id])) {
+                        // Nếu số lượng <= 0 thì xóa sản phẩm
+                        unset($_SESSION['cart'][$id]);
+                    }
+                }
+            }
+        }
+        header('Location: index.php?act=gio_hang');
+        exit();
     }
 }
 ?>

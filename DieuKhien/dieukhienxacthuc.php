@@ -17,6 +17,11 @@ class DieuKhienXacThuc {
     public function hien_thi_dang_ky() {
         include __DIR__ . '/../GiaoDien/trang/dang_ky.php';
     }
+
+    // Hiển thị form quên mật khẩu
+    public function hien_thi_quen_mat_khau() {
+        include __DIR__ . '/../GiaoDien/trang/quen_mat_khau.php';
+    }
     // Xử lý logic đăng ký
     public function xu_ly_dang_ky() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

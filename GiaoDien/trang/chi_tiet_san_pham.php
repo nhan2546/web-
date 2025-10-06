@@ -11,7 +11,13 @@
                 <h4>Mô tả sản phẩm</h4>
                 <p><?= !empty($san_pham['description']) ? nl2br(htmlspecialchars($san_pham['description'])) : 'Chưa có mô tả cho sản phẩm này.' ?></p>
                 <hr>
-                <button class="btn btn-primary btn-lg">Thêm Vào Giỏ</button>
+                <form action="index.php?act=them_vao_gio" method="post">
+                    <input type="hidden" name="id" value="<?= htmlspecialchars($san_pham['id']) ?>">
+                    <input type="hidden" name="name" value="<?= htmlspecialchars($san_pham['name']) ?>">
+                    <input type="hidden" name="price" value="<?= htmlspecialchars($san_pham['price']) ?>">
+                    <input type="hidden" name="image_url" value="<?= htmlspecialchars($san_pham['image_url']) ?>">
+                    <button type="submit" class="btn btn-primary btn-lg">Thêm Vào Giỏ</button>
+                </form>
             </div>
         </div>
     <?php else: ?>

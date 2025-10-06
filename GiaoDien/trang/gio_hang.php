@@ -1,103 +1,77 @@
+<?php
+$cart = $_SESSION['cart'] ?? [];
+$total_price = 0;
+?>
 <div class="container cart-section">
     <h2 class="mb-4">Giỏ Hàng Của Bạn</h2>
-    <div class="row">
-        <!-- Cột danh sách sản phẩm -->
-        <div class="col-lg-8">
-            <form action="index.php?act=thanh_toan" method="POST" id="cart-form">
-                <div class="cart-items-container">
-                    <table class="table cart-items-table">
-                        <thead>
-                            <tr>
-                                <th class="text-center" style="width: 50px;"><input type="checkbox" id="select-all"></th>
-                                <th colspan="2">Sản phẩm</th>
-                                <th class="text-center">Số lượng</th>
-                                <th class="text-end">Tổng cộng</th>
-                                <th class="text-center">Xóa</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Ví dụ sản phẩm trong giỏ hàng -->
-                            <!-- TODO: Thay thế bằng vòng lặp để hiển thị sản phẩm từ session -->
-                            <tr>
-                                <td class="text-center align-middle"><input type="checkbox" class="product-checkbox" name="selected_products[]" value="1"></td>
-                                <td style="width: 80px;">
-                                    <img src="https://via.placeholder.com/80" alt="Iphone 14 Plus" class="cart-product-image">
-                                </td>
-                                <td class="align-middle">
-                                    <div class="cart-product-info">
-                                        <a href="#" class="cart-product-name">Iphone 14 Plus</a>
-                                        <div class="cart-product-price">11.000.000 VND</div>
-                                    </div>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <div class="quantity-controls">
-                                        <button type="button" class="btn btn-sm btn-secondary">-</button>
-                                        <input type="text" value="1" class="form-control form-control-sm text-center" readonly>
-                                        <button type="button" class="btn btn-sm btn-secondary">+</button>
-                                    </div>
-                                </td>
-                                <td class="align-middle text-end">11.000.000 VND</td>
-                                <td class="align-middle text-center">
-                                    <button type="button" class="btn btn-sm btn-danger">&times;</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center align-middle"><input type="checkbox" class="product-checkbox" name="selected_products[]" value="2"></td>
-                                <td><img src="https://via.placeholder.com/80" alt="Ốp lưng" class="cart-product-image"></td>
-                                <td class="align-middle">
-                                    <div class="cart-product-info">
-                                        <a href="#" class="cart-product-name">Ốp lưng Silicon</a>
-                                        <div class="cart-product-price">200.000 VND</div>
-                                    </div>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <div class="quantity-controls">
-                                        <button type="button" class="btn btn-sm btn-secondary">-</button>
-                                        <input type="text" value="1" class="form-control form-control-sm text-center" readonly>
-                                        <button type="button" class="btn btn-sm btn-secondary">+</button>
-                                    </div>
-                                </td>
-                                <td class="align-middle text-end">200.000 VND</td>
-                                <td class="align-middle text-center">
-                                    <button type="button" class="btn btn-sm btn-danger">&times;</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </form>
-        </div>
+    <?php if (empty($cart)): ?>
+        <div class="alert alert-info text-center">Giỏ hàng của bạn đang trống. <a href="index.php?act=hienthi_sp">Bắt đầu mua sắm</a>!</div>
+    <?php else: ?>
+        <div class="row">
+            <!-- Cột danh sách sản phẩm -->
+            <div class="col-lg-8">
+                <form action="index.php?act=cap_nhat_gio_hang" method="POST" id="cart-update-form">
+                    <div class="cart-items-container">
+                        <table class="table cart-items-table">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">Sản phẩm</th>
+                                    <th class="text-center">Số lượng</th>
+                                    <th class="text-end">Tạm tính</th>
+                                    <th class="text-center">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($cart as $item): 
+                                    $subtotal = $item['price'] * $item['quantity'];
+                                    $total_price += $subtotal;
+                                ?>
+                                <tr>
+                                    <td style="width: 80px;">
+                                        <img src="TaiLen/san_pham/<?= htmlspecialchars($item['image_url']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" class="cart-product-image">
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="cart-product-info">
+                                            <a href="index.php?act=chi_tiet_san_pham&id=<?= $item['id'] ?>" class="cart-product-name"><?= htmlspecialchars($item['name']) ?></a>
+                                            <div class="cart-product-price"><?= number_format($item['price'], 0, ',', '.') ?> VND</div>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <div class="quantity-controls">
+                                            <input type="number" name="quantities[<?= $item['id'] ?>]" value="<?= htmlspecialchars($item['quantity']) ?>" class="form-control form-control-sm text-center" min="1">
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-end"><?= number_format($subtotal, 0, ',', '.') ?> VND</td>
+                                    <td class="align-middle text-center">
+                                        <a href="index.php?act=xoa_san_pham_gio_hang&id=<?= $item['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">&times;</a>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                        <button type="submit" class="btn btn-info">Cập nhật giỏ hàng</button>
+                    </div>
+                </form>
+            </div>
 
-        <!-- Cột tóm tắt đơn hàng -->
-        <div class="col-lg-4">
-            <div class="cart-summary">
-                <h4 class="mb-3">Tóm tắt đơn hàng</h4>
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Tạm tính</span>
-                    <span>11.200.000 VND</span>
-                </div>
-                <hr>
-                <div class="d-flex justify-content-between fw-bold fs-5">
-                    <span>Tổng cộng</span>
-                    <span>11.200.000 VND</span>
-                </div>
-                <div class="d-grid mt-4">
-                    <button type="submit" form="cart-form" class="btn btn-primary btn-lg">Tiến hành Thanh Toán</button>
+            <!-- Cột tóm tắt đơn hàng -->
+            <div class="col-lg-4">
+                <div class="cart-summary">
+                    <h4 class="mb-3">Tóm tắt đơn hàng</h4>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tạm tính</span>
+                        <span><?= number_format($total_price, 0, ',', '.') ?> VND</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold fs-5">
+                        <span>Tổng cộng</span>
+                        <span><?= number_format($total_price, 0, ',', '.') ?> VND</span>
+                    </div>
+                    <div class="d-grid mt-4">
+                        <a href="index.php?act=thanh_toan" class="btn btn-primary btn-lg">Tiến hành Thanh Toán</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    <?php endif; ?>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const selectAllCheckbox = document.getElementById('select-all');
-        const productCheckboxes = document.querySelectorAll('.product-checkbox');
-
-        selectAllCheckbox.addEventListener('change', function() {
-            productCheckboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-        });
-    });
-</script>
