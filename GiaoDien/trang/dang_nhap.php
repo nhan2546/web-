@@ -37,12 +37,12 @@
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary">Đăng nhập</button>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="d-flex align-items-center mt-3">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
                             <label class="form-check-label" for="remember_me">Ghi nhớ đăng nhập</label>
                         </div>
-                        <a href="index.php?act=quen_mat_khau" class="forgot-password-link">Quên mật khẩu?</a>
+                        <a href="index.php?act=quen_mat_khau" class="forgot-password-link ms-auto">Quên mật khẩu?</a>
                     </div>
                 </form>
                 <div class="divider-text">hoặc</div>

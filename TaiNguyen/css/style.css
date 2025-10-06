@@ -1,10 +1,12 @@
-/* Layout để footer dính đáy */
+/* --- CẤU TRÚC LAYOUT CHUNG --- */
+/* Thiết lập cơ bản cho toàn bộ trang */
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
 }
 
+/* Định dạng cho thẻ body, sử dụng flexbox để đẩy footer xuống cuối trang */
 body {
     background: #f4f7f6;
     color: #333;
@@ -12,18 +14,23 @@ body {
     display: flex;
     flex-direction: column;
 }
+/* Đảm bảo vùng nội dung chính co giãn để lấp đầy không gian */
 .main {
     flex: 1 0 auto;
 }
+
+/* --- HEADER CHUNG --- */
+/* Định dạng cho thanh header chính */
 .main-header {
-    background: #e74c3c; /* Màu đỏ dịu mắt hơn */
+    background: #e74c3c; 
     color: #fff;
-    padding: 15px 0 0; /* Chỉ thêm padding ở trên */
+    padding: 15px 0 0; 
     font-weight: 800;
     letter-spacing: .5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Thêm bóng đổ nhẹ */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
 }
 
+/* Căn chỉnh các thành phần bên trong header (logo, search, actions) */
 .header-content {
     display: flex;
     flex-direction: row; /* Đưa các mục header lên cùng một hàng */
@@ -31,21 +38,25 @@ body {
     align-items: center;
 }
 
+/* Định dạng cho tiêu đề/logo của cửa hàng */
 .shop-title {
-    margin: 0; /* Bỏ margin thừa */
-    font-size: 28px; /* Giảm kích thước chữ một chút */
+    margin: 0; 
+    font-size: 28px; 
 }
 
+/* Định dạng cho liên kết của logo */
 .shop-title-link {
     text-decoration: none;
-    color: inherit; /* Kế thừa màu từ .main-header */
+    color: inherit; 
 }
 
-/* --- Header Search --- */
+/* --- THANH TÌM KIẾM TRÊN HEADER --- */
+/* Vùng chứa thanh tìm kiếm */
 .header-search-container {
      padding: 0 40px;
 }
 
+/* Form tìm kiếm */
 .header-search-form {
     display: flex;
     background: rgba(255, 255, 255, 0.2);
@@ -55,11 +66,13 @@ body {
     transition: all 0.3s ease;
 }
 
+/* Hiệu ứng khi người dùng click vào form tìm kiếm */
 .header-search-form:focus-within {
     background: rgba(255, 255, 255, 1);
     border-color: #fff;
 }
 
+/* Ô nhập liệu của thanh tìm kiếm */
 .header-search-form input {
     flex-grow: 1;
     border: none;
@@ -68,22 +81,26 @@ body {
     color: #fff;
     outline: none;
     background: transparent;
-    width: 250px; /* Giới hạn chiều rộng ban đầu */
+    width: 250px; 
     transition: color 0.3s ease;
 }
 
+/* Đổi màu chữ khi đang nhập liệu */
 .header-search-form:focus-within input {
     color: #333;
 }
 
+/* Chữ gợi ý (placeholder) trong ô tìm kiếm */
 .header-search-form input::placeholder {
     color: rgba(255, 255, 255, 0.7);
     transition: color 0.3s ease;
 }
+/* Đổi màu chữ gợi ý khi đang nhập liệu */
 .header-search-form:focus-within input::placeholder {
     color: #aaa;
 }
 
+/* Nút bấm tìm kiếm (icon kính lúp) */
 .header-search-form button {
     border: none;
     background: transparent;
@@ -93,25 +110,30 @@ body {
     transition: color 0.3s ease;
 }
 
+/* Đổi màu icon khi đang nhập liệu */
 .header-search-form:focus-within button {
     color: #e74c3c;
 }
 
-/* --- Header Actions (Giỏ hàng, User) --- */
+/* --- CÁC NÚT CHỨC NĂNG HEADER (GIỎ HÀNG, USER) --- */
+/* Vùng chứa các icon chức năng */
 .header-actions {
     display: flex;
     align-items: center;
     gap: 25px;
 }
 
+/* --- FOOTER --- */
+/* Định dạng cho chân trang */
 .footer-custom {
-    background: #e74c3c; /* Đồng bộ màu đỏ */
+    background: #e74c3c; 
     color: #fff;
     text-align: center;
-    padding: 12px 0; /* Giảm padding cho footer nhỏ lại */
+    padding: 12px 0; 
 }
 
-/* Tiêu đề, bảng  (giữ nguyên) */
+/* --- CÁC THÀNH PHẦN CHUNG (BẢNG, NÚT BẤM, BADGE) --- */
+/* Tiêu đề chính của các trang */
 h1 {
     color: #333;
     border-bottom: 2px solid #eee;
@@ -119,6 +141,7 @@ h1 {
     margin-bottom: 20px;
 }
 
+/* Định dạng chung cho bảng */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -133,6 +156,7 @@ td {
     vertical-align: middle;
 }
 
+/* Tiêu đề của bảng */
 thead th {
     background: #f2f2f2;
     font-weight: bold;
@@ -146,6 +170,7 @@ tbody tr:hover {
     background: #f1f1f1;
 }
 
+/* Định dạng chung cho các nút bấm */
 .btn {
     display: inline-block;
     padding: 8px 15px;
@@ -167,6 +192,7 @@ tbody tr:hover {
     background: #138496;
 }
 
+/* Định dạng cho các nhãn trạng thái (status badge) */
 .badge {
     padding: 5px 10px;
     border-radius: 12px;
@@ -176,6 +202,7 @@ tbody tr:hover {
     text-transform: capitalize;
 }
 
+/* Các màu khác nhau cho từng trạng thái */
 .badge-pending {
     background: #ffc107;
     color: #333;
@@ -197,15 +224,19 @@ tbody tr:hover {
     background: #dc3545;
 }
 
+/* --- THANH MENU DANH MỤC --- */
+/* Thanh nav chứa các danh mục sản phẩm */
 .main-nav-bar {
-    background: #e74c3c; /* Đồng bộ màu với header chính */
-    padding: 0; /* Bỏ padding thừa */
+    background: #e74c3c; 
+    padding: 0;
 }
+/* Căn chỉnh các mục trong menu */
 .main-nav-bar .main-nav {
-    justify-content: flex-start; /* Căn menu về bên trái */
+    justify-content: flex-start; 
     gap: 35px;
 }
 
+/* Định dạng cho từng mục chức năng trên header (Giỏ hàng, User) */
 .header-action-item {
     display: flex;
     align-items: center;
@@ -219,24 +250,27 @@ tbody tr:hover {
     color: #f1f1f1;
 }
 .header-action-item svg {
-    width: 22px; /* Chỉnh kích thước icon */
+    width: 22px; 
     height: 22px;
-    vertical-align: -4px; /* Căn chỉnh icon với chữ */
+    vertical-align: -4px; 
 }
 
+/* Danh sách các mục trong thanh menu chính */
 .main-nav {
     list-style: none;
     padding: 0;
     display: flex;
-    align-items: center; /* Căn các mục menu theo chiều dọc */
+    align-items: center; 
     gap: 25px;
     margin: 0;
 }
 
+/* Chữ bên cạnh icon chức năng */
 .header-action-item span {
-    display: block; /* Để chữ nằm dưới icon trên màn nhỏ nếu cần */
+    display: block; 
 }
-.header-action-item .nav-link { /* Dành cho dropdown user */
+/* Định dạng riêng cho mục dropdown của User */
+.header-action-item .nav-link { 
     display: flex;
     align-items: center;
     gap: 8px;
@@ -244,6 +278,7 @@ tbody tr:hover {
     font-size: 13px;
 }
 
+/* Liên kết trong thanh menu chính */
 .main-nav a, .main-nav .nav-link {
     color: white;
     text-decoration: none;
@@ -257,12 +292,13 @@ tbody tr:hover {
     color: #f1f1f1;
 }
 
-/* CSS cho dropdown menu trong header mới */
+/* Các mục con trong menu dropdown */
 .main-nav .dropdown-menu a {
-    color: #212529; /* Màu chữ đen cho các mục dropdown */
+    color: #212529; 
     font-weight: normal;
 }
 
+/* --- CÁC KHỐI CSS KHÔNG CÒN SỬ DỤNG (ĐÃ XÓA) --- */
 /* Chi tiết */
 .order-details-grid {
     display: grid;
@@ -317,7 +353,8 @@ tbody tr:hover {
     text-decoration: underline;
 }
 
-/* Danh sách sản phẩm */
+/* --- TRANG DANH SÁCH SẢN PHẨM --- */
+/* Lưới hiển thị các sản phẩm */
 .danh_sach_san_pham {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -327,7 +364,7 @@ tbody tr:hover {
     justify-items: center;
 }
 
-/* Card */
+/* Khung chứa thông tin của một sản phẩm */
 .product-grid { 
     background: #fff;
     border-radius: 10px;
@@ -338,6 +375,7 @@ tbody tr:hover {
     transition: transform .2s ease-in-out;
 }
 
+/* Hình ảnh sản phẩm */
 .product-grid img {
     width: 100%;
     max-width: 250px;
@@ -347,22 +385,25 @@ tbody tr:hover {
     display: block;
 }
 
+/* Tên sản phẩm */
 .product-grid h3 {
     margin: 10px 0;
     font-size: 18px;
     color: #333;
 }
 
+/* Giá sản phẩm */
 .price {
     font-size: 16px;
     color: #e63946;
     font-weight: bold;
 }
 
+/* Nút "Thêm vào giỏ" */
 .product-grid button {
     padding: 10px 15px;
     border: none;
-    background: #e74c3c; /* Đồng bộ màu đỏ */
+    background: #e74c3c; 
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
@@ -370,18 +411,20 @@ tbody tr:hover {
 }
 
 .product-grid button:hover {
-    background: #c0392b; /* Thêm hiệu ứng hover đậm hơn */
+    background: #c0392b; 
 }
 
-/* Giới hạn chiều rộng nội dung chính để tăng lề hai bên */
+/* --- WRAPPER CHUNG CHO NỘI DUNG --- */
+/* Lớp bao bọc nội dung chính, giới hạn chiều rộng và căn giữa */
 .main-content-wrapper {
-    max-width: 1280px; /* Bạn có thể điều chỉnh giá trị này */
+    max-width: 1280px; 
     width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
 
-/* --- Trang Giỏ Hàng --- */
+/* --- TRANG GIỎ HÀNG --- */
+/* Khung chính của trang giỏ hàng */
 .cart-section {
     background: #fff;
     padding: 25px;
@@ -389,14 +432,17 @@ tbody tr:hover {
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
+/* Bảng chứa các sản phẩm trong giỏ */
 .cart-items-table {
     border: none;
 }
 
+/* Tiêu đề của bảng giỏ hàng */
 .cart-items-table thead {
     border-bottom: 2px solid #dee2e6;
 }
 
+/* Các cột tiêu đề (TH) */
 .cart-items-table th {
     border: none;
     font-weight: 600;
@@ -405,6 +451,7 @@ tbody tr:hover {
     font-size: 13px;
 }
 
+/* Các ô dữ liệu (TD) */
 .cart-items-table td {
     border-top: 1px solid #eee;
     border-bottom: none;
@@ -412,6 +459,7 @@ tbody tr:hover {
     border-right: none;
 }
 
+/* Hình ảnh sản phẩm trong giỏ hàng */
 .cart-product-image {
     width: 80px;
     height: 80px;
@@ -419,6 +467,7 @@ tbody tr:hover {
     border-radius: 8px;
 }
 
+/* Tên và giá sản phẩm trong giỏ hàng */
 .cart-product-name {
     font-weight: bold;
     color: #333;
@@ -432,6 +481,7 @@ tbody tr:hover {
     font-size: 14px;
 }
 
+/* Khung điều chỉnh số lượng sản phẩm */
 .quantity-controls {
     display: flex;
     width: 100px;
@@ -444,40 +494,41 @@ tbody tr:hover {
     border-radius: 0;
 }
 
+/* Khung tóm tắt đơn hàng (tổng tiền, nút thanh toán) */
 .cart-summary {
-    background: #f8f9fa; /* Sửa lại màu nền cho hài hòa */
+    background: #f8f9fa; 
     padding: 20px;
     border-radius: 8px;
     border: 1px solid #eee;
 }
 
-/* --- Tùy chỉnh màu nút --- */
-
-/* Ghi đè màu nút .btn-primary (nút Đăng nhập) */
+/* --- TÙY CHỈNH MÀU NÚT BẤM --- */
+/* Ghi đè màu cho nút chính ( Đăng nhập, Đặt hàng) */
 .btn-primary {
     background-color: #e74c3c; 
     border-color: #e74c3c;
 }
 
 .btn-primary:hover {
-    background-color: #c0392b; /* Màu đỏ đậm hơn khi di chuột */
+    background-color: #c0392b; 
     border-color: #b93628;
 }
 
-/* Ghi đè màu nút .btn-danger (nút Google) */
+/* Ghi đè màu cho nút .btn-danger (được dùng cho nút Google) */
 .btn-danger {
-    background-color: #4285F4; /* Màu xanh của Google */
+    background-color: #4285F4; 
     border-color: #4285F4;
 }
 .btn-danger:hover {
-    background-color: #357ae8; /* Màu xanh đậm hơn khi di chuột */
+    background-color: #357ae8; 
     border-color: #2a6de4;
 }
 
-/* --- Các nút liên hệ nổi --- */
+/* --- CÁC NÚT LIÊN HỆ NỔI (GỌI, ZALO) --- */
+/* Vùng chứa các nút, cố định ở góc dưới bên phải */
 .contact-float {
     position: fixed;
-    bottom: 80px; /* Tăng khoảng cách với đáy để không che footer */
+    bottom: 80px; 
     right: 20px;
     display: flex;
     flex-direction: column;
@@ -485,6 +536,7 @@ tbody tr:hover {
     z-index: 1000;
 }
 
+/* Định dạng chung cho từng nút liên hệ */
 .contact-item {
     display: flex;
     align-items: center;
@@ -502,6 +554,7 @@ tbody tr:hover {
     transform: scale(1.1);
 }
 
+/* Nút Zalo */
 .contact-item.zalo {
     background-color: #0068ff;
 }
@@ -509,16 +562,19 @@ tbody tr:hover {
     width: 32px;
     height: 32px;
 }
+/* Nút gọi điện */
 .contact-item.phone {
-    background-color: #e74c3c; /* Màu đỏ chủ đạo */
+    background-color: #e74c3c; 
 }
 
-/* --- Trang Đăng nhập / Đăng ký --- */
+/* --- TRANG ĐĂNG NHẬP / ĐĂNG KÝ --- */
+/* Vùng bao bọc form, đảm bảo nó chiếm đủ không gian và căn giữa */
 .auth-page-wrapper {
     padding: 50px 0;
-    flex-grow: 1; /* Đảm bảo nó chiếm không gian còn lại */
+    flex-grow: 1; 
 }
 
+/* Tiêu đề của form (Đăng nhập, Đăng ký) */
 .auth-form-title {
     text-align: center;
     margin-bottom: 25px;
@@ -527,6 +583,7 @@ tbody tr:hover {
     font-weight: 600;
 }
 
+/* Ô nhập liệu trong form */
 .auth-form-container .form-control {
     border-radius: 8px;
     padding: 12px 15px;
@@ -534,17 +591,20 @@ tbody tr:hover {
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
+/* Hiệu ứng khi click vào ô nhập liệu */
 .auth-form-container .form-control:focus {
     border-color: #e74c3c;
     box-shadow: 0 0 0 0.25rem rgba(231, 76, 60, 0.25);
 }
 
+/* Nút bấm chính trong form */
 .auth-form-container .btn-primary {
     padding: 12px;
     font-weight: bold;
     border-radius: 8px;
 }
 
+/* Đường kẻ và chữ "hoặc" ngăn cách giữa các phương thức đăng nhập */
 .divider-text {
     text-align: center;
     margin: 20px 0;
@@ -554,6 +614,7 @@ tbody tr:hover {
     font-size: 13px;
 }
 
+/* Tạo đường kẻ hai bên chữ hoặc */
 .divider-text::before,
 .divider-text::after {
     content: '';
@@ -567,6 +628,7 @@ tbody tr:hover {
 .divider-text::before { left: 0; }
 .divider-text::after { right: 0; }
 
+/* Nút Đăng nhập với Google */
 .btn-google {
     background-color: #fff;
     border: 1px solid #dee2e6;
@@ -579,19 +641,22 @@ tbody tr:hover {
     background-color: #f8f9fa;
 }
 
+/* Phần chân của form (chứa link chuyển đổi giữa đăng nhập/đăng ký) */
 .auth-form-footer {
     margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid #e9ecef;
 }
 
+/* Liên kết Quên mật khẩu */
 .forgot-password-link {
     font-size: 16px;
     text-decoration: none;
     color: #434343;
 }
 
-/* --- General Admin Layout --- */
+/*  GIAO DIỆN TRANG QUẢN TRỊ (ADMIN)  */
+/* Định nghĩa các biến màu và kích thước cho trang admin */
 :root {
     --admin-bg: #f4f7f6;
     --sidebar-bg: #2c3e50;
@@ -602,18 +667,21 @@ tbody tr:hover {
     --border-color: #e5e9f2;
 }
 
+/* Định dạng body riêng cho các trang admin */
 body.admin-body {
     background-color: var(--admin-bg);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #34495e;
 }
 
+/* Vùng bao bọc toàn bộ layout admin */
 .admin-wrapper {
     display: flex;
     min-height: 100vh;
 }
 
-/* --- Sidebar --- */
+/* THANH BÊN (SIDEBAR) CỦA TRANG ADMIN  */
+/* Định dạng chung cho sidebar */
 .admin-sidebar {
     width: var(--sidebar-width);
     background-color: var(--sidebar-bg);
@@ -627,6 +695,7 @@ body.admin-body {
     z-index: 100;
 }
 
+/* Logo/Tên trang web trên sidebar */
 .sidebar-brand {
     padding: 20px;
     font-size: 24px;
@@ -637,6 +706,7 @@ body.admin-body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Danh sách các mục menu trong sidebar */
 .sidebar-nav {
     list-style: none;
     padding: 20px 0;
@@ -644,6 +714,7 @@ body.admin-body {
     flex-grow: 1;
 }
 
+/* Từng mục menu */
 .sidebar-nav-item a {
     display: flex;
     align-items: center;
@@ -659,6 +730,7 @@ body.admin-body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Định dạng cho mục menu đang được chọn (active) */
 .sidebar-nav-item.active a {
     background-color: var(--primary-color);
     color: #fff;
@@ -670,7 +742,8 @@ body.admin-body {
     height: 20px;
 }
 
-/* --- Main Content --- */
+/* --- VÙNG NỘI DUNG CHÍNH CỦA TRANG ADMIN --- */
+/* Vùng chứa header và nội dung trang */
 .admin-main-content {
     margin-left: var(--sidebar-width);
     width: calc(100% - var(--sidebar-width));
@@ -678,6 +751,7 @@ body.admin-body {
     flex-direction: column;
 }
 
+/* Header của trang admin (chứa thông tin user) */
 .admin-header {
     background-color: #fff;
     padding: 15px 30px;
@@ -688,15 +762,18 @@ body.admin-body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
+/* Thông tin người dùng đăng nhập */
 .user-profile {
     color: #34495e;
 }
 
+/* Vùng nội dung chính của từng trang (dashboard, product list, ...) */
 .admin-page-content {
     padding: 30px;
     flex-grow: 1;
 }
 
+/* Tiêu đề của trang admin (ví dụ: "Bảng điều khiển", "Quản lý sản phẩm") */
 .page-header {
     margin-bottom: 30px;
 }
@@ -707,7 +784,8 @@ body.admin-body {
     color: #2c3e50;
 }
 
-/* --- Components --- */
+/* --- CÁC THÀNH PHẦN GIAO DIỆN TRONG TRANG ADMIN --- */
+/* Khung thẻ (card) chung để bao bọc nội dung */
 .admin-card {
     background-color: #fff;
     border-radius: 8px;
@@ -716,6 +794,7 @@ body.admin-body {
     margin-bottom: 20px;
 }
 
+/* Tiêu đề của card */
 .admin-card-header {
     padding: 20px;
     border-bottom: 1px solid var(--border-color);
@@ -723,17 +802,19 @@ body.admin-body {
     font-weight: 600;
 }
 
+/* Thân của card */
 .admin-card-body {
     padding: 20px;
 }
 
-/* Dashboard Cards */
+/* Lưới các thẻ thống kê trên trang dashboard */
 .dashboard-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
 }
 
+/* Từng thẻ thống kê (doanh thu, đơn hàng, ...) */
 .dashboard-card {
     background-color: #fff;
     padding: 20px;
@@ -742,24 +823,28 @@ body.admin-body {
     box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
+/* Tiêu đề nhỏ của thẻ thống kê */
 .dashboard-card .card-title {
     font-size: 14px;
     color: #7f8c8d;
     margin-bottom: 10px;
 }
 
+/* Giá trị (số liệu) của thẻ thống kê */
 .dashboard-card .card-value {
     font-size: 32px;
     font-weight: bold;
     color: #2c3e50;
 }
 
-/* Table Styles */
+/* --- BẢNG DỮ LIỆU TRONG TRANG ADMIN --- */
+/* Định dạng chung cho bảng */
 .admin-table {
     width: 100%;
     border-collapse: collapse;
 }
 
+/* Các ô trong bảng */
 .admin-table th, .admin-table td {
     padding: 15px;
     text-align: left;
@@ -776,12 +861,14 @@ body.admin-body {
     background-color: #f8f9fa;
 }
 
+/* Các nút hành động (Sửa, Xóa) trong bảng */
 .admin-table .action-buttons a {
     margin-right: 10px;
     text-decoration: none;
 }
 
-/* Button Styles */
+/* --- NÚT BẤM TRONG TRANG ADMIN --- */
+/* Định dạng chung cho nút bấm */
 .admin-btn {
     display: inline-block;
     padding: 10px 20px;
@@ -793,6 +880,7 @@ body.admin-body {
     transition: background-color 0.2s;
 }
 
+/* Nút chính (màu xanh) */
 .admin-btn-primary {
     background-color: var(--primary-color);
     color: #fff;
@@ -802,6 +890,7 @@ body.admin-body {
     color: #fff;
 }
 
+/* Nút nguy hiểm (màu đỏ, dùng cho hành động xóa) */
 .admin-btn-danger {
     background-color: #e74c3c;
     color: #fff;

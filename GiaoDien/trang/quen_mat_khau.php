@@ -14,7 +14,7 @@
                         <div class="invalid-feedback">Vui lòng nhập một địa chỉ email hợp lệ.</div>
                     </div>
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Gửi Hướng Dẫn</button>
+                        <button type="submit" class="btn btn-primary">Gửi Mã</button>
                     </div>
                 </form>
                 <div class="auth-form-footer text-center">
