@@ -2,6 +2,7 @@
     <div class="text-center my-4">
         <h2 class="mt-4">Tất Cả Sản Phẩm</h2>
     </div>
+
     <div class="danh_sach_san_pham">
         <?php if (!empty($danh_sach_san_pham)): ?>
             <?php foreach ($danh_sach_san_pham as $san_pham): ?>
@@ -25,6 +26,5 @@
         <?php endif; ?>
     </div>
 
-    <?php // Chèn thanh phân trang vào đây
-    include __DIR__ . '/../../DieuKhien/phan_trang.php'; ?>
+    <?php include __DIR__ . '/bo_cuc/phan_trang.php'; ?>
 </div>

@@ -49,6 +49,12 @@ switch ($act) {
     case 'cap_nhat_gio_hang':
         $c->cap_nhat_gio_hang();
         break;
+    case 'tim_kiem':
+        $c->tim_kiem_san_pham();
+        break;
+    case 'ajax_tim_kiem':
+        $c->ajax_tim_kiem();
+        break;
 
     case 'thanh_toan':
         // Chỉ cần include file view thanh toán

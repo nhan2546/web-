@@ -23,7 +23,17 @@ class controller {
 
     public function hienthi_sp() {
         $sp_model = new sanpham($this->pdo);
-        $danh_sach_san_pham = $sp_model->getallsanpham();
+
+        // Logic phân trang
+        $products_per_page = 8; // Số sản phẩm trên mỗi trang
+        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($current_page - 1) * $products_per_page;
+
+        $total_products = $sp_model->countAllSanPham();
+        $total_pages = ceil($total_products / $products_per_page);
+
+        $danh_sach_san_pham = $sp_model->getallsanpham($products_per_page, $offset);
+
         include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
     }
 
@@ -40,6 +50,18 @@ class controller {
         $danh_sach_san_pham = $sp_model->timKiemSanPham($keyword);
         // Sử dụng một view riêng để hiển thị kết quả
         include __DIR__.'/../GiaoDien/trang/ket_qua_tim_kiem.php';
+    }
+
+    public function ajax_tim_kiem() {
+        header('Content-Type: application/json'); // Báo cho trình duyệt biết đây là dữ liệu JSON
+        $keyword = $_GET['keyword'] ?? '';
+        $sp_model = new sanpham($this->pdo);
+
+        // Giới hạn số lượng kết quả trả về để không làm chậm trang
+        $danh_sach_san_pham = $sp_model->timKiemSanPham($keyword, 5); 
+
+        echo json_encode($danh_sach_san_pham);
+        exit(); // Dừng thực thi sau khi trả về JSON
     }
 
     // --- CÁC HÀM XỬ LÝ GIỎ HÀNG ---

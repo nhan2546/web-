@@ -113,12 +113,58 @@
                 handleChat();
             }
         });
+
+        // --- JAVASCRIPT CHO TÌM KIẾM TRỰC TIẾP ---
+        const searchInput = document.getElementById('search-input');
+        const resultsContainer = document.getElementById('search-results-container');
+
+        if (searchInput && resultsContainer) {
+            searchInput.addEventListener('keyup', function() {
+                const keyword = this.value.trim();
+
+                if (keyword.length > 1) {
+                    fetch(`index.php?act=ajax_tim_kiem&keyword=${keyword}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            resultsContainer.innerHTML = ''; // Xóa kết quả cũ
+                            if (data.length > 0) {
+                                const ul = document.createElement('ul');
+                                ul.className = 'search-results-list';
+                                data.forEach(product => {
+                                    const li = document.createElement('li');
+                                    li.className = 'search-result-item';
+                                    li.innerHTML = `
+                                        <a href="index.php?act=chi_tiet_san_pham&id=${product.id}">
+                                            <img src="TaiLen/san_pham/${product.image_url}" alt="${product.name}">
+                                            <span>${product.name}</span>
+                                        </a>
+                                    `;
+                                    ul.appendChild(li);
+                                });
+                                resultsContainer.appendChild(ul);
+                                resultsContainer.style.display = 'block';
+                            } else {
+                                resultsContainer.style.display = 'none';
+                            }
+                        });
+                } else {
+                    resultsContainer.innerHTML = '';
+                    resultsContainer.style.display = 'none';
+                }
+            });
+            // Ẩn kết quả khi click ra ngoài
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target)) {
+                    resultsContainer.style.display = 'none';
+                }
+            });
+        }
     </script>
 
     <!-- FOOTER -->
     <footer class="footer-custom mt-auto">
         <div class="container">
-            <p>&copy; <?= date('Y') ?> Shop Táo Ngon. Mọi quyền được bảo lưu.</p>
+            <p>&copy; <?= date('Y') ?> Shop Táo Ngon.</p>
         </div>
     </footer>
 </body>

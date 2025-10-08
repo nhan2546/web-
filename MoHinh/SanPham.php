@@ -118,10 +118,37 @@ class sanpham {
     }
 
     /*lấy sản phẩm từ bản product*/
-    public function getallsanpham(){
+    public function getallsanpham($limit = null, $offset = 0){
         $sql = "SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.id DESC";
+        if ($limit !== null) {
+            $sql .= " LIMIT :limit OFFSET :offset";
+        }
+        $stmt = $this->db->prepare($sql);
+        if ($limit !== null) {
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /* Đếm tổng số sản phẩm */
+    public function countAllSanPham() {
+        $sql = "SELECT COUNT(*) FROM products";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    /*Tìm kiếm sản phẩm theo từ khóa*/
+    public function timKiemSanPham($keyword, $limit = null) {
+        $sql = "SELECT p.*, c.name as category_name 
+                FROM products p 
+                LEFT JOIN categories c ON p.category_id = c.id 
+                WHERE p.name LIKE ? ORDER BY p.id DESC";
+        if ($limit) $sql .= " LIMIT " . (int)$limit;
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['%' . $keyword . '%']);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

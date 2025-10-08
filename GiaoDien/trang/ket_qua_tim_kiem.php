@@ -1,5 +1,5 @@
 <div class="container">
-    <h2 class="mb-4">Kết quả tìm kiếm cho: "<?= htmlspecialchars($keyword ?? '') ?>"</h2>
+    <h2 class="mb-4"><?= htmlspecialchars($keyword ?? '') ?></h2>
 
     <div class="danh_sach_san_pham">
         <?php if (!empty($danh_sach_san_pham)): ?>
@@ -20,7 +20,7 @@
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <p class="col-12 text-center">Không tìm thấy sản phẩm nào phù hợp với từ khóa của bạn.</p>
+            <p class="col-12 text-center">Không tìm thấy sản phẩm nào phù hợp.</p>
         <?php endif; ?>
     </div>
 </div>
