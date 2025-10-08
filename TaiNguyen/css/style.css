@@ -626,6 +626,28 @@ tbody tr:hover {
 .auth-page-wrapper {
     padding: 50px 0;
     flex-grow: 1; 
+    /* Thêm flexbox để căn giữa form */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Khung bao bọc form đăng nhập/đăng ký */
+.auth-form-container {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+    width: 100%;
+    max-width: 450px; /* Giới hạn chiều rộng tối đa của form */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng chuyển động mượt mà */
+}
+
+/* Hiệu ứng khi rê chuột vào form */
+.auth-form-container:hover {
+    transform: translateY(-5px); /* Nâng form lên một chút */
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12); /* Tăng độ đậm của bóng đổ */
 }
 
 /* Tiêu đề của form (Đăng nhập, Đăng ký) */
@@ -690,23 +712,44 @@ tbody tr:hover {
     padding: 12px;
     font-weight: 500;
     border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .btn-facebook:hover {
-    background-color: #166fe5;
+    background-color: #1877F2;
+    border: 1px solid #1877F2;
     color: #fff;
+    padding: 12px;
+    font-weight: 500;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Nút Đăng nhập với Google */
 .btn-google {
-    background-color: #fff;
-    border: 1px solid #dee2e6;
+    background-color: #fcfcfc; 
+    border: 1px solid #9699f6;
+    /* Bổ sung các thuộc tính còn thiếu */
     color: #333;
     padding: 12px;
     font-weight: 500;
     border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .btn-google:hover {
-    background-color: #f1f1f1;
+    background-color: #f8f9fa; /* Chuyển nền sang màu xám nhạt khi rê chuột */
+    border-color: #dadce0; /* Đổi màu viền để đồng bộ */
+}
+
+/* Định dạng cho icon bên trong nút */
+.btn-icon {
+    margin-right: 10px; /* Tạo khoảng cách giữa icon và chữ */
+    line-height: 1; /* Đảm bảo icon được căn giữa theo chiều dọc */
 }
 
 /* Nút Đăng nhập bằng số điện thoại */
@@ -717,7 +760,10 @@ tbody tr:hover {
     padding: 12px;
     font-weight: 500;
     border-radius: 8px;
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}   
 .btn-phone:hover {
     background-color: #1ebe5a;
     color: #fff;

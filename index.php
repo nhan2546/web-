@@ -22,24 +22,9 @@ $danh_muc_menu = $danhMucModel->getDS_Danhmuc(); // Sửa tên hàm cho đúng v
 // Determine action
 $act = $_GET['act'] ?? 'trangchu';
 
-// Include header
-// Include header (biến $danh_muc_menu sẽ có sẵn trong file này)
-include __DIR__.'/GiaoDien/trang/bo_cuc/dau_trang.php';
-
+// TÁCH BIỆT LOGIC XỬ LÝ VÀ HIỂN THỊ
+// Các case xử lý logic (đăng nhập, thêm giỏ hàng,...) sẽ không include view trực tiếp
 switch ($act) {
-    // Page/Product Actions
-    case 'trangchu':
-        $c->trangchu();
-        break;
-    case 'hienthi_sp':
-        $c->hienthi_sp();
-        break;
-    case 'chi_tiet_san_pham':
-        $c->chi_tiet_san_pham();
-        break;
-    case 'gio_hang':
-        $c->hien_thi_gio_hang();
-        break;
     case 'them_vao_gio':
         $c->them_vao_gio();
         break;
@@ -49,31 +34,8 @@ switch ($act) {
     case 'cap_nhat_gio_hang':
         $c->cap_nhat_gio_hang();
         break;
-    case 'tim_kiem':
-        $c->tim_kiem_san_pham();
-        break;
-    case 'ajax_tim_kiem':
-        $c->ajax_tim_kiem();
-        break;
-
-    case 'thanh_toan':
-        // Chỉ cần include file view thanh toán
-        include __DIR__.'/GiaoDien/trang/thanh_toan.php';
-        break;
-    case 'xu_ly_dat_hang':
-        // TODO: Thêm logic xử lý đặt hàng ở đây
-        echo " Đặt Hàng Thành Công!";
-        break;
-
-    // Authentication Actions
-    case 'dang_nhap':
-        $authController->hien_thi_dang_nhap();
-        break;
     case 'xu_ly_dang_nhap':
         $authController->xu_ly_dang_nhap();
-        break;
-    case 'dang_ky':
-        $authController->hien_thi_dang_ky();
         break;
     case 'xu_ly_dang_ky':
         $authController->xu_ly_dang_ky();
@@ -81,17 +43,52 @@ switch ($act) {
     case 'dang_xuat':
         $authController->dang_xuat();
         break;
+}
+
+// BẮT ĐẦU HIỂN THỊ GIAO DIỆN
+// Include header (biến $danh_muc_menu sẽ có sẵn trong file này)
+include __DIR__.'/GiaoDien/trang/bo_cuc/dau_trang.php';
+
+// Khối switch này chỉ xử lý các action có hiển thị giao diện
+switch ($act) {
+    case 'trangchu':
+        $c->trangchu();
+        break;
+    case 'hienthi_sp':
+        $c->hienthi_sp();
+        break;
+    case 'danhmuc':
+        $c->hienthi_sp_theo_danhmuc();
+        break;
+    case 'chi_tiet_san_pham':
+        $c->chi_tiet_san_pham();
+        break;
+    case 'gio_hang':
+        $c->hien_thi_gio_hang();
+        break;
+    case 'tim_kiem':
+        $c->tim_kiem_san_pham();
+        break;
+    case 'ajax_tim_kiem': // AJAX không cần header/footer nhưng để đây cho gọn
+        $c->ajax_tim_kiem();
+        break;
+    case 'thanh_toan':
+        include __DIR__.'/GiaoDien/trang/thanh_toan.php';
+        break;
+    case 'dang_nhap':
+        $authController->hien_thi_dang_nhap();
+        break;
+    case 'dang_ky':
+        $authController->hien_thi_dang_ky();
+        break;
     case 'quen_mat_khau':
         $authController->hien_thi_quen_mat_khau();
         break;
-
-    default:
-        $c->trangchu();
+    case 'lich_su_mua_hang':
+        $c->lich_su_mua_hang();
         break;
 }
-?>
 
-<?php
 // Include footer
 include __DIR__.'/GiaoDien/trang/bo_cuc/chan_trang.php';
 ?>

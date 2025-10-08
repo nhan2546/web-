@@ -24,17 +24,19 @@
                     }
                 ?>
                 <form action="index.php?act=xu_ly_dang_nhap" method="POST" id="login-form" novalidate>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                        <div class="invalid-feedback">Vui lòng nhập một địa chỉ email hợp lệ.</div>
+                    <div class="row mb-3">
+                        <label for="email" class="col-sm-3 col-form-label">Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Mật khẩu</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                        <div class="invalid-feedback">Vui lòng nhập mật khẩu.</div>
+                    <div class="row mb-4">
+                        <label for="password" class="col-sm-3 col-form-label">Mật khẩu</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
                     </div>
-                    <div class="d-grid">
+                    <div class="d-grid mb-4">
                         <button type="submit" class="btn btn-primary">Đăng nhập</button>
                     </div>
                     <div class="d-flex align-items-center mt-3">
@@ -45,8 +47,8 @@
                         <a href="index.php?act=quen_mat_khau" class="forgot-password-link ms-auto">Quên mật khẩu?</a>
                     </div>
                 </form>
-                <div class="divider-text">hoặc</div>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-between gap-md-3 social-login-buttons">
+                <div class="divider-text my-4">hoặc đăng nhập với</div>
+                <div class="d-grid gap-3">
                     <!-- Nút Đăng nhập với Facebook -->
                     <a href="index.php?act=login_facebook" class="btn btn-facebook">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16" style="vertical-align: -2px; margin-right: 8px;">
@@ -56,9 +58,9 @@
                     </a>
                     <!-- Nút Đăng nhập với Google -->
                     <a href="<?php echo $google_login_url ?? 'https://accounts.google.com/v3/signin/identifier?dsh=S-1053462655%3A1759761351987161&flowEntry=ServiceLogin&flowName=GlifWebSignIn&ifkv=AfYwgwVmp6ePggGNb6Hb9MBYUvF5SdXZ6fKLB3eGXNhYpG-lZAHoQBDeJiZrNGXH38UVsKt_EV0_'; ?>" class="btn btn-google">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-google" viewBox="0 0 16 16" style="vertical-align: -2px; margin-right: 8px;">
-                            <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.25C2.999 7.58 2.5 8.983 2.5 10.5s.499 2.92 1.008 3.584C4.14 15.592 5.913 16.5 8 16.5c1.834 0 3.356-.922 4.19-2.215l.002-.002c.787-1.31 1.3-2.955 1.3-4.785a9.426 9.426 0 0 0-.055-1.958H8V6.558h7.545z"/>
-                        </svg>
+                        <span class="btn-icon">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google logo" width="18" height="18">
+                        </span>
                         Đăng nhập với Google
                     </a>
                     <!-- Nút Đăng nhập bằng SĐT -->

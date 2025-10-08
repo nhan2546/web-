@@ -140,6 +140,34 @@ class sanpham {
         return $stmt->fetchColumn();
     }
 
+    /* Lấy sản phẩm theo ID danh mục với phân trang */
+    public function getSanPhamByDanhMuc($category_id, $limit = null, $offset = 0) {
+        $sql = "SELECT p.*, c.name as category_name 
+                FROM products p 
+                LEFT JOIN categories c ON p.category_id = c.id 
+                WHERE p.category_id = :category_id 
+                ORDER BY p.id DESC";
+        if ($limit !== null) {
+            $sql .= " LIMIT :limit OFFSET :offset";
+        }
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':category_id', $category_id, PDO::PARAM_INT);
+        if ($limit !== null) {
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /* Đếm tổng số sản phẩm trong một danh mục */
+    public function countSanPhamByDanhMuc($category_id) {
+        $sql = "SELECT COUNT(*) FROM products WHERE category_id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$category_id]);
+        return $stmt->fetchColumn();
+    }
+
     /*Tìm kiếm sản phẩm theo từ khóa*/
     public function timKiemSanPham($keyword, $limit = null) {
         $sql = "SELECT p.*, c.name as category_name 

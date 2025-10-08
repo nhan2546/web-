@@ -1,6 +1,10 @@
 <div class="container">
     <div class="text-center my-4">
-        <h2 class="mt-4">Tất Cả Sản Phẩm</h2>
+        <?php if (isset($category_info) && $category_info): ?>
+            <h2 class="mt-4"><?= htmlspecialchars($category_info['name']) ?></h2>
+        <?php else: ?>
+            <h2 class="mt-4">Tất Cả Sản Phẩm</h2>
+        <?php endif; ?>
     </div>
     <div class="danh_sach_san_pham">
         <?php if (!empty($danh_sach_san_pham)): ?>

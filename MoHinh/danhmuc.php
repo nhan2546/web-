@@ -41,6 +41,16 @@ class danhmuc {
         return $stmt->execute([$id]);
     }
     
+    /**
+     * Lấy thông tin một danh mục theo ID
+     * @param int $id ID của danh mục
+     */
+    public function getDanhMucById($id) {
+        $sql = "SELECT * FROM `categories` WHERE id = ? LIMIT 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     // Bạn có thể thêm các hàm khác như cập nhật danh mục ở đây...
 }
 ?>

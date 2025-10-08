@@ -37,6 +37,31 @@ class controller {
         include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
     }
 
+    public function hienthi_sp_theo_danhmuc() {
+        $category_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        if ($category_id <= 0) {
+            header('Location: index.php?act=trangchu');
+            exit();
+        }
+
+        $sp_model = new sanpham($this->pdo);
+        $dm_model = new danhmuc($this->pdo);
+
+        // Lấy thông tin danh mục để hiển thị tiêu đề
+        $category_info = $dm_model->getDanhMucById($category_id);
+
+        // Logic phân trang
+        $products_per_page = 8;
+        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($current_page - 1) * $products_per_page;
+
+        $total_products = $sp_model->countSanPhamByDanhMuc($category_id);
+        $total_pages = ceil($total_products / $products_per_page);
+
+        $danh_sach_san_pham = $sp_model->getSanPhamByDanhMuc($category_id, $products_per_page, $offset);
+        include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
+    }
+
     public function chi_tiet_san_pham() {
         $id = $_GET['id'] ?? 0;
         $sp_model = new sanpham($this->pdo);
@@ -124,6 +149,22 @@ class controller {
         }
         header('Location: index.php?act=gio_hang');
         exit();
+    }
+
+    public function lich_su_mua_hang() {
+        // 1. Kiểm tra người dùng đã đăng nhập chưa
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?act=dang_nhap');
+            exit();
+        }
+
+        // 2. Lấy đơn hàng từ CSDL
+        require_once __DIR__ . '/../MoHinh/DonHang.php';
+        $donHangModel = new donhang($this->pdo);
+        $danh_sach_don_hang = $donHangModel->getOrdersByUserId($_SESSION['user_id']);
+
+        // 3. Hiển thị view
+        include __DIR__.'/../GiaoDien/trang/lich_su_mua_hang.php';
     }
 }
 ?>
