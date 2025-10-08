@@ -717,29 +717,22 @@ tbody tr:hover {
     justify-content: center;
 }
 .btn-facebook:hover {
-    background-color: #1877F2;
-    border: 1px solid #1877F2;
+    background-color: #166fe5;
     color: #fff;
-    padding: 12px;
-    font-weight: 500;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* Nút Đăng nhập với Google */
 .btn-google {
-    background-color: #fcfcfc; 
-    border: 1px solid #9699f6;
-    /* Bổ sung các thuộc tính còn thiếu */
-    color: #333;
+    background-color: #ffffff;
+    border: 1px solid #1877F2;
+    color: #000000;
     padding: 12px;
     font-weight: 500;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
+    
 }
 .btn-google:hover {
     background-color: #f8f9fa; /* Chuyển nền sang màu xám nhạt khi rê chuột */
