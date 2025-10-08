@@ -86,5 +86,6 @@ switch ($act) {
 ?>
 
 <?php
+// Include footer
 include __DIR__.'/GiaoDien/trang/bo_cuc/chan_trang.php';
 ?>
