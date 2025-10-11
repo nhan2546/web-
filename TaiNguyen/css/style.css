@@ -1251,6 +1251,12 @@ body.admin-body {
     gap: 30px; 
 }
 
+/* Loại bỏ dấu chấm đầu dòng cho các danh sách trong mega menu */
+.megamenu .list-unstyled {
+    list-style: none;
+    padding-left: 0;
+}
+
 /* Các liên kết danh mục con trong mega menu */
 .megamenu .list-unstyled a {
     color: #555; 

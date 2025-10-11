@@ -125,8 +125,10 @@
                                 <h6 class="title">Thương hiệu khác</h6>
                                 <ul class="list-unstyled">
                                     <li><a href="#">Dell</a></li>
+                                    <li><a href="#">Lenovo</a></li>
                                     <li><a href="#">HP</a></li>
                                     <li><a href="#">Asus</a></li>
+                                    <li><a href="#">MSI</a></li>
                                 </ul>
                             </div>
                             <div class="col-auto">
@@ -135,6 +137,14 @@
                                     <li><a href="#">Dưới 20 triệu</a></li>
                                     <li><a href="#">Từ 20 - 30 triệu</a></li>
                                     <li><a href="#">Trên 30 triệu</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-auto">
+                                <h6 class="title">Nhu cầu sử dụng</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Văn phòng</a></li>
+                                    <li><a href="#">Đồ họa - Kỹ thuật</a></li>
+                                    <li><a href="#">Mỏng nhẹ</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -158,6 +168,25 @@
                                     <li><a href="#">Samsung</a></li>
                                     <li><a href="#">Garmin</a></li>
                                     <li><a href="#">Xiaomi</a></li>
+                                    <li><a href="#">Amazfit</a></li>
+                                    <li><a href="#">Huawei</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-auto">
+                                <h6 class="title">Tính năng nổi bật</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Chống nước</a></li>
+                                    <li><a href="#">Nghe gọi trên đồng hồ</a></li>
+                                    <li><a href="#">Đo nồng độ Oxy (SpO2)</a></li>
+                                    <li><a href="#">GPS</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-auto">
+                                <h6 class="title">Chọn theo giá</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Dưới 1 triệu</a></li>
+                                    <li><a href="#">Từ 1 - 3 triệu</a></li>
+                                    <li><a href="#">Trên 3 triệu</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -173,6 +202,25 @@
                                     <li><a href="#">Sạc, Cáp</a></li>
                                     <li><a href="#">AirPods</a></li>
                                     <li><a href="#">Ốp lưng</a></li>
+                                    <li><a href="#">Ốp lưng iPhone</a></li>
+                                    <li><a href="#">Dán màn hình</a></li>
+                                    <li><a href="#">AirTag</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-auto">
+                                <h6 class="title">Loa, Tai nghe</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Tai nghe Bluetooth</a></li>
+                                    <li><a href="#">Tai nghe có dây</a></li>
+                                    <li><a href="#">Loa Bluetooth</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-auto">
+                                <h6 class="title">Phụ kiện Laptop</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Chuột, Bàn phím</a></li>
+                                    <li><a href="#">Balo, Túi chống sốc</a></li>
+                                    <li><a href="#">Phần mềm</a></li>
                                 </ul>
                             </div>
                         </div>
