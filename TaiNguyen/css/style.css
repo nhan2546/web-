@@ -1100,8 +1100,7 @@ body.admin-body {
     pointer-events: auto;
     transform: scale(1);
 }
-
-/* Header của chatbot */
+/* Header của chatbot (giữ nguyên) */
 .chatbot-header {
     background: #3498db; 
     color: #fff;
@@ -1114,76 +1113,96 @@ body.admin-body {
     margin: 0;
 }
 
-/* Khung chat */
+/* Khung hiển thị tin nhắn (giữ nguyên) */
 .chatbot-box {
     height: 250px; 
     overflow-y: auto;
     padding: 20px;
+    background: #f9f9f9; /* Thêm màu nền nhẹ cho dễ nhìn */
 }
 
-/* Vùng nhập liệu */
+/* Vùng nhập liệu (giữ nguyên) */
 .chat-input {
     display: flex;
     gap: 5px;
     padding: 10px 20px;
     border-top: 1px solid #ddd;
+    background: #fff;
 }
 
-/* định dạng tin nhắn trong chatbot */
-/* Định dạng chung cho một dòng chat */
-.chatbot-box .chat {
+/* --- ĐỊNH DẠNG LẠI PHẦN TIN NHẮN --- */
+
+/* Định dạng chung cho một dòng chat (user hoặc bot) */
+.chat-message {
     display: flex;
     margin-bottom: 15px;
-}
-
-/* Avatar của bot */
-.chatbot-box .outgoing {
+    align-items: flex-end; /* Căn avatar và bong bóng chat theo chiều dọc */
     gap: 10px;
 }
 
-.chat-avatar {
+/* Kiểu cho tin nhắn của người dùng (căn phải) */
+.chat-message.user {
+    justify-content: flex-end;
+}
+
+/* Kiểu cho tin nhắn của bot (căn trái, mặc định) */
+.chat-message.bot {
+    justify-content: flex-start;
+}
+
+/* Avatar của bot */
+.bot-avatar {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0; /* Ngăn avatar bị co lại */
-    overflow: hidden; 
+    flex-shrink: 0;
+    overflow: hidden;
 }
 
-.chat-avatar img {
+.bot-avatar img {
     width: 100%;
     height: 100%;
-    border-radius: 50%; 
-    object-fit: cover; 
+    object-fit: cover;
 }
 
-/* Bong bóng chat (nội dung tin nhắn) */
-.chatbot-box .chat p {
+/* Vùng chứa bong bóng chat */
+.message-content {
+    max-width: 75%;
+}
+
+/* Bong bóng chat (thẻ <p>) */
+.message-content p {
     font-size: 0.95rem;
     padding: 12px 16px;
     margin: 0;
-    max-width: 85%;
+    border-radius: 18px; /* Bo tròn đều các góc trước */
+    word-wrap: break-word; /* Đảm bảo chữ dài tự xuống dòng */
 }
 
-/* Tin nhắn của Bot (outgoing) */
-.chatbot-box .outgoing p {
+/* Tùy chỉnh bong bóng chat của bot */
+.chat-message.bot .message-content p {
+    background: #3498db;
     color: #fff;
-    background: #3498db; 
-    border-radius: 18px 18px 0 18px;
+    border-bottom-left-radius: 0; /* Tạo hiệu ứng "đuôi" cho bong bóng chat */
 }
 
-/* Tin nhắn của Người dùng (incoming) */
-.chatbot-box .incoming {
-    justify-content: flex-end; 
-}
-.chatbot-box .incoming p {
+/* Tùy chỉnh bong bóng chat của người dùng */
+.chat-message.user .message-content p {
     background: #f1f1f1;
     color: #333;
-    border-radius: 18px 18px 18px 0;
+    border-bottom-right-radius: 0; /* Tạo hiệu ứng "đuôi" cho bong bóng chat */
 }
 
+/* Hiệu ứng "đang gõ..." cho bot */
+.chat-message.typing .message-content p {
+    animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
 /* tùy chỉnh nút ẩn/hiện mật khẩu */
 /* Ghi đè lên input-group của Bootstrap để nút nằm bên trong input */
 .auth-form-container div[style*="position: relative"] {
