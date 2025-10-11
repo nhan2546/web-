@@ -1210,3 +1210,75 @@ body.admin-body {
     background: transparent; /* Bỏ nền của nút */
     cursor: pointer; /* Thêm con trỏ chuột khi di vào */
 }
+
+/* --- MEGA MENU --- */
+/* Thiết lập vị trí cho các mục menu có dropdown */
+.main-nav .nav-item.has-megamenu {
+    position: static; /* Quan trọng: để megamenu có thể chiếm toàn bộ chiều rộng */
+}
+
+/* Định dạng cho khung mega menu */
+.main-nav .megamenu {
+    /* Thu nhỏ và căn giữa menu */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1140px; /* Chiều rộng tối đa của container Bootstrap */
+    max-width: 95%; /* Đảm bảo không bị tràn trên màn hình nhỏ */
+    padding: 20px;
+    margin-top: 10px; /* Tạo khoảng cách nhỏ với thanh menu */
+    border-radius: 8px; /* Bo tròn các góc */
+    border: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: absolute; /* Quan trọng: Tách menu ra khỏi luồng trang */
+    background-color: #fff; /* Thêm nền trắng cho menu */
+    z-index: 1040; /* Đảm bảo menu nằm trên các thành phần khác */
+    /* Thay đổi để tạo hiệu ứng mượt mà */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(10px); /* Kết hợp transform để căn giữa và tạo hiệu ứng */
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+/* Tiêu đề của mỗi cột trong mega menu */
+.megamenu .title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee; /* Thêm lại gạch chân mỏng cho tiêu đề */
+}
+
+/* Tạo layout hàng ngang cho các cột danh mục lớn */
+.megamenu .row {
+    display: flex;
+    flex-wrap: nowrap; /* Ngăn các cột xuống hàng */
+    gap: 30px; /* Khoảng cách giữa các cột */
+}
+
+/* Các liên kết danh mục con trong mega menu */
+.megamenu .list-unstyled a {
+    color: #555; /* Đổi màu chữ cho dễ đọc hơn */
+    display: block;
+    font-size: 14px;
+    font-weight: normal; /* Ghi đè font-weight của nav-link */
+    padding: 5px 0; /* Trở lại padding gốc cho liên kết văn bản */
+}
+
+.megamenu .list-unstyled a:hover {
+    color: #e74c3c; /* Màu khi rê chuột */
+    text-decoration: underline; /* Thêm gạch chân khi rê chuột */
+}
+
+/* --- HIỂN THỊ MEGA MENU KHI RÊ CHUỘT --- */
+/* 
+  Ghi đè hành vi mặc định của Bootstrap (yêu cầu click).
+  Khi rê chuột vào thẻ <li> chứa mega menu, menu con sẽ hiện ra.
+*/
+@media (min-width: 992px) { /* Chỉ áp dụng cho màn hình lớn (desktop) */
+    .main-nav .nav-item.has-megamenu:hover > .megamenu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0); /* Đưa menu về vị trí cuối cùng */
+    }
+}

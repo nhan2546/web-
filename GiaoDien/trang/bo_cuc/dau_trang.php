@@ -66,13 +66,119 @@
     <nav class="main-nav-bar">
         <div class="main-content-wrapper">
             <ul class="nav-list main-nav">
-                <li class="nav-item dropdown dropdown-megamenu">
-                <a class="nav-link dropdown-toggle" href="#" id="phoneDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Điện thoại</a>
+                <!-- Ví dụ về Mega Menu cho mục Điện thoại -->
+                <li class="nav-item has-megamenu">
+                    <a class="nav-link" href="#">Điện thoại</a>
+                    <div class="dropdown-menu megamenu" role="menu">
+                        <div class="row">
+                            <div class="col-auto">
+                                <h6 class="title">iPhone</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">iPhone 15 Series</a></li>
+                                    <li><a href="#">iPhone 14 Series</a></li>
+                                    <li><a href="#">iPhone 13 Series</a></li>
+                                    <li><a href="#">iPhone 12 Series</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-auto">
+                                <h6 class="title">Samsung</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Galaxy S Series</a></li>
+                                    <li><a href="#">Galaxy ZPhone</a></li>
+                                    <li><a href="#">Galaxy A Series</a></li>
+                                    <li><a href="#">Galaxy M Series</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-auto">
+                                <h6 class="title">Chọn theo giá</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Dưới 2 triệu</a></li>
+                                    <li><a href="#">Từ 2 - 4 triệu</a></li>
+                                    <li><a href="#">Từ 4 - 7 triệu</a></li>
+                                    <li><a href="#">Từ 7 - 13 triệu</a></li>
+                                    <li><a href="#">Trên 13 triệu</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-auto">
+                                <h6 class="title">Nhu cầu sử dụng</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Chơi game / Cấu hình cao</a></li>
+                                    <li><a href="#">Chụp ảnh đẹp</a></li>
+                                    <li><a href="#">Pin trâu</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </li>
-                <li><a href="index.php?act=danhmuc&id=2">Laptop</a></li>
-                <li><a href="index.php?act=danhmuc&id=3">Đồng hồ Thông Minh</a></li>
-                <li><a href="index.php?act=danhmuc&id=4">Thu Máy cũ</a></li>
-                <li><a href="index.php?act=danhmuc&id=5">Phụ kiện</a></li>
+                <li class="nav-item has-megamenu">
+                    <a class="nav-link" href="#">Laptop</a>
+                    <div class="dropdown-menu megamenu" role="menu">
+                        <div class="row">
+                            <div class="col-auto">
+                                <h6 class="title">MacBook</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">MacBook Air</a></li>
+                                    <li><a href="#">MacBook Pro</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-auto">
+                                <h6 class="title">Thương hiệu khác</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Dell</a></li>
+                                    <li><a href="#">HP</a></li>
+                                    <li><a href="#">Asus</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-auto">
+                                <h6 class="title">Chọn theo giá</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Dưới 20 triệu</a></li>
+                                    <li><a href="#">Từ 20 - 30 triệu</a></li>
+                                    <li><a href="#">Trên 30 triệu</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item has-megamenu">
+                    <a class="nav-link" href="#">Đồng hồ Thông Minh</a>
+                    <div class="dropdown-menu megamenu" role="menu">
+                        <div class="row">
+                            <div class="col-auto">
+                                <h6 class="title">Apple Watch</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Apple Watch SE</a></li>
+                                    <li><a href="#">Apple Watch Series 9</a></li>
+                                    <li><a href="#">Apple Watch Ultra 2</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-auto">
+                                <h6 class="title">Thương hiệu khác</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Samsung</a></li>
+                                    <li><a href="#">Garmin</a></li>
+                                    <li><a href="#">Xiaomi</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item has-megamenu">
+                    <a class="nav-link" href="#">Phụ kiện</a>
+                    <div class="dropdown-menu megamenu" role="menu">
+                        <div class="row">
+                            <div class="col-auto">
+                                <h6 class="title">Phụ kiện Apple</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Sạc, Cáp</a></li>
+                                    <li><a href="#">AirPods</a></li>
+                                    <li><a href="#">Ốp lưng</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a class="nav-link" href="index.php?act=danhmuc&id=4">Thu Máy cũ</a></li>
             </ul>
         </div>
     </nav>
