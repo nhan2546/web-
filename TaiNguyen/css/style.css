@@ -612,15 +612,19 @@ tbody tr:hover {
     background-color: #25D366; /* Đổi sang màu xanh lá cây giống nút SĐT ở trang đăng nhập */
 }
 
-/* --- TRANG ĐĂNG NHẬP / ĐĂNG KÝ --- */
+/* TRANG ĐĂNG NHẬP / ĐĂNG KÝ  */
 /* Vùng bao bọc form, đảm bảo nó chiếm đủ không gian và căn giữa */
 .auth-page-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 50px 0;
     flex-grow: 1; 
 }
 
 /* Khung bao bọc form đăng nhập/đăng ký */
 .auth-form-container {
+    text-align: center;
     background: #fff;
     padding: 40px;
     margin: 0 auto; /* Căn giữa form theo chiều ngang */
@@ -649,11 +653,16 @@ tbody tr:hover {
 
 /* Ô nhập liệu trong form */
 .auth-form-container .form-control {
-    border-radius: 8px;
-    padding: 12px 15px;
-    border: 1px solid #ced4da;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  width: 100%;
+  max-width: 360px;    /* tùy chỉnh độ rộng mong muốn */
+  height: 45px;        /* cùng chiều cao */
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 12px;
+  box-sizing: border-box;
 }
+
 
 /* Hiệu ứng khi click vào ô nhập liệu */
 .auth-form-container .form-control:focus {
@@ -662,11 +671,11 @@ tbody tr:hover {
 }
 
 /* Nút bấm chính trong form */
-.auth-form-container .btn-primary {
-    padding: 12px;
-    font-weight: bold;
-    border-radius: 8px;
-    margin-bottom: 10px;
+.auth-form-container .btn-primary{
+  display:block;
+  width:100%;
+  max-width: 200px;                  /* tùy chỉnh kích thước nút */
+  margin: 8px auto 0;                /* ra giữa */
 }
 
 /* Đường kẻ và chữ "hoặc" ngăn cách giữa các phương thức đăng nhập */
@@ -1178,19 +1187,19 @@ body.admin-body {
 
 /* --- TÙY CHỈNH NÚT ẨN/HIỆN MẬT KHẨU --- */
 /* Ghi đè lên input-group của Bootstrap để nút nằm bên trong input */
-.auth-form-container .input-group {
+.auth-form-container div[style*="position: relative"] {
     position: relative;
 }
 
 /* Thêm khoảng trống bên phải cho ô input để chứa nút */
-.auth-form-container .input-group input[type="password"],
-.auth-form-container .input-group input[type="text"] {
+.auth-form-container input[type="password"],
+.auth-form-container input[type="text"] {
     padding-right: 48px; /* Độ rộng của nút + khoảng đệm */
 }
 
 /* Định vị lại nút bấm vào bên trong ô input */
-.auth-form-container .input-group #togglePassword,
-.auth-form-container .input-group #toggleConfirmPassword {
+.auth-form-container #togglePassword,
+.auth-form-container #toggleConfirmPassword {
     position: absolute;
     right: 10px; /* Tạo khoảng đệm bên phải */
     top: 50%; /* Đặt vị trí ở giữa theo chiều dọc */

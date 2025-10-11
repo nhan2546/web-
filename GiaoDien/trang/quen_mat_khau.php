@@ -1,7 +1,7 @@
 <div class="auth-page-wrapper">
     <div class="auth-form-container">
         <h3 class="auth-form-title">Đặt Lại Mật Khẩu</h3>
-        <p class="text-center text-muted mb-4">Nhập email của bạn để nhận hướng dẫn đặt lại mật khẩu.</p>
+        <p class="text-center text-muted mb-4">Nhập email của bạn để  đặt lại mật khẩu.</p>
         
         <!-- TODO: Thêm logic xử lý thông báo lỗi/thành công ở đây -->
 
