@@ -678,6 +678,7 @@ tbody tr:hover {
     padding: 12px;
     font-weight: bold;
     border-radius: 8px;
+    margin-bottom: 10px;
 }
 
 /* Đường kẻ và chữ "hoặc" ngăn cách giữa các phương thức đăng nhập */
@@ -715,6 +716,8 @@ tbody tr:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+   
+    margin-bottom: 20px;
 }
 .btn-facebook:hover {
     background-color: #166fe5;
@@ -732,6 +735,8 @@ tbody tr:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    
+    margin-bottom: 20px;
     
 }
 .btn-google:hover {
@@ -1183,4 +1188,30 @@ body.admin-body {
     background: #f1f1f1;
     color: #333;
     border-radius: 18px 18px 18px 0;
+}
+
+/* --- TÙY CHỈNH NÚT ẨN/HIỆN MẬT KHẨU --- */
+/* Ghi đè lên input-group của Bootstrap để nút nằm bên trong input */
+.auth-form-container .input-group {
+    position: relative;
+}
+
+/* Thêm khoảng trống bên phải cho ô input để chứa nút */
+.auth-form-container .input-group input[type="password"],
+.auth-form-container .input-group input[type="text"] {
+    padding-right: 48px; /* Độ rộng của nút + khoảng đệm */
+}
+
+/* Định vị lại nút bấm vào bên trong ô input */
+.auth-form-container .input-group #togglePassword,
+.auth-form-container .input-group #toggleConfirmPassword {
+    position: absolute;
+    right: 10px; /* Tạo khoảng đệm bên phải */
+    top: 50%; /* Đặt vị trí ở giữa theo chiều dọc */
+    transform: translateY(-50%); /* Căn chỉnh lại cho chính xác */
+    height: 100%; /* Đảm bảo nút có cùng chiều cao với input */
+    z-index: 10; /* Đảm bảo nút nằm trên input */
+    border: none; /* Bỏ viền của nút */
+    background: transparent; /* Bỏ nền của nút */
+    cursor: pointer; /* Thêm con trỏ chuột khi di vào */
 }
