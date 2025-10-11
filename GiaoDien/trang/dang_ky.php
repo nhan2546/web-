@@ -1,4 +1,4 @@
-<div class="container auth-page-wrapper">
+<div class="auth-page-wrapper">
     <div class="auth-form-container">
         <h3 class="auth-form-title">Đăng ký tài khoản</h3>
         <?php
@@ -36,19 +36,29 @@
                     <input type="email" class="form-control" id="email" name="email" required>
                 </div>
             </div>
-            <div class="row mb-4">
+            <div class="row mb-3">
                 <label for="password" class="col-sm-4 col-form-label">Mật khẩu</label>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" id="password" name="password" required>
+                    <div style="position: relative;"> <!-- Bọc trong một div có position: relative -->
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="confirm_password" class="col-sm-4 col-form-label">Xác nhận Mật khẩu</label>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                    <div style="position: relative;"> <!-- Bọc trong một div có position: relative -->
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                        <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="d-grid mb-4">
+            <div class="d-grid mb-3">
                 <button type="submit" class="btn btn-primary">Đăng ký</button>
             </div>
         </form>
