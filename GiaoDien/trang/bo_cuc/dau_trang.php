@@ -77,4 +77,4 @@
         </div>
     </nav>
     <main class="main py-4">
-        <div class="main-content-wrapper">
+        <div class="container">

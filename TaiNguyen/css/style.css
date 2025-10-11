@@ -461,15 +461,6 @@ tbody tr:hover {
     background: #2980b9; 
 }
 
-/* --- WRAPPER CHUNG CHO NỘI DUNG --- */
-/* Lớp bao bọc nội dung chính, giới hạn chiều rộng và căn giữa */
-.main-content-wrapper {
-    max-width: 1280px; 
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 /* --- TRANG GIỎ HÀNG --- */
 /* Khung chính của trang giỏ hàng */
 .cart-section {
@@ -626,16 +617,13 @@ tbody tr:hover {
 .auth-page-wrapper {
     padding: 50px 0;
     flex-grow: 1; 
-    /* Thêm flexbox để căn giữa form */
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* Khung bao bọc form đăng nhập/đăng ký */
 .auth-form-container {
     background: #fff;
     padding: 40px;
+    margin: 0 auto; /* Căn giữa form theo chiều ngang */
     border-radius: 12px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     border: 1px solid #e9ecef;
@@ -684,7 +672,7 @@ tbody tr:hover {
 /* Đường kẻ và chữ "hoặc" ngăn cách giữa các phương thức đăng nhập */
 .divider-text {
     text-align: center;
-    margin: 20px 0;
+    margin: 15px 0;
     color: #6c757d;
     position: relative;
     text-transform: uppercase;
@@ -697,7 +685,7 @@ tbody tr:hover {
     content: '';
     position: absolute;
     top: 50%;
-    width: 38%;
+    width: 30%;
     height: 1px;
     background-color: #dee2e6;
 }
@@ -716,8 +704,7 @@ tbody tr:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-   
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 .btn-facebook:hover {
     background-color: #166fe5;
@@ -735,8 +722,7 @@ tbody tr:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     
 }
 .btn-google:hover {

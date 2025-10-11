@@ -1,4 +1,5 @@
-    </main> <!-- Đóng thẻ main từ file dau_trang.php -->
+        </div> <!-- Đóng thẻ .container từ dau_trang.php -->
+    </main> <!-- Đóng thẻ main từ dau_trang.php -->
     <!-- CÁC NÚT LIÊN HỆ NỔI -->
     <div class="contact-float">
         <!-- Nút Chatbot AI -->

@@ -1,4 +1,4 @@
-<div class="container auth-page-wrapper">
+<div class="auth-page-wrapper">
     <div class="auth-form-container">
         <h3 class="auth-form-title">Đăng ký tài khoản</h3>
         <?php
@@ -36,7 +36,7 @@
                     <input type="email" class="form-control" id="email" name="email" required>
                 </div>
             </div>
-            <div class="row mb-4">
+            <div class="row mb-3">
                 <label for="password" class="col-sm-4 col-form-label">Mật khẩu</label>
                 <div class="col-sm-8">
                     <div class="input-group">
@@ -58,7 +58,7 @@
                     </div>
                 </div>
             </div>
-            <div class="d-grid mb-4">
+            <div class="d-grid mb-3">
                 <button type="submit" class="btn btn-primary">Đăng ký</button>
             </div>
         </form>

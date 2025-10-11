@@ -2,7 +2,7 @@
 $cart = $_SESSION['cart'] ?? [];
 $total_price = 0;
 ?>
-<div class="container cart-section">
+<div class="cart-section">
     <h2 class="mb-4">Giỏ Hàng Của Bạn</h2>
     <?php if (empty($cart)): ?>
         <div class="alert alert-info text-center">Giỏ hàng của bạn đang trống. <a href="index.php?act=hienthi_sp">Bắt đầu mua sắm</a>!</div>
