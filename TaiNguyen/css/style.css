@@ -41,29 +41,31 @@ body {
 /* Định dạng cho tiêu đề/logo của cửa hàng */
 .shop-title {
     margin: 0; 
-    font-size: 28px; 
+    font-size: 28px;
+    border-bottom: none; 
+    padding-bottom: 0; 
 }
 
 /* Định dạng cho liên kết của logo */
 .shop-title-link {
     text-decoration: none;
     color: inherit;
-    display: flex; /* Bật flexbox để căn chỉnh logo và chữ */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    gap: 12px; /* Khoảng cách giữa logo và chữ */
+    display: flex; 
+    align-items: center; 
+    gap: 12px;
 }
 
 /* Định dạng cho ảnh logo */
 .shop-logo {
-    height: 40px; /* Điều chỉnh chiều cao của logo nếu cần */
-    width: auto; /* Chiều rộng tự động để giữ tỷ lệ */
+    height: 40px; 
+    width: auto;
 }
 
 /* thanh tìm kiếm trên header */
 /* Vùng chứa thanh tìm kiếm */
 .header-search-container {
      padding: 0 40px;
-     position: relative; /* Cần thiết để định vị khung kết quả */
+     position: relative; 
 }
 
 /* Form tìm kiếm */
@@ -369,63 +371,6 @@ tbody tr:hover {
     color: #212529; 
     font-weight: normal;
 }
-
-/* các khối css không còn sử dụng (đã xóa) */
-/* Chi tiết */
-.order-details-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.detail-box {
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 5px;
-}
-
-.detail-box h2 {
-    margin-top: 0;
-    font-size: 18px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-}
-
-.detail-box p {
-    margin: 8px 0;
-    line-height: 1.6;
-}
-
-.detail-box p strong {
-    display: inline-block;
-    width: 120px;
-    color: #555;
-}
-
-.product-image {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-right: 15px;
-    border: 1px solid #eee;
-}
-
-.back-link {
-    display: inline-block;
-    margin-bottom: 20px;
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.back-link:hover {
-    text-decoration: underline;
-}
-
-/* trang danh sách sản phẩm */
 /* Lưới hiển thị các sản phẩm */
 .danh_sach_san_pham {
     display: grid;
@@ -594,6 +539,9 @@ tbody tr:hover {
     bottom: 80px;
     right: 20px;
     z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 /* Định dạng chung cho từng nút liên hệ */
@@ -604,7 +552,7 @@ tbody tr:hover {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    color: white;
+    color: #ffffff; /* Đổi màu icon SVG (như icon điện thoại) sang màu trắng */
     text-decoration: none;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     overflow: hidden; /* Ẩn các phần ảnh thừa ra ngoài hình tròn */
@@ -614,7 +562,8 @@ tbody tr:hover {
 .contact-item img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Đảm bảo ảnh lấp đầy và giữ tỷ lệ */
+    object-fit: cover;
+    border-radius: 50%; /* Đảm bảo ảnh bên trong cũng được bo tròn */
 }
 
 .contact-item:hover {
@@ -624,38 +573,15 @@ tbody tr:hover {
 /* Nút Zalo */
 .contact-item.zalo {
     background-color: #0068ff;
-    position: fixed;
-    bottom: 144px;
-    right: 20px;
 }
 .contact-item.zalo img {
     width: 32px;
     height: 32px;
 }
 
+/* Nút Gọi điện */
 .contact-item.phone {
-    background-color: #25D366; /* Đổi sang màu xanh lá cây giống nút SĐT ở trang đăng nhập */
-    position: fixed;
-    bottom: 82px;
-    right: 20px;
-}
-
-/* Tùy chỉnh vị trí cho nút bấm của Rasa Webchat */
-.rasa-widget-launcher {
-    position: fixed !important;
-    bottom: 20px !important; /* Đặt ở vị trí thấp nhất */
-    right: 20px !important;
-    z-index: 1002 !important; /* Đảm bảo nó nổi lên trên tất cả */
-}
-
-/* trang đăng nhập / đăng ký */
-/* Vùng bao bọc form, đảm bảo nó chiếm đủ không gian và căn giữa */
-.auth-page-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 50px 0;
-    flex-grow: 1; 
+    background-color: #25D366;
 }
 
 /* Khung bao bọc form đăng nhập/đăng ký */
@@ -1072,14 +998,8 @@ body.admin-body {
     cursor: pointer;
     z-index: 1000;
     transition: transform 0.2s ease-in-out;
-    background-color: #fff; 
-    border: none; 
-}
-
-.chatbot-toggler:not(.contact-item) {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    background-color: #ffffff; /* Thêm màu nền xanh cho nút AI */
+    padding: 0; /* Xóa padding mặc định của button */
 }
 
 /* CSS để ẩn/hiện icon trên nút chatbot */
@@ -1101,7 +1021,7 @@ body.admin-body {
 }
 .chatbot-toggler .icon-close {
     opacity: 0;
-    color: #333; 
+    color: #ffffff; 
     transform: rotate(-90deg);
 }
 .chatbot-toggler.show-close .icon-close {
@@ -1116,12 +1036,12 @@ body.admin-body {
 /* Cửa sổ chatbot */
 .chatbot-container {
     position: fixed;
-    bottom: 200px; 
-    right: 90px;  
+    bottom: 200px; /* Căn chỉnh theo chiều dọc với nhóm nút */
+    right: 82px;  /* Đặt bên trái nhóm nút */
     width: 300px; 
     background: #fff;
     border-radius: 15px;
-    box-shadow: 0 0 128px 0 rgba(0,0,0,0.1), 0 32px 64px -48px rgba(0,0,0,0.5);
+    box-shadow: 0 0 128px 0 rgba(253, 253, 253, 0.1), 0 32px 64px -48px rgba(0,0,0,0.5);
     overflow: hidden;
     opacity: 0;
     pointer-events: none;
@@ -1138,7 +1058,7 @@ body.admin-body {
 }
 /* Header của chatbot (giữ nguyên) */
 .chatbot-header {
-    background: #3498db; 
+    background: linear-gradient(135deg, #3498db, #2980b9);
     color: #fff;
     padding: 16px 0;
     text-align: center;
@@ -1149,21 +1069,75 @@ body.admin-body {
     margin: 0;
 }
 
-/* Khung hiển thị tin nhắn (giữ nguyên) */
+/* Khung hiển thị tin nhắn  */
 .chatbot-box {
     height: 250px; 
     overflow-y: auto;
-    padding: 20px;
-    background: #f9f9f9; /* Thêm màu nền nhẹ cho dễ nhìn */
+    padding: 20px 20px 10px;
+    background: #ffffff;
+}
+
+/* Tùy chỉnh thanh cuộn cho đẹp hơn */
+.chatbot-box::-webkit-scrollbar {
+    width: 6px;
+}
+.chatbot-box::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 6px;
+}
+.chatbot-box::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 6px;
 }
 
 /* Vùng nhập liệu (giữ nguyên) */
 .chat-input {
     display: flex;
     gap: 5px;
-    padding: 10px 20px;
-    border-top: 1px solid #ddd;
+    align-items: center; 
+    padding: 5px 10px; 
+    border-top: 1px solid #f0f0f0;
     background: #fff;
+    margin: 10px;
+    border-radius: 25px; 
+    border: 1px solid #f0f0f0;
+    transition: border-color 0.2s ease;
+}
+
+/* Hiệu ứng khi người dùng click vào khung nhập liệu */
+.chat-input:focus-within {
+    border-color: #3498db;
+}
+
+.chat-input textarea {
+    flex-grow: 1; /* Cho phép textarea co giãn lấp đầy không gian */
+    border: none;
+    outline: none;
+    resize: none;
+    font-size: 0.95rem;
+    padding: 8px 5px;
+    background: transparent;
+    max-height: 80px; /* Giới hạn chiều cao tối đa khi gõ nhiều */
+}
+
+/* Nút gửi tin nhắn */
+#send-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0; /* Ngăn nút bị co lại */
+    transition: background-color 0.2s ease;
+}
+
+#send-btn:hover {
+    background: #2980b9;
 }
 
 /* --- ĐỊNH DẠNG LẠI PHẦN TIN NHẮN --- */
@@ -1217,15 +1191,15 @@ body.admin-body {
 
 /* Tùy chỉnh bong bóng chat của bot */
 .chat-message.bot .message-content p {
-    background: #3498db;
-    color: #fff;
+    background: #e9ecef;
+    color: #333;
     border-bottom-left-radius: 0; /* Tạo hiệu ứng "đuôi" cho bong bóng chat */
 }
 
 /* Tùy chỉnh bong bóng chat của người dùng */
 .chat-message.user .message-content p {
-    background: #f1f1f1;
-    color: #333;
+    background: #3498db;
+    color: #fff;
     border-bottom-right-radius: 0; /* Tạo hiệu ứng "đuôi" cho bong bóng chat */
 }
 
