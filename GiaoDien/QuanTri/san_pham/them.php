@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> c922697982852a140e64231188e9a735ea6bbb31
 <div class="admin-card">
     <div class="admin-card-header">
         Thêm sản phẩm mới
@@ -40,4 +43,11 @@
             <div class="d-flex justify-content-end">
                 <a href="admin.php?act=ds_sanpham" class="admin-btn" style="background-color: #6c757d; color: white; margin-right: 10px;">Hủy</a>
                 <button type="submit" class="admin-btn admin-btn-primary">Thêm sản phẩm</button>
+<<<<<<< HEAD
             </div>
+=======
+            </div>
+        </form>
+    </div>
+</div>
+>>>>>>> c922697982852a140e64231188e9a735ea6bbb31
