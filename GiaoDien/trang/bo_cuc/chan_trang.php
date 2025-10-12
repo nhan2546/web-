@@ -2,18 +2,21 @@
     </main> <!-- Đóng thẻ main từ dau_trang.php -->
     <!-- CÁC NÚT LIÊN HỆ NỔI -->
     <div class="contact-float">
-        <!-- Nút Zalo -->
-        <a href="https://zalo.me/0837277347" target="_blank" class="contact-item zalo">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
-        </a>
-        <!-- Nút Gọi điện --> 
-        <a href="tel: 0837277347" class="contact-item phone">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.28 1.465l-2.135 2.136a11.942 11.942 0 0 0 5.586 5.586l2.136-2.135a1.745 1.745 0 0 1 1.465-.28l2.305 1.152a1.745 1.745 0 0 1 .163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03.003-2.137.703-2.877L1.885.511z"/></svg>
-        </a>
+        <!-- Nhóm chứa Zalo và Gọi điện -->
+        <div class="contact-group">
+            <!-- Nút Zalo -->
+            <a href="https://zalo.me/0837277347" target="_blank" class="contact-item zalo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
+            </a>
+            <!-- Nút Gọi điện --> 
+            <a href="tel: 0837277347" class="contact-item phone">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.28 1.465l-2.135 2.136a11.942 11.942 0 0 0 5.586 5.586l2.136-2.135a1.745 1.745 0 0 1 1.465-.28l2.305 1.152a1.745 1.745 0 0 1 .163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03.003-2.137.703-2.877L1.885.511z"/></svg>
+            </a>
+        </div>
+        <!-- TÍCH HỢP RASA WEBCHAT -->
+        <div id="rasa-webchat-container"></div>
     </div>
 
-<!-- TÍCH HỢP RASA WEBCHAT -->
-<div id="rasa-webchat-container"></div>
 <script src="https://unpkg.com/rasa-webchat@^1/lib/index.js" async></script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -39,20 +42,6 @@
   });
 </script>
 <!-- KẾT THÚC TÍCH HỢP RASA WEBCHAT -->
-
-<!-- TÙY CHỈNH VỊ TRÍ CHO RASA WEBCHAT -->
-<style>
-    .rasa-widget-launcher {
-        /* Vị trí mặc định của container các nút nổi là bottom: 80px */
-        /* Nút Điện thoại (cao 50px) chiếm từ 80px đến 130px */
-        /* Khoảng trống (gap) là 12px */
-        /* Nút Zalo (cao 50px) chiếm từ 142px đến 192px */
-        /* Đặt nút Rasa ở trên Zalo, với một khoảng trống 12px */
-        bottom: 204px !important; 
-        right: 20px !important; /* Giữ nguyên khoảng cách phải là 20px */
-    }
-</style>
-<!-- KẾT THÚC TÙY CHỈNH VỊ TRÍ -->
 <script>
         // --- JAVASCRIPT CHO TÌM KIẾM TRỰC TIẾP ---
         const searchInput = document.getElementById('search-input');

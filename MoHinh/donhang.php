@@ -21,6 +21,19 @@ class donhang {
     }
 
     /**
+     * Lấy danh sách đơn hàng của một người dùng cụ thể.
+     * @param int $userId ID của người dùng.
+     * @return array Mảng chứa các đơn hàng của người dùng đó.
+     */
+    public function getOrdersByUserId($userId) {
+        $db = new CSDL();
+        $sql = "SELECT * FROM orders WHERE user_id = ? ORDER BY order_date DESC";
+        $stmt = $db->conn->prepare($sql);
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * Lấy toàn bộ thông tin chi tiết của MỘT đơn hàng.
      * Bao gồm thông tin đơn hàng, thông tin khách hàng và danh sách sản phẩm trong đơn.
      * @param int $orderId ID của đơn hàng cần xem.
