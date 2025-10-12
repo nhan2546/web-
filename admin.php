@@ -31,6 +31,9 @@ switch ($act) {
     case 'ds_sanpham':
         $adminController->ds_sanpham();
         break;
+    case 'them_sp': // Route mới để hiển thị form
+        $adminController->hienthi_themsp();
+        break;
     case 'xl_themsp': // Route mới để xử lý thêm sản phẩm
         $adminController->xl_themsp();
         break;

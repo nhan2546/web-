@@ -24,6 +24,11 @@ class DieuKhienQuanTri {
         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php';
     }
 
+    // Chức năng: Hiển thị form thêm sản phẩm
+    public function hienthi_themsp() {
+        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
+    }
+
     // Chức năng: Hiển thị danh sách đơn hàng
     public function ds_donhang() {
         $dh_model = new donhang($this->pdo);
