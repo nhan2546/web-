@@ -85,14 +85,17 @@ class DieuKhienXacThuc {
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_role'] = $user['role'];
 
-                // Chuyển hướng dựa trên vai trò
+                // PHÂN LOẠI VÀ CHUYỂN HƯỚNG DỰA TRÊN VAI TRÒ
                 if ($user['role'] === 'admin' || $user['role'] === 'staff') {
+                    // Nếu là admin hoặc nhân viên, chuyển đến trang quản trị
                     header('Location: admin.php');
-                    exit;
+                } else {
+                    // Nếu là người dùng thường, chuyển về trang chủ
+                    header('Location: index.php?act=trangchu');
                 }
-                header('Location: index.php?act=trangchu'); // Sửa lỗi: Chuyển hướng người dùng thường về trang chủ
                 exit;
             } else {
+                // Nếu thông tin không hợp lệ, quay lại trang đăng nhập với thông báo lỗi
                 header('Location: index.php?act=dang_nhap&error=invalid_credentials');
                 exit;
             }

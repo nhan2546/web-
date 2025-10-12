@@ -189,16 +189,9 @@ class sanpham {
     }
 
     /*cap nhat san pham*/
-    public function capnhatsp(sanpham $sp){
+    public function capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id){
         $sql = "UPDATE products SET name = ?, description = ?, price = ?, image_url = ?, stock_quantity = ?, category_id = ? WHERE id = ?";
         $stmt = $this->db->prepare($sql);
-        $name = $sp->getName();
-        $description = $sp->getDecribe();
-        $price = $sp->getPrice();
-        $image_url = $sp->getImage();
-        $stock_quantity = $sp->getMount();
-        $category_id = $sp->getId_danhmuc();
-        $id = $sp->getId();
         $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id, $id]);
     }
 

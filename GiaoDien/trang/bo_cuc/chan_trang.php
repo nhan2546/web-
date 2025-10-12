@@ -25,60 +25,16 @@
 
     <!-- CÁC NÚT LIÊN HỆ NỔI -->
     <div class="contact-float">
-<<<<<<< HEAD
         <!-- Nút Zalo -->
         <a href="https://zalo.me/0837277347" target="_blank" class="contact-item zalo">
             <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
         </a>
         <!-- Nút Gọi điện -->
         <a href="tel: 0837277347" class="contact-item phone">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.28 1.465l-2.135 2.136a11.942 11.942 0 0 0 5.586 5.586l2.136-2.135a1.745 1.745 0 0 1 1.465-.28l2.305 1.152a1.745 1.745 0 0 1 .163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03.003-2.137.703-2.877L1.885.511z"/></svg>
-        </a>
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.28 1.465l-2.135 2.136a11.942 11.942 0 0 0 5.586 5.586l2.136-2.135a1.745 1.745 0 0 1 1.465-.28l2.305 1.152a1.745 1.745 0 0 1 .163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03.003-2.137.703-2.877L1.885.511z"/></svg>
+         </a>
     </div>
-
-=======
-        <!-- Nhóm chứa Zalo và Gọi điện -->
-        <div class="contact-group">
-            <!-- Nút Zalo -->
-            <a href="https://zalo.me/0837277347" target="_blank" class="contact-item zalo">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
-            </a>
-            <!-- Nút Gọi điện --> 
-            <a href="tel: 0837277347" class="contact-item phone">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.28 1.465l-2.135 2.136a11.942 11.942 0 0 0 5.586 5.586l2.136-2.135a1.745 1.745 0 0 1 1.465-.28l2.305 1.152a1.745 1.745 0 0 1 .163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03.003-2.137.703-2.877L1.885.511z"/></svg>
-            </a>
-        </div>
-        <!-- TÍCH HỢP RASA WEBCHAT -->
-        <div id="rasa-webchat-container"></div>
-    </div>
-
-<script src="https://unpkg.com/rasa-webchat@^1/lib/index.js" async></script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    
-    window.WebChat.default(
-      {
-        initPayload: "/greet",
-        customData: { language: "vi" }, // Đặt ngôn ngữ là Tiếng Việt
-        socketUrl: "http://localhost:5005",
-        title: "Trợ lý AI",
-        subtitle: "Sẵn sàng giúp đỡ bạn",
-        inputTextFieldHint: "Nhập tin nhắn...",
-        connectingText: "Đang kết nối...",
-        profileAvatar: "TaiNguyen/hinh_anh/Chatbot Chat Message.jpg", // Đường dẫn đến avatar của bot
-        openLauncherImage: 'TaiNguyen/hinh_anh/Chatbot Chat Message.jpg', // Icon lúc ban đầu
-        closeLauncherImage: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGxpbmUgeDE9IjE4IiB5MT0iNiIgeDI9IjYiIHkyPSIxOCI+PC9saW5lPjxsaW5lIHgxPSI2IiB5MT0iNiIgeDI9IjE4IiB5Mj0iMTgiPjwvbGluZT48L3N2Zz4=', // Icon dấu X khi mở
-        params: {
-          storage: "session" // "local" or "session"
-        }
-      },
-      null
-    );
-  });
-</script>
-<!-- KẾT THÚC TÍCH HỢP RASA WEBCHAT -->
->>>>>>> 6a67568bcba0b1e7e07d820b7af683704f185830
-<script>
+ <script>
         // --- JAVASCRIPT CHO TÌM KIẾM TRỰC TIẾP ---
         const searchInput = document.getElementById('search-input');
         const resultsContainer = document.getElementById('search-results-container');
