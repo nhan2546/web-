@@ -1437,3 +1437,24 @@ body.admin-body {
 .profile-summary-card .btn-outline-danger:hover {
     color: #fff;
 }
+
+/* Định dạng cho khu vực thông tin người dùng trên header admin */
+.admin-header .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Khoảng cách giữa lời chào và nút đăng xuất */
+}
+
+/* Nút đăng xuất */
+.admin-logout-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e74c3c; /* Màu đỏ cho hành động nguy hiểm */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.admin-logout-link:hover {
+    color: #c0392b; /* Màu đỏ đậm hơn khi rê chuột */
+}
