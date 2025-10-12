@@ -12,6 +12,7 @@
         <div class="container">
             <div class="header-content">
                 <a href="index.php?act=trangchu" class="shop-title-link">
+                    <img src="TaiNguyen/hinh_anh/ChatGPT Image Oct 12, 2025, 01_19_04 PM.png" alt="Shop Táo Ngon Logo" class="shop-logo">
                     <h1 class="shop-title">Shop Táo Ngon</h1>
                 </a>
                 <!-- Thanh tìm kiếm ở giữa -->
@@ -38,7 +39,7 @@
                     </a>
                     <?php if (isset($_SESSION['user_fullname'])): ?>
                         <!-- Tên tài khoản -->
-                        <a href="#" title="Tài khoản của bạn" class="header-action-item">
+                        <a href="index.php?act=thong_tin_tai_khoan" title="Tài khoản của bạn" class="header-action-item">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
                             </svg>
@@ -74,7 +75,7 @@
             <ul class="nav-list main-nav">
                 <!-- Ví dụ về Mega Menu cho mục Điện thoại -->
                 <li class="nav-item has-megamenu">
-                    <a class="nav-link" href="#">Điện thoại</a>
+                    <a class="nav-link" href="index.php?act=danhmuc&id=1">Điện thoại</a>
                     <div class="dropdown-menu megamenu" role="menu">
                         <div class="row">
                             <div class="col-auto">
@@ -117,7 +118,7 @@
                     </div>
                 </li>
                 <li class="nav-item has-megamenu">
-                    <a class="nav-link" href="#">Laptop</a>
+                    <a class="nav-link" href="index.php?act=danhmuc&id=2">Laptop</a>
                     <div class="dropdown-menu megamenu" role="menu">
                         <div class="row">
                             <div class="col-auto">
@@ -157,7 +158,7 @@
                     </div>
                 </li>
                 <li class="nav-item has-megamenu">
-                    <a class="nav-link" href="#">Đồng hồ Thông Minh</a>
+                    <a class="nav-link" href="index.php?act=danhmuc&id=3">Đồng hồ Thông Minh</a>
                     <div class="dropdown-menu megamenu" role="menu">
                         <div class="row">
                             <div class="col-auto">
@@ -199,7 +200,7 @@
                     </div>
                 </li>
                 <li class="nav-item has-megamenu">
-                    <a class="nav-link" href="#">Phụ kiện</a>
+                    <a class="nav-link" href="index.php?act=danhmuc&id=4">Phụ kiện</a>
                     <div class="dropdown-menu megamenu" role="menu">
                         <div class="row">
                             <div class="col-auto">
@@ -232,7 +233,7 @@
                         </div>
                     </div>
                 </li>
-                <li><a class="nav-link" href="index.php?act=danhmuc&id=4">Thu Máy cũ</a></li>
+                <li><a class="nav-link" href="index.php?act=danhmuc&id=5">Thu Máy cũ</a></li>
             </ul>
         </div>
     </nav>

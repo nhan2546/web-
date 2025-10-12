@@ -31,10 +31,17 @@ switch ($act) {
     case 'ds_sanpham':
         $adminController->ds_sanpham();
         break;
+<<<<<<< HEAD
     case 'them_sp': // Route để hiển thị form thêm
         $adminController->them_sp();
         break;
     case 'xl_themsp': // Route để xử lý logic thêm sản phẩm
+=======
+    case 'them_sp': // Route mới để hiển thị form
+        $adminController->hienthi_themsp();
+        break;
+    case 'xl_themsp': // Route mới để xử lý thêm sản phẩm
+>>>>>>> afca77cd971748c14b4406f6a402e47fed186b97
         $adminController->xl_themsp();
         break;
     case 'xoa_sp': // Route để xử lý xóa sản phẩm
