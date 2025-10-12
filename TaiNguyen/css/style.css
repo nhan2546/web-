@@ -540,8 +540,7 @@ h1 {
 
 /* Ô nhập liệu trong form */
 .auth-form-container .form-control {
-  width: 100%;
-  max-width: 360px;    /* tùy chỉnh độ rộng mong muốn */
+  width: 70%;
   height: 45px;        /* cùng chiều cao */
   padding: 10px 15px;
   border-radius: 8px;
@@ -559,10 +558,29 @@ h1 {
 
 /* Nút bấm chính trong form */
 .auth-form-container .btn-primary{
-  display:block;
-  width:100%;
-  max-width: 200px;                  /* tùy chỉnh kích thước nút */
-  margin: 8px auto 0;                /* ra giữa */
+  width: 100%;
+}
+
+/* Vùng chứa nút đăng nhập chính */
+.main-login-btn-wrapper {
+    width: 70%;
+    margin: 0 auto; /* Căn giữa */
+}
+
+/* Nút bấm chính và các nút social trong form */
+.auth-form-container .btn {
+    padding: 12px;
+    font-weight: 500;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+}
+.auth-form-container .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 /* Đường kẻ và chữ "hoặc" ngăn cách giữa các phương thức đăng nhập */
@@ -589,17 +607,17 @@ h1 {
 .divider-text::before { left: 0; }
 .divider-text::after { right: 0; }
 
+/* Vùng chứa các nút đăng nhập social */
+.social-login-wrapper {
+    width: 70%; /* Cùng chiều rộng với ô input */
+    margin: 0 auto; /* Căn giữa */
+}
+
 /* Nút Đăng nhập với Facebook */
 .btn-facebook {
     background-color: #1877F2;
     border: 1px solid #1877F2;
     color: #fff;
-    padding: 12px;
-    font-weight: 500;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     margin-bottom: 12px;
 }
 .btn-facebook:hover {
@@ -612,12 +630,6 @@ h1 {
     background-color: #ffffff;
     border: 1px solid #1877F2;
     color: #000000;
-    padding: 12px;
-    font-weight: 500;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     margin-bottom: 12px;
     
 }
@@ -637,12 +649,6 @@ h1 {
     background-color: #25D366;
     border: 1px solid #25D366;
     color: #fff;
-    padding: 12px;
-    font-weight: 500;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }   
 .btn-phone:hover {
     background-color: #1ebe5a;
@@ -669,250 +675,6 @@ h1 {
     color: #434343;
 }
 
-/* giao diện trang quản trị (admin) */
-/* Định nghĩa các biến màu và kích thước cho trang admin */
-:root {
-    --admin-bg: #f4f7f6;
-    --sidebar-bg: #2c3e50;
-    --sidebar-width: 250px;
-    --text-light: #ecf0f1;
-    --text-muted: #95a5a6;
-    --primary-color: #3498db;
-    --border-color: #e5e9f2;
-}
-
-/* Định dạng body riêng cho các trang admin */
-body.admin-body {
-    background-color: var(--admin-bg);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #34495e;
-}
-
-/* Vùng bao bọc toàn bộ layout admin */
-.admin-wrapper {
-    display: flex;
-    min-height: 100vh;
-}
-
-/* thanh bên (sidebar) của trang admin */
-/* Định dạng chung cho sidebar */
-.admin-sidebar {
-    width: var(--sidebar-width);
-    background-color: var(--sidebar-bg);
-    color: var(--text-light);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    z-index: 100;
-}
-
-/* Logo/Tên trang web trên sidebar */
-.sidebar-brand {
-    padding: 20px;
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    color: #fff;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Danh sách các mục menu trong sidebar */
-.sidebar-nav {
-    list-style: none;
-    padding: 20px 0;
-    margin: 0;
-    flex-grow: 1;
-}
-
-/* Từng mục menu */
-.sidebar-nav-item a {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px 20px;
-    color: var(--text-light);
-    text-decoration: none;
-    transition: background-color 0.2s, color 0.2s;
-    font-size: 16px;
-}
-
-.sidebar-nav-item a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Định dạng cho mục menu đang được chọn (active) */
-.sidebar-nav-item.active a {
-    background-color: var(--primary-color);
-    color: #fff;
-    font-weight: bold;
-}
-
-.sidebar-nav-item a svg {
-    width: 20px;
-    height: 20px;
-}
-
-/* vùng nội dung chính của trang admin */
-/* Vùng chứa header và nội dung trang */
-.admin-main-content {
-    margin-left: var(--sidebar-width);
-    width: calc(100% - var(--sidebar-width));
-    display: flex;
-    flex-direction: column;
-}
-
-/* Header của trang admin (chứa thông tin user) */
-.admin-header {
-    background-color: #fff;
-    padding: 15px 30px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-/* Thông tin người dùng đăng nhập */
-.user-profile {
-    color: #34495e;
-}
-
-/* Vùng nội dung chính của từng trang (dashboard, product list, ...) */
-.admin-page-content {
-    padding: 30px;
-    flex-grow: 1;
-}
-
-/* Tiêu đề của trang admin (ví dụ: "Bảng điều khiển", "Quản lý sản phẩm") */
-.page-header {
-    margin-bottom: 30px;
-}
-
-.page-header h1 {
-    margin: 0;
-    font-size: 28px;
-    color: #2c3e50;
-}
-
-/* các thành phần giao diện trong trang admin */
-/* Khung thẻ (card) chung để bao bọc nội dung */
-.admin-card {
-    background-color: #fff;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-    margin-bottom: 20px;
-}
-
-/* Tiêu đề của card */
-.admin-card-header {
-    padding: 20px;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 18px;
-    font-weight: 600;
-}
-
-/* Thân của card */
-.admin-card-body {
-    padding: 20px;
-}
-
-/* Lưới các thẻ thống kê trên trang dashboard */
-.dashboard-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-/* Từng thẻ thống kê (doanh thu, đơn hàng, ...) */
-.dashboard-card {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-}
-
-/* Tiêu đề nhỏ của thẻ thống kê */
-.dashboard-card .card-title {
-    font-size: 14px;
-    color: #7f8c8d;
-    margin-bottom: 10px;
-}
-
-/* Giá trị (số liệu) của thẻ thống kê */
-.dashboard-card .card-value {
-    font-size: 32px;
-    font-weight: bold;
-    color: #2c3e50;
-}
-
-/* bảng dữ liệu trong trang admin */
-/* Định dạng chung cho bảng */
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-/* Các ô trong bảng */
-.admin-table th, .admin-table td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.admin-table thead th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #34495e;
-}
-
-.admin-table tbody tr:hover {
-    background-color: #f8f9fa;
-}
-
-/* Các nút hành động (Sửa, Xóa) trong bảng */
-.admin-table .action-buttons a {
-    margin-right: 10px;
-    text-decoration: none;
-}
-
-/* nút bấm trong trang admin */
-/* Định dạng chung cho nút bấm */
-.admin-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.2s;
-}
-
-/* Nút chính (màu xanh) */
-.admin-btn-primary {
-    background-color: var(--primary-color);
-    color: #fff;
-}
-.admin-btn-primary:hover {
-    background-color: #2980b9;
-    color: #fff;
-}
-
-/* Nút nguy hiểm (màu đỏ, dùng cho hành động xóa) */
-.admin-btn-danger {
-    background-color: #e74c3c;
-    color: #fff;
-}
-.admin-btn-danger:hover {
-    background-color: #c0392b;
-    color: #fff;
-}
 
 /* giao diện ai chatbot */
 /* Nút bấm mở chatbot */
@@ -1363,44 +1125,3 @@ body.admin-body {
     color: #fff;
 }
 
-/* Định dạng cho khu vực thông tin người dùng trên header admin */
-.admin-header .user-profile {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* Khoảng cách giữa lời chào và nút đăng xuất */
-}
-
-/* Nút đăng xuất */
-.admin-logout-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #e74c3c; /* Màu đỏ cho hành động nguy hiểm */
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.admin-logout-link:hover {
-    color: #c0392b; /* Màu đỏ đậm hơn khi rê chuột */
-}
-
-/* Định dạng cho khu vực thông tin người dùng trên header admin */
-.admin-header .user-profile {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* Khoảng cách giữa lời chào và nút đăng xuất */
-}
-
-/* Nút đăng xuất */
-.admin-logout-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #e74c3c; /* Màu đỏ cho hành động nguy hiểm */
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.admin-logout-link:hover {
-    color: #c0392b; /* Màu đỏ đậm hơn khi rê chuột */
-}
