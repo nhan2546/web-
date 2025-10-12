@@ -68,7 +68,7 @@ class DieuKhienQuanTri {
     public function them_sp() {
         // Lấy danh sách danh mục để hiển thị trong form
         $dm_model = new danhmuc($this->pdo);
-        $danh_sach_danh_muc = $dm_model->getAllCategories();
+        $danh_sach_danh_muc = $dm_model->getDS_Danhmuc();
         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
     }
 
@@ -117,7 +117,7 @@ class DieuKhienQuanTri {
             $san_pham = $sp_model->getone_sanoham($id); // Lấy thông tin sản phẩm cần sửa
 
             $dm_model = new danhmuc($this->pdo);
-            $danh_sach_danh_muc = $dm_model->getAllCategories(); // Lấy danh sách danh mục
+            $danh_sach_danh_muc = $dm_model->getDS_Danhmuc(); // Lấy danh sách danh mục
 
             if ($san_pham) {
                 include __DIR__ . '/../GiaoDien/QuanTri/san_pham/sua.php';
@@ -169,7 +169,7 @@ class DieuKhienQuanTri {
     // --- QUẢN LÝ DANH MỤC ---
     public function ds_danhmuc() {
         $dm_model = new danhmuc($this->pdo);
-        $danh_sach_danh_muc = $dm_model->getAllCategories();
+        $danh_sach_danh_muc = $dm_model->getDS_Danhmuc();
         include __DIR__ . '/../danh_sach.php';
     }
 
@@ -226,7 +226,7 @@ class DieuKhienQuanTri {
     // --- QUẢN LÝ NGƯỜI DÙNG ---
     public function ds_nguoidung() {
         $user_model = new NguoiDung($this->pdo);
-        $danh_sach_nguoi_dung = $user_model->getAllUsers();
+        $danh_sach_nguoi_dung = $user_model->getDS_NguoiDung();
         include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/danh_sach.php';
     }
 

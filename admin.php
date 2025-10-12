@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], $allowed
 }
 
 // Bao gồm header của trang admin
-include __DIR__ . '/GiaoDien/QuanTri/bo_cuc/dau_trang.php';
+include __DIR__ . '/GiaoDien/QuanTri/nguoi_dung/dau_trang_admin.php';
 
 // 2. KHỞI TẠO
 // Tải các tệp cần thiết và khởi tạo đối tượng.
@@ -95,5 +95,5 @@ switch ($act) {
 }
 
 // Bao gồm footer của trang admin
-include __DIR__ . '/GiaoDien/QuanTri/bo_cuc/chan_trang.php';
+include __DIR__ . '/GiaoDien/QuanTri/nguoi_dung/chan_trang_admin.php';
 ?>

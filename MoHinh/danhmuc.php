@@ -25,22 +25,23 @@ class danhmuc {
      * Thêm một danh mục mới
      * @param string $name Tên của danh mục mới
      */
-    public function themDM($name) {
+    public function addCategory($name) {
         $sql = "INSERT INTO `categories` (`name`) VALUES (?)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([$name]);
     }
 
     /**
-     * Xóa một danh mục theo ID
-     * @param int $id ID của danh mục cần xóa
+     * Cập nhật tên một danh mục
+     * @param int $id ID của danh mục
+     * @param string $name Tên mới của danh mục
      */
-    public function xoaDM($id) {
-        $sql = "DELETE FROM `categories` WHERE id = ?";
+    public function updateCategory($id, $name) {
+        $sql = "UPDATE `categories` SET `name` = ? WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([$id]);
+        return $stmt->execute([$name, $id]);
     }
-    
+
     /**
      * Lấy thông tin một danh mục theo ID
      * @param int $id ID của danh mục
@@ -51,6 +52,15 @@ class danhmuc {
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    // Bạn có thể thêm các hàm khác như cập nhật danh mục ở đây...
+
+    /**
+     * Xóa một danh mục theo ID
+     * @param int $id ID của danh mục cần xóa
+     */
+    public function deleteCategory($id) {
+        $sql = "DELETE FROM `categories` WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$id]);
+    }
 }
 ?>
