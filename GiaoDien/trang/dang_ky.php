@@ -24,41 +24,19 @@
             }
         ?>
         <form action="index.php?act=xu_ly_dang_ky" method="POST" id="register-form" novalidate>
-            <div class="row mb-3">
-                <label for="fullname" class="col-sm-4 col-form-label">Họ và Tên</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" id="fullname" name="fullname" required>
-                </div>
+            <div class="mb-3 position-relative">
+                <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Họ và Tên" required>
             </div>
-            <div class="row mb-3">
-                <label for="email" class="col-sm-4 col-form-label">Email</label>
-                <div class="col-sm-8">
-                    <input type="email" class="form-control" id="email" name="email" required>
-                </div>
+            <div class="mb-3 position-relative">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
             </div>
-            <div class="row mb-3">
-                <label for="password" class="col-sm-4 col-form-label">Mật khẩu</label>
-                <div class="col-sm-8">
-                    <div style="position: relative;"> <!-- Bọc trong một div có position: relative -->
-                        <input type="password" class="form-control" id="password" name="password" required>
-                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>
-                        </button>
-                    </div>
-                </div>
+            <div class="mb-3 position-relative">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" required>
             </div>
-            <div class="row mb-3">
-                <label for="confirm_password" class="col-sm-4 col-form-label">Xác nhận Mật khẩu</label>
-                <div class="col-sm-8">
-                    <div style="position: relative;"> <!-- Bọc trong một div có position: relative -->
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-                        <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>
-                        </button>
-                    </div>
-                </div>
+            <div class="mb-3 position-relative">
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Xác nhận Mật khẩu" required>
             </div>
-            <div class="d-grid mb-3">
+            <div class="main-login-btn-wrapper mb-3">
                 <button type="submit" class="btn btn-primary">Đăng ký</button>
             </div>
         </form>
