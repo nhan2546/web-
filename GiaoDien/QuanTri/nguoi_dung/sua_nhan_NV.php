@@ -1,10 +1,10 @@
 <div class="page-header">
-    <h1>Sửa thông tin Người dùng</h1>
+    <h1>Sửa thông tin Nhân Viên</h1>
 </div>
 
 <div class="admin-card">
     <div class="admin-card-body">
-        <form action="admin.php?act=xl_sua_nguoidung" method="POST">
+        <form action="admin.php?act=xl_sua_nhanvien" method="POST">
             <input type="hidden" name="id" value="<?php echo $nguoi_dung['id']; ?>">
 
             <div class="mb-3">

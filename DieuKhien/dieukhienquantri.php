@@ -187,12 +187,12 @@ class DieuKhienQuanTri {
         $dm_model = new danhmuc($this->pdo);
         $danh_sach_danh_muc = $dm_model->getDS_Danhmuc();
         // Sử dụng view đã có ở thư mục gốc
-        include __DIR__ . '/../danh_sach.php';
+        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php';
     }
 
     public function them_danhmuc() {
         // Sử dụng view đã có ở thư mục gốc
-         include __DIR__ . '/../them.php';
+         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
     }
 
     public function xl_them_danhmuc() {
