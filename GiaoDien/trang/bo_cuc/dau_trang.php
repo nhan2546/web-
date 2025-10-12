@@ -12,6 +12,7 @@
         <div class="container">
             <div class="header-content">
                 <a href="index.php?act=trangchu" class="shop-title-link">
+                    <img src="TaiNguyen/hinh_anh/logo_transparent.png" alt="Shop Táo Ngon Logo" class="shop-logo">
                     <h1 class="shop-title">Shop Táo Ngon</h1>
                 </a>
                 <!-- Thanh tìm kiếm ở giữa -->

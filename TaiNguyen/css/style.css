@@ -47,7 +47,16 @@ body {
 /* Định dạng cho liên kết của logo */
 .shop-title-link {
     text-decoration: none;
-    color: inherit; 
+    color: inherit;
+    display: flex; /* Bật flexbox để căn chỉnh logo và chữ */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    gap: 12px; /* Khoảng cách giữa logo và chữ */
+}
+
+/* Định dạng cho ảnh logo */
+.shop-logo {
+    height: 40px; /* Điều chỉnh chiều cao của logo nếu cần */
+    width: auto; /* Chiều rộng tự động để giữ tỷ lệ */
 }
 
 /* thanh tìm kiếm trên header */
@@ -582,12 +591,9 @@ tbody tr:hover {
 /* Vùng chứa các nút, cố định ở góc dưới bên phải */
 .contact-float {
     position: fixed;
-    bottom: 80px; 
+    bottom: 80px;
     right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    z-index: 1001; /* Đảm bảo các nút luôn ở trên cùng */
+    z-index: 1001;
 }
 
 /* Định dạng chung cho từng nút liên hệ */
@@ -618,14 +624,28 @@ tbody tr:hover {
 /* Nút Zalo */
 .contact-item.zalo {
     background-color: #0068ff;
+    position: fixed;
+    bottom: 144px;
+    right: 20px;
 }
 .contact-item.zalo img {
     width: 32px;
     height: 32px;
 }
-/* Nút gọi điện */
+
 .contact-item.phone {
     background-color: #25D366; /* Đổi sang màu xanh lá cây giống nút SĐT ở trang đăng nhập */
+    position: fixed;
+    bottom: 82px;
+    right: 20px;
+}
+
+/* Tùy chỉnh vị trí cho nút bấm của Rasa Webchat */
+.rasa-widget-launcher {
+    position: fixed !important;
+    bottom: 20px !important; /* Đặt ở vị trí thấp nhất */
+    right: 20px !important;
+    z-index: 1002 !important; /* Đảm bảo nó nổi lên trên tất cả */
 }
 
 /* trang đăng nhập / đăng ký */
