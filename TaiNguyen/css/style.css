@@ -10,7 +10,7 @@ html, body {
 body {
     background: #f4f7f6;
     color: #333;
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', 'Inter', sans-serif;
     display: flex;
     flex-direction: column;
 }
@@ -122,6 +122,7 @@ body {
     display: flex;
     align-items: center;
     gap: 25px;
+    padding-right: 15px; 
 }
 
 /* khung kết quả tìm kiếm trực tiếp */
@@ -284,7 +285,8 @@ tbody tr:hover {
 }
 
 /* Định dạng cho từng mục chức năng trên header (Giỏ hàng, User) */
-.header-action-item {
+.header-action-item,
+.header-action-item .nav-link { 
     display: flex;
     align-items: center;
     gap: 8px;
@@ -323,6 +325,20 @@ tbody tr:hover {
     gap: 8px;
     padding: 0;
     font-size: 13px;
+}
+/* Sửa lỗi còn dấu chấm trong menu dropdown của user */
+/* Quy tắc này có độ ưu tiên cao hơn để ghi đè các style khác */
+.header-actions .dropdown-menu li {
+    list-style-type: none;
+}
+
+/* Đổi màu chữ cho các mục trong menu dropdown của user */
+.header-actions .dropdown-menu .dropdown-item {
+    display: flex; /* Bật flexbox để căn chỉnh icon và chữ */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    gap: 10px; /* Tạo khoảng cách giữa icon và chữ */
+    color: white;
+    font-weight: normal; 
 }
 
 /* Liên kết trong thanh menu chính */
