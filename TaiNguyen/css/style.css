@@ -200,87 +200,12 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Định dạng chung cho bảng */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-    vertical-align: middle;
-}
-
-/* Tiêu đề của bảng */
-thead th {
-    background: #f2f2f2;
-    font-weight: bold;
-}
-
-tbody tr:nth-child(even) {
-    background: #f9f9f9;
-}
-
-tbody tr:hover {
-    background: #f1f1f1;
-}
-
-/* Định dạng chung cho các nút bấm */
-.btn {
-    display: inline-block;
-    padding: 8px 15px;
-    font-size: 14px;
-    text-align: center;
-    text-decoration: none;
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-    border: none;
-    transition: background-color .2s;
-}
-
 .btn-info {
     background: #17a2b8;
 }
 
 .btn-info:hover {
     background: #138496;
-}
-
-/* Định dạng cho các nhãn trạng thái (status badge) */
-.badge {
-    padding: 5px 10px;
-    border-radius: 12px;
-    color: #fff;
-    font-size: 12px;
-    font-weight: bold;
-    text-transform: capitalize;
-}
-
-/* Các màu khác nhau cho từng trạng thái */
-.badge-pending {
-    background: #ffc107;
-    color: #333;
-}
-
-.badge-processing {
-    background: #007bff;
-}
-
-.badge-shipped {
-    background: #28a745;
-}
-
-.badge-delivered {
-    background: #6c757d;
-}
-
-.badge-cancelled {
-    background: #dc3545;
 }
 
 /* thanh menu danh mục */
@@ -1436,6 +1361,27 @@ body.admin-body {
 }
 .profile-summary-card .btn-outline-danger:hover {
     color: #fff;
+}
+
+/* Định dạng cho khu vực thông tin người dùng trên header admin */
+.admin-header .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Khoảng cách giữa lời chào và nút đăng xuất */
+}
+
+/* Nút đăng xuất */
+.admin-logout-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e74c3c; /* Màu đỏ cho hành động nguy hiểm */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.admin-logout-link:hover {
+    color: #c0392b; /* Màu đỏ đậm hơn khi rê chuột */
 }
 
 /* Định dạng cho khu vực thông tin người dùng trên header admin */

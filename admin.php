@@ -92,6 +92,10 @@ switch ($act) {
         $adminController->xl_sua_nguoidung();
         break;
 
+    // AJAX Endpoints
+    case 'ajax_get_chart_data':
+        $adminController->ajax_get_chart_data();
+        break;
     // Các route khác...
 
     // Mặc định: hiển thị Bảng điều khiển

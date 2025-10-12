@@ -113,5 +113,21 @@ class donhang {
         $result = $db->read($sql);
         return $result[0]['count'] ?? 0;
     }
+
+    /**
+     * Lấy dữ liệu doanh thu theo tháng cho biểu đồ (12 tháng gần nhất).
+     * @return array Mảng chứa các tháng và doanh thu tương ứng.
+     */
+    public function getMonthlyRevenue() {
+        $db = new CSDL();
+        $sql = "SELECT 
+                    DATE_FORMAT(order_date, '%Y-%m') as month, 
+                    SUM(total_amount) as revenue 
+                FROM orders 
+                WHERE status = 'delivered' AND order_date >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+                GROUP BY DATE_FORMAT(order_date, '%Y-%m')
+                ORDER BY month ASC";
+        return $db->read($sql);
+    }
 }
 ?>

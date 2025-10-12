@@ -25,7 +25,6 @@ $current_act = $_GET['act'] ?? 'dashboard';
     <title><?php echo get_current_page_title($current_act); ?> - Trang Quản Trị</title>
     <link href="TaiNguyen/css/bootstrap.min.css" rel="stylesheet">
     <link href="TaiNguyen/css/style.admin.css" rel="stylesheet">
-    <link href="TaiNguyen/css/style.css" rel="stylesheet">
 </head>
 <body class="admin-body">
     <div class="admin-wrapper">

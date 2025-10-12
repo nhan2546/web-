@@ -35,7 +35,7 @@ class DieuKhienQuanTri {
     public function ds_donhang() {
         $dh_model = new donhang($this->pdo);
         $danh_sach_don_hang = $dh_model->getAllOrders();
-        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php';
+        include __DIR__ . '/GiaoDien/QuanTri/san_pham/quan_ly_don_hang_admin.php';
     }
 
     // Chức năng: Hiển thị chi tiết đơn hàng
@@ -192,7 +192,7 @@ class DieuKhienQuanTri {
 
     public function them_danhmuc() {
         // Sử dụng view đã có ở thư mục gốc
-         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
+         include __DIR__ . '/../them.php';
     }
 
     public function xl_them_danhmuc() {
@@ -246,7 +246,7 @@ class DieuKhienQuanTri {
     public function ds_nguoidung() {
         $user_model = new NguoiDung($this->pdo);
         $danh_sach_nguoi_dung = $user_model->getDS_NguoiDung();
-        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/danh_sach.admin,php';
+        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/danh_sach.php';
     }
 
     public function xoa_nguoidung() {
@@ -293,6 +293,26 @@ class DieuKhienQuanTri {
             header('Location: admin.php?act=ds_nguoidung&success=updated');
             exit;
         }
+    }
+
+    /**
+     * Cung cấp dữ liệu doanh thu hàng tháng cho biểu đồ (AJAX).
+     */
+    public function ajax_get_chart_data() {
+        header('Content-Type: application/json');
+        $dh_model = new donhang($this->pdo);
+        $monthly_revenue = $dh_model->getMonthlyRevenue();
+
+        // Chuẩn bị dữ liệu cho Chart.js
+        $labels = [];
+        $data = [];
+        foreach ($monthly_revenue as $row) {
+            $labels[] = $row['month'];
+            $data[] = (float)$row['revenue'];
+        }
+
+        echo json_encode(['labels' => $labels, 'data' => $data]);
+        exit; // Dừng thực thi để chỉ trả về JSON
     }
 }
 ?>
