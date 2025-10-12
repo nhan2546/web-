@@ -246,7 +246,7 @@ class DieuKhienQuanTri {
     public function ds_nguoidung() {
         $user_model = new NguoiDung($this->pdo);
         $danh_sach_nguoi_dung = $user_model->getDS_NguoiDung();
-        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/danh_sach.php';
+        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_NV.php';
     }
 
     public function xoa_nguoidung() {

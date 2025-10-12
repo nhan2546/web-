@@ -217,6 +217,34 @@ body.admin-body {
 .badge-shipped { background: #17a2b8; }
 .badge-delivered { background: #28a745; }
 .badge-cancelled { background: #dc3545; }
+.badge-secondary {
+    background-color: #e9ecef; 
+    color: #212529; 
+}
+
+
+/* Nút bấm trong trang admin */
+/* Định dạng chung cho nút bấm */
+.admin-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    font-size: 14px;
+    color: #fff; /* Màu chữ mặc định cho các nút */
+}
+
+/* Nút nguy hiểm (màu đỏ, dùng cho hành động xóa) */
+.admin-btn-danger {
+    background-color: #e74c3c;
+}
+.admin-btn-danger:hover {
+    background-color: #c0392b;
+}
 
 /* các form trong trang admin */
 /* Định dạng chung cho các form */
