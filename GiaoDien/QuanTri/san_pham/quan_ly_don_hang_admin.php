@@ -1,25 +1,6 @@
 <?php
-// GiaoDien/QuanTri/san_pham/quan_ly_don_hang_admin.php
-
-// header (đúng bố cục bạn có)
-include __DIR__ . '/../dau_trang_admin.php';
-
-// Kết nối DB & Model
-require_once __DIR__ . '/../../../db_connect.php';     // chỉnh nếu file db nằm nơi khác
-require_once __DIR__ . '/../../../DieuKhien/donhang_model.php';
-
-$model = new DonHangModel($connect);
-
-// filters
-$q = $_GET['q'] ?? '';
-$status = $_GET['status'] ?? '';
-$from = $_GET['from'] ?? '';
-$to = $_GET['to'] ?? '';
-$page = max(1, intval($_GET['page'] ?? 1));
-$limit = 10; $offset = ($page-1)*$limit; $total=0;
-
-$rows = $model->getOrders($q,$status,$from,$to,$limit,$offset,$total);
-$pages = max(1, ceil($total/$limit));
+// Các biến như $danh_sach_don_hang, $status_filter, $search_term đã được controller chuẩn bị
+// Chúng ta chỉ cần sử dụng chúng ở đây.
 $opts=['pending'=>'Chờ xử lý','processing'=>'Đang xử lý','shipped'=>'Đã gửi','delivered'=>'Đã giao','cancelled'=>'Đã hủy'];
 ?>
 
@@ -27,16 +8,16 @@ $opts=['pending'=>'Chờ xử lý','processing'=>'Đang xử lý','shipped'=>'Đ
 
 <form method="get" class="admin-card" style="padding:15px; display:grid; grid-template-columns: repeat(6,1fr); gap:10px; align-items:end;">
   <input type="hidden" name="act" value="donhang">
-  <div><label>Từ khóa</label><input class="form-control" name="q" value="<?=htmlspecialchars($q)?>" placeholder="Mã đơn / Tên / SĐT"></div>
+  <div><label>Từ khóa</label><input class="form-control" name="search" value="<?=htmlspecialchars($search_term ?? '')?>" placeholder="Mã đơn / Tên khách hàng"></div>
   <div>
     <label>Trạng thái</label>
     <select class="form-control" name="status">
       <option value="">Tất cả</option>
-      <?php foreach($opts as $k=>$v){ $sel=$status===$k?'selected':''; echo "<option $sel value='$k'>$v</option>"; } ?>
+      <?php foreach($opts as $k=>$v){ $sel=($status_filter ?? '')===$k?'selected':''; echo "<option $sel value='$k'>$v</option>"; } ?>
     </select>
   </div>
-  <div><label>Từ ngày</label><input class="form-control" type="date" name="from" value="<?=htmlspecialchars($from)?>"></div>
-  <div><label>Đến ngày</label><input class="form-control" type="date" name="to" value="<?=htmlspecialchars($to)?>"></div>
+  <div><label>Từ ngày</label><input class="form-control" type="date" name="from" value=""></div>
+  <div><label>Đến ngày</label><input class="form-control" type="date" name="to" value=""></div>
   <div><button class="btn btn-primary" type="submit">Lọc</button></div>
   <div><a class="btn btn-info" href="?act=donhang">Xóa lọc</a></div>
 </form>
@@ -46,31 +27,30 @@ $opts=['pending'=>'Chờ xử lý','processing'=>'Đang xử lý','shipped'=>'Đ
     <table class="admin-table">
       <thead>
         <tr>
-          <th>Mã đơn</th><th>Khách hàng</th><th>SĐT</th><th>Ngày tạo</th>
+          <th>Mã đơn</th><th>Khách hàng</th><th>Ngày tạo</th>
           <th>Tổng tiền</th><th>Trạng thái</th><th style="width:180px">Thao tác</th>
         </tr>
       </thead>
       <tbody>
-      <?php if(!$rows): ?>
+      <?php if(empty($danh_sach_don_hang)): ?>
         <tr><td colspan="7">Không có đơn phù hợp.</td></tr>
-      <?php else: foreach($rows as $r): ?>
+      <?php else: foreach($danh_sach_don_hang as $don_hang): ?>
         <tr>
-          <td>#<?=htmlspecialchars($r['code'])?></td>
-          <td><?=htmlspecialchars($r['name'])?></td>
-          <td><?=htmlspecialchars($r['phone'])?></td>
-          <td><?=date('d/m/Y H:i', strtotime($r['created_at']))?></td>
-          <td><?=number_format($r['total_amount'],0,',','.')?>₫</td>
+          <td>#<?=htmlspecialchars($don_hang['id'])?></td>
+          <td><?=htmlspecialchars($don_hang['customer_name'])?></td>
+          <td><?=date('d/m/Y H:i', strtotime($don_hang['order_date']))?></td>
+          <td><?=number_format($don_hang['total_amount'],0,',','.')?>₫</td>
           <td>
             <form class="frm-status" method="post" action="/web-/DieuKhien/donhang_update_trangthai.php" style="display:flex; gap:6px; align-items:center">
-              <input type="hidden" name="id" value="<?=$r['id']?>">
+              <input type="hidden" name="id" value="<?=$don_hang['id']?>">
               <select name="status" class="form-control" style="min-width:130px">
-                <?php foreach($opts as $k=>$v){ $sel=$r['status']===$k?'selected':''; echo "<option $sel value='$k'>$v</option>"; } ?>
+                <?php foreach($opts as $k=>$v){ $sel=$don_hang['status']===$k?'selected':''; echo "<option $sel value='$k'>$v</option>"; } ?>
               </select>
               <button class="btn btn-info" type="submit">Lưu</button>
             </form>
           </td>
           <td>
-            <button class="btn btn-info btn-detail" data-id="<?=$r['id']?>">Xem</button>
+            <a href="admin.php?act=ct_donhang&id=<?=$don_hang['id']?>" class="btn btn-info">Xem</a>
           </td>
         </tr>
       <?php endforeach; endif; ?>
@@ -81,10 +61,7 @@ $opts=['pending'=>'Chờ xử lý','processing'=>'Đang xử lý','shipped'=>'Đ
 
 <!-- Phân trang -->
 <div style="display:flex; gap:8px; justify-content:flex-end; align-items:center;">
-  <?php for($i=1;$i<=$pages;$i++): 
-    $url = "?act=donhang&q=".urlencode($q)."&status=$status&from=$from&to=$to&page=$i"; ?>
-    <a class="btn <?= $i==$page?'btn-primary':'btn-info' ?>" href="<?=$url?>"><?=$i?></a>
-  <?php endfor; ?>
+  <!-- Logic phân trang sẽ được thêm ở đây -->
 </div>
 
 <!-- Modal chi tiết -->
@@ -124,5 +101,3 @@ document.querySelectorAll('.frm-status').forEach(f=>{
   });
 });
 </script>
-
-<?php include __DIR__ . '/../chan_trang_admin.php'; ?>

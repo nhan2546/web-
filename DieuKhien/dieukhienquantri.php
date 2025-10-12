@@ -1,7 +1,4 @@
 <?php
-// Tệp: DieuKhien/DieuKhienQuanTri.php
-
-// 1. INCLUDE CÁC TỆP MODEL CẦN THIẾT
 require_once __DIR__ . '/../MoHinh/CSDL.php';
 require_once __DIR__ . '/../MoHinh/SanPham.php';
 require_once __DIR__ . '/../MoHinh/DanhMuc.php';
@@ -33,9 +30,13 @@ class DieuKhienQuanTri {
 
     // Chức năng: Hiển thị danh sách đơn hàng
     public function ds_donhang() {
+        // Lấy các tham số lọc và tìm kiếm từ URL
+        $status_filter = $_GET['status'] ?? '';
+        $search_term = $_GET['search'] ?? '';
+
         $dh_model = new donhang($this->pdo);
-        $danh_sach_don_hang = $dh_model->getAllOrders();
-        include __DIR__ . '/GiaoDien/QuanTri/san_pham/quan_ly_don_hang_admin.php';
+        $danh_sach_don_hang = $dh_model->getOrders($status_filter, $search_term);
+        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/quan_ly_don_hang_admin.php';
     }
 
     // Chức năng: Hiển thị chi tiết đơn hàng
@@ -85,7 +86,7 @@ class DieuKhienQuanTri {
         // Lấy danh sách danh mục để hiển thị trong form
         $dm_model = new danhmuc($this->pdo);
         $danh_sach_danh_muc = $dm_model->getDS_Danhmuc(); // Sửa lỗi gọi hàm không tồn tại
-        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
+        include __DIR__ . '/..GiaoDien/QuanTri/san_pham/them.php';
     }
 
     // Chức năng: Xử lý thêm sản phẩm mới
@@ -186,13 +187,11 @@ class DieuKhienQuanTri {
     public function ds_danhmuc() {
         $dm_model = new danhmuc($this->pdo);
         $danh_sach_danh_muc = $dm_model->getDS_Danhmuc();
-        // Sử dụng view đã có ở thư mục gốc
-        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php';
+        include __DIR__ . '/../GiaoDien/QuanTri/danh_muc/danh_sach.php';
     }
 
     public function them_danhmuc() {
-        // Sử dụng view đã có ở thư mục gốc
-         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
+        include __DIR__ . '/../GiaoDien/QuanTri/danh_muc/them.php';
     }
 
     public function xl_them_danhmuc() {
@@ -212,8 +211,7 @@ class DieuKhienQuanTri {
         $dm_model = new danhmuc($this->pdo);
         $danh_muc = $dm_model->getDanhMucById($id);
         if ($danh_muc) {
-            // Sử dụng view đã có ở thư mục gốc
-            include __DIR__ . '/../sua.php';
+            include __DIR__ . '/../GiaoDien/QuanTri/danh_muc/sua.php';
         } else {
             header('Location: admin.php?act=ds_danhmuc');
         }
@@ -245,7 +243,7 @@ class DieuKhienQuanTri {
     // --- QUẢN LÝ NGƯỜI DÙNG ---
     public function ds_nguoidung() {
         $user_model = new NguoiDung($this->pdo);
-        $danh_sach_nguoi_dung = $user_model->getDS_NguoiDung();
+        $danh_sach_nhan_vien = $user_model->getDS_NguoiDung(); // Giả sử hàm này lấy tất cả user
         include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_NV.php';
     }
 

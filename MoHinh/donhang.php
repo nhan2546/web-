@@ -21,6 +21,41 @@ class donhang {
     }
 
     /**
+     * Lấy danh sách đơn hàng có phân trang, lọc và tìm kiếm.
+     * @param string $status Trạng thái cần lọc.
+     * @param string $searchTerm Từ khóa tìm kiếm.
+     * @return array Mảng chứa các đơn hàng.
+     */
+    public function getOrders($status = '', $searchTerm = '') {
+        $db = new CSDL();
+        $sql = "SELECT o.*, u.fullname as customer_name 
+                FROM orders o
+                JOIN users u ON o.user_id = u.id
+                WHERE 1=1"; // Mệnh đề WHERE luôn đúng để dễ dàng nối thêm điều kiện
+
+        $params = [];
+        $types = '';
+
+        if (!empty($status)) {
+            $sql .= " AND o.status = ?";
+            $params[] = $status;
+            $types .= 's';
+        }
+
+        if (!empty($searchTerm)) {
+            // Tìm kiếm theo tên khách hàng hoặc mã đơn hàng (không có #)
+            $sql .= " AND (u.fullname LIKE ? OR o.id = ?)";
+            $search_like = "%" . $searchTerm . "%";
+            $params[] = $search_like;
+            $params[] = $searchTerm; // Cho o.id
+            $types .= 'ss';
+        }
+
+        $sql .= " ORDER BY o.order_date DESC";
+        return $db->read($sql, $params, $types);
+    }
+
+    /**
      * Lấy danh sách đơn hàng của một người dùng cụ thể.
      * @param int $userId ID của người dùng.
      * @return array Mảng chứa các đơn hàng của người dùng đó.
