@@ -1,6 +1,7 @@
 <?php
 // Tệp: DieuKhien/DieuKhienTrang.php
 
+require_once __DIR__ . '/../MoHinh/NguoiDung.php';
 require_once __DIR__ . '/../MoHinh/SanPham.php';
 
 class controller {
@@ -165,6 +166,110 @@ class controller {
 
         // 3. Hiển thị view
         include __DIR__.'/../GiaoDien/trang/lich_su_mua_hang.php';
+    }
+
+    public function thong_tin_tai_khoan() {
+        // 1. Kiểm tra người dùng đã đăng nhập chưa
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?act=dang_nhap');
+            exit();
+        }
+
+        // 2. Lấy thông tin người dùng từ CSDL
+        $userModel = new NguoiDung($this->pdo);
+        $user_info = $userModel->findUserById($_SESSION['user_id']);
+
+        // 3. Hiển thị view
+        include __DIR__.'/../GiaoDien/trang/thong_tin_tai_khoan.php';
+    }
+
+    public function cap_nhat_tai_khoan() {
+        // 1. Kiểm tra người dùng đã đăng nhập và gửi form bằng POST
+        if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?act=trangchu');
+            exit();
+        }
+
+        // 2. Lấy dữ liệu từ form
+        $user_id = $_SESSION['user_id'];
+        $fullname = $_POST['fullname'] ?? '';
+        $phone_number = $_POST['phone_number'] ?? '';
+        $address = $_POST['address'] ?? '';
+
+        // 3. Gọi model để cập nhật
+        $userModel = new NguoiDung($this->pdo);
+        $userModel->updateUserInfo($user_id, $fullname, $phone_number, $address);
+
+        // 4. Chuyển hướng lại trang thông tin với thông báo thành công
+        header('Location: index.php?act=thong_tin_tai_khoan&success=1');
+        exit();
+    }
+
+    public function doi_mat_khau() {
+        if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?act=trangchu');
+            exit();
+        }
+
+        $user_id = $_SESSION['user_id'];
+        $current_password = $_POST['current_password'] ?? '';
+        $new_password = $_POST['new_password'] ?? '';
+        $confirm_new_password = $_POST['confirm_new_password'] ?? '';
+
+        // Kiểm tra mật khẩu mới có khớp không
+        if ($new_password !== $confirm_new_password) {
+            header('Location: index.php?act=thong_tin_tai_khoan&error=password_mismatch');
+            exit();
+        }
+
+        $userModel = new NguoiDung($this->pdo);
+        $user = $userModel->findUserById($user_id);
+
+        // Kiểm tra mật khẩu hiện tại có đúng không
+        if (!$user || !password_verify($current_password, $user['password'])) {
+            header('Location: index.php?act=thong_tin_tai_khoan&error=wrong_password');
+            exit();
+        }
+
+        // Cập nhật mật khẩu mới
+        $userModel->updatePassword($user_id, $new_password);
+
+        // Chuyển hướng với thông báo thành công
+        header('Location: index.php?act=thong_tin_tai_khoan&success=password_changed');
+        exit();
+    }
+
+    public function cap_nhat_avatar() {
+        if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?act=trangchu');
+            exit();
+        }
+
+        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
+            $target_dir = __DIR__ . "/../TaiLen/avatars/";
+            // Tạo thư mục nếu chưa tồn tại
+            if (!is_dir($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $file_extension = pathinfo($_FILES["avatar"]["name"], PATHINFO_EXTENSION);
+            // Tạo tên tệp duy nhất để tránh ghi đè
+            $new_filename = 'user_' . $_SESSION['user_id'] . '_' . time() . '.' . $file_extension;
+            $target_file = $target_dir . $new_filename;
+
+            // Di chuyển tệp đã tải lên
+            if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file)) {
+                // Cập nhật CSDL
+                $userModel = new NguoiDung($this->pdo);
+                $userModel->updateAvatar($_SESSION['user_id'], $new_filename);
+                header('Location: index.php?act=thong_tin_tai_khoan&success=avatar_updated');
+                exit();
+            }
+        }
+
+        // Nếu có lỗi, chuyển hướng lại
+        header('Location: index.php?act=thong_tin_tai_khoan&error=avatar_upload_failed');
+        exit();
     }
 }
 ?>

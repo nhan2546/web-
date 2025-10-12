@@ -1312,3 +1312,128 @@ body.admin-body {
         transform: translateY(0); 
     }
 }
+
+/* trang thông tin tài khoản */
+.account-page-wrapper h1 {
+    border-bottom: none;
+    text-align: center;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.account-page-wrapper .form-label {
+    font-weight: 500;
+    color: #555;
+}
+/* trang thông tin tài khoản */
+.account-page-wrapper .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+    margin-bottom: 20px;
+}
+
+.account-page-wrapper .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 600;
+    font-size: 18px;
+    border-radius: 12px 12px 0 0;
+}
+
+.account-page-wrapper .card-header h3 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.account-page-wrapper .form-control {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+}
+
+.account-page-wrapper .form-control[readonly] {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+.account-page-wrapper .form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.2);
+}
+
+/* Thẻ thông tin người dùng bên phải */
+.profile-summary-card .card-body {
+    padding: 30px 20px;
+}
+
+.profile-avatar-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 15px;
+}
+
+.profile-avatar-wrapper .avatar-upload-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(0,0,0,0.6);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    border: 2px solid white;
+}
+
+.profile-avatar-wrapper:hover .avatar-upload-overlay {
+    opacity: 1;
+}
+
+.profile-summary-card .profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #3498db;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.profile-summary-card .profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile-summary-card .profile-name {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.profile-summary-card .profile-email {
+    margin-bottom: 20px;
+}
+
+.profile-summary-card .btn {
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.profile-summary-card .btn-outline-primary:hover {
+    color: #fff;
+}
+.profile-summary-card .btn-outline-danger:hover {
+    color: #fff;
+}

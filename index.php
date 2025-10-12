@@ -43,6 +43,18 @@ switch ($act) {
     case 'dang_xuat':
         $authController->dang_xuat();
         break;
+    case 'cap_nhat_tai_khoan':
+        $c->cap_nhat_tai_khoan();
+        break;
+    case 'doi_mat_khau':
+        $c->doi_mat_khau();
+        break;
+    case 'cap_nhat_avatar':
+        $c->cap_nhat_avatar();
+        break;
+    // Các case xử lý logic khác...
+
+
 }
 
 // BẮT ĐẦU HIỂN THỊ GIAO DIỆN
@@ -86,6 +98,9 @@ switch ($act) {
         break;
     case 'lich_su_mua_hang':
         $c->lich_su_mua_hang();
+        break;
+    case 'thong_tin_tai_khoan':
+        $c->thong_tin_tai_khoan();
         break;
 }
 
