@@ -41,13 +41,9 @@ $current_act = $_GET['act'] ?? 'dashboard';
                 <li class="sidebar-nav-item <?php echo (in_array($current_act, ['ds_donhang', 'ct_donhang'])) ? 'active' : ''; ?>">
                     <a href="admin.php?act=ds_donhang">Quản lý Đơn hàng</a>
                 </li>
-                <li class="sidebar-nav-item <?php echo (in_array($current_act, ['ds_danhmuc', 'them_danhmuc', 'sua_danhmuc'])) ? 'active' : ''; ?>">
-                    <a href="admin.php?act=ds_danhmuc">Quản lý Danh mục</a>
-                </li>
                 <li class="sidebar-nav-item <?php echo (in_array($current_act, ['ds_nguoidung', 'sua_nguoidung'])) ? 'active' : ''; ?>">
-                    <a href="admin.php?act=ds_nguoidung">Quản lý Người dùng</a>
+                    <a href="admin.php?act=ds_nguoidung">Quản lý Nhân viên</a>
                 </li>
-                <!-- Thêm các mục quản lý khác ở đây -->
             </ul>
         </aside>
 

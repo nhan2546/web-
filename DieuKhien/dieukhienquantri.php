@@ -187,7 +187,7 @@ class DieuKhienQuanTri {
     public function ds_danhmuc() {
         $dm_model = new danhmuc($this->pdo);
         $danh_sach_danh_muc = $dm_model->getDS_Danhmuc();
-        include __DIR__ . '/../GiaoDien/QuanTri/danh_muc/danh_sach.php';
+        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_NV.php';
     }
 
     public function them_danhmuc() {
