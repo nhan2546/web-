@@ -6,6 +6,7 @@ require_once __DIR__ . '/../MoHinh/CSDL.php';
 require_once __DIR__ . '/../MoHinh/SanPham.php';
 require_once __DIR__ . '/../MoHinh/DanhMuc.php';
 require_once __DIR__ . '/../MoHinh/DonHang.php';
+require_once __DIR__ . '/../MoHinh/NguoiDung.php'; // Thêm model Người Dùng
 
 class DieuKhienQuanTri {
     private $pdo; // Thuộc tính để lưu trữ kết nối CSDL
@@ -17,17 +18,17 @@ class DieuKhienQuanTri {
 
     // --- CÁC HÀM XỬ LÝ CHO TỪNG CHỨC NĂNG ---
 
+    // Chức năng: Hiển thị trang dashboard mặc định
+    public function dashboard() {
+        include __DIR__ . '/../GiaoDien/QuanTri/bang_dieu_khien.php';
+    }
+
     // Chức năng: Hiển thị danh sách sản phẩm
     public function ds_sanpham() {
         // Khởi tạo model và truyền kết nối CSDL vào -> ĐÂY LÀ CÁCH LÀM ĐÚNG
         $sp_model = new sanpham($this->pdo);
         $danh_sach_san_pham = $sp_model->getallsanpham();
         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php';
-    }
-
-    // Chức năng: Hiển thị form thêm sản phẩm
-    public function hienthi_themsp() {
-        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
     }
 
     // Chức năng: Hiển thị danh sách đơn hàng
@@ -61,11 +62,6 @@ class DieuKhienQuanTri {
             }
             header('Location: admin.php?act=ct_donhang&id=' . $order_id);
         }
-    }
-    
-    // Chức năng: Hiển thị trang dashboard mặc định
-    public function dashboard() {
-        include __DIR__ . '/../GiaoDien/QuanTri/bang_dieu_khien.php';
     }
 
     // Chức năng: Hiển thị form thêm sản phẩm
@@ -167,6 +163,80 @@ class DieuKhienQuanTri {
             $sanpham_model->xoasp($id);
         }
         header('Location: admin.php?act=ds_sanpham&success=deleted');
+        exit;
+    }
+
+    // --- QUẢN LÝ DANH MỤC ---
+    public function ds_danhmuc() {
+        $dm_model = new danhmuc($this->pdo);
+        $danh_sach_danh_muc = $dm_model->getAllCategories();
+        include __DIR__ . '/../danh_sach.php';
+    }
+
+    public function them_danhmuc() {
+        include __DIR__ . '/../them.php';
+    }
+
+    public function xl_them_danhmuc() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = $_POST['name'] ?? '';
+            if (!empty($name)) {
+                $dm_model = new danhmuc($this->pdo);
+                $dm_model->addCategory($name);
+            }
+            header('Location: admin.php?act=ds_danhmuc&success=added');
+            exit;
+        }
+    }
+
+    public function sua_danhmuc() {
+        $id = $_GET['id'] ?? 0;
+        $dm_model = new danhmuc($this->pdo);
+        $danh_muc = $dm_model->getDanhMucById($id);
+        if ($danh_muc) {
+            include __DIR__ . '/../sua.php';
+        } else {
+            header('Location: admin.php?act=ds_danhmuc');
+        }
+    }
+
+    public function xl_sua_danhmuc() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'] ?? 0;
+            $name = $_POST['name'] ?? '';
+            if ($id > 0 && !empty($name)) {
+                $dm_model = new danhmuc($this->pdo);
+                $dm_model->updateCategory($id, $name);
+            }
+            header('Location: admin.php?act=ds_danhmuc&success=updated');
+            exit;
+        }
+    }
+
+    public function xoa_danhmuc() {
+        $id = $_GET['id'] ?? 0;
+        if ($id > 0) {
+            $dm_model = new danhmuc($this->pdo);
+            $dm_model->deleteCategory($id);
+        }
+        header('Location: admin.php?act=ds_danhmuc&success=deleted');
+        exit;
+    }
+
+    // --- QUẢN LÝ NGƯỜI DÙNG ---
+    public function ds_nguoidung() {
+        $user_model = new NguoiDung($this->pdo);
+        $danh_sach_nguoi_dung = $user_model->getAllUsers();
+        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/danh_sach.php';
+    }
+
+    public function xoa_nguoidung() {
+        $id = $_GET['id'] ?? 0;
+        if ($id > 0 && $id != $_SESSION['user_id']) { // Ngăn admin tự xóa mình
+            $user_model = new NguoiDung($this->pdo);
+            $user_model->deleteUser($id);
+        }
+        header('Location: admin.php?act=ds_nguoidung&success=deleted');
         exit;
     }
 }

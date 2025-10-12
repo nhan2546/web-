@@ -28,30 +28,65 @@ $act = $_GET['act'] ?? 'dashboard';
 
 switch ($act) {
     // Quản lý sản phẩm
-    case 'ds_sanpham':
+    case 'ds_sanpham': // Danh sách sản phẩm
         $adminController->ds_sanpham();
         break;
-    case 'them_sp': // Route để hiển thị form thêm
+    case 'them_sp': // Hiển thị form thêm sản phẩm
         $adminController->them_sp();
         break;
-    case 'xl_themsp': // Route để xử lý logic thêm sản phẩm
-    case 'them_sp': // Route mới để hiển thị form
-        $adminController->hienthi_themsp();
-        break;
-    case 'xl_themsp': // Route mới để xử lý thêm sản phẩm
+    case 'xl_themsp': // Xử lý logic thêm sản phẩm
         $adminController->xl_themsp();
         break;
-    case 'xoa_sp': // Route để xử lý xóa sản phẩm
-        $adminController->xoa_sp();
-        break;
-    case 'sua_sp': // Route để hiển thị form sửa
+    case 'sua_sp': // Hiển thị form sửa sản phẩm
         $adminController->sua_sp();
         break;
-    case 'xl_suasp': // Route để xử lý logic sửa
+    case 'xl_suasp': // Xử lý logic sửa sản phẩm
         $adminController->xl_suasp();
         break;
+    case 'xoa_sp': // Xử lý xóa sản phẩm
+        $adminController->xoa_sp();
+        break;
 
-    // Các route quản trị khác...
+    // Quản lý đơn hàng
+    case 'ds_donhang': // Danh sách đơn hàng
+        $adminController->ds_donhang();
+        break;
+    case 'ct_donhang': // Chi tiết đơn hàng
+        $adminController->ct_donhang();
+        break;
+    case 'capnhat_trangthai_donhang': // Xử lý cập nhật trạng thái đơn hàng
+        $adminController->capnhat_trangthai_donhang();
+        break;
+
+    // Quản lý Danh mục
+    case 'ds_danhmuc':
+        $adminController->ds_danhmuc();
+        break;
+    case 'them_danhmuc':
+        $adminController->them_danhmuc();
+        break;
+    case 'xl_them_danhmuc':
+        $adminController->xl_them_danhmuc();
+        break;
+    case 'sua_danhmuc':
+        $adminController->sua_danhmuc();
+        break;
+    case 'xl_sua_danhmuc':
+        $adminController->xl_sua_danhmuc();
+        break;
+    case 'xoa_danhmuc':
+        $adminController->xoa_danhmuc();
+        break;
+
+    // Quản lý Người dùng
+    case 'ds_nguoidung':
+        $adminController->ds_nguoidung();
+        break;
+    case 'xoa_nguoidung':
+        $adminController->xoa_nguoidung();
+        break;
+
+    // Các route khác...
 
     // Mặc định: hiển thị Bảng điều khiển
     default:
