@@ -109,4 +109,46 @@ class NguoiDung {
         }
         return false;
     }
+
+    /**
+     * Lấy danh sách tất cả người dùng cho trang admin.
+     * @return array Mảng chứa danh sách người dùng.
+     */
+    public function getDS_NguoiDung() {
+        $stmt = $this->pdo->query("SELECT id, fullname, email, role, created_at FROM users ORDER BY created_at DESC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Cập nhật thông tin và vai trò của người dùng (dành cho admin).
+     * @param int $id ID người dùng.
+     * @param string $fullname Họ và tên.
+     * @param string $email Email.
+     * @param string $role Vai trò.
+     * @return bool True nếu cập nhật thành công.
+     */
+    public function updateUserByAdmin($id, $fullname, $email, $role) {
+        $stmt = $this->pdo->prepare("UPDATE users SET fullname = ?, email = ?, role = ? WHERE id = ?");
+        return $stmt->execute([$fullname, $email, $role, $id]);
+    }
+
+    /**
+     * Xóa người dùng theo ID.
+     * @param int $id ID người dùng.
+     * @return bool True nếu xóa thành công.
+     */
+    public function deleteUser($id) {
+        $stmt = $this->pdo->prepare("DELETE FROM users WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+
+    /**
+     * Đếm tổng số khách hàng.
+     * @return int Số lượng người dùng có vai trò 'customer'.
+     */
+    public function countCustomers() {
+        $stmt = $this->pdo->prepare("SELECT COUNT(id) FROM users WHERE role = 'customer'");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
 }

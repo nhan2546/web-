@@ -31,17 +31,10 @@ switch ($act) {
     case 'ds_sanpham': // Danh sách sản phẩm
         $adminController->ds_sanpham();
         break;
-<<<<<<< HEAD
-    case 'them_sp': // Route để hiển thị form thêm
-        $adminController->them_sp();
-        break;
-    case 'xl_themsp': // Route để xử lý logic thêm sản phẩm
-=======
     case 'them_sp': // Hiển thị form thêm sản phẩm
         $adminController->them_sp();
         break;
     case 'xl_themsp': // Xử lý logic thêm sản phẩm
->>>>>>> 7d4bf51bfce35c5ecf8d11cfcd0ce29d60fc942b
         $adminController->xl_themsp();
         break;
     case 'sua_sp': // Hiển thị form sửa sản phẩm
@@ -91,6 +84,12 @@ switch ($act) {
         break;
     case 'xoa_nguoidung':
         $adminController->xoa_nguoidung();
+        break;
+    case 'sua_nguoidung':
+        $adminController->sua_nguoidung();
+        break;
+    case 'xl_sua_nguoidung':
+        $adminController->xl_sua_nguoidung();
         break;
 
     // Các route khác...

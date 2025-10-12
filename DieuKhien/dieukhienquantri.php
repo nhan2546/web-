@@ -6,7 +6,7 @@ require_once __DIR__ . '/../MoHinh/CSDL.php';
 require_once __DIR__ . '/../MoHinh/SanPham.php';
 require_once __DIR__ . '/../MoHinh/DanhMuc.php';
 require_once __DIR__ . '/../MoHinh/DonHang.php';
-require_once __DIR__ . '/../MoHinh/NguoiDung.php'; // Thêm model Người Dùng
+require_once __DIR__ . '/../MoHinh/NguoiDung.php';
 
 class DieuKhienQuanTri {
     private $pdo; // Thuộc tính để lưu trữ kết nối CSDL
@@ -18,11 +18,6 @@ class DieuKhienQuanTri {
 
     // --- CÁC HÀM XỬ LÝ CHO TỪNG CHỨC NĂNG ---
 
-    // Chức năng: Hiển thị trang dashboard mặc định
-    public function dashboard() {
-        include __DIR__ . '/../GiaoDien/QuanTri/bang_dieu_khien.php';
-    }
-
     // Chức năng: Hiển thị danh sách sản phẩm
     public function ds_sanpham() {
         // Khởi tạo model và truyền kết nối CSDL vào -> ĐÂY LÀ CÁCH LÀM ĐÚNG
@@ -31,11 +26,16 @@ class DieuKhienQuanTri {
         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php';
     }
 
+    // Chức năng: Hiển thị form thêm sản phẩm
+    public function hienthi_themsp() {
+        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
+    }
+
     // Chức năng: Hiển thị danh sách đơn hàng
     public function ds_donhang() {
         $dh_model = new donhang($this->pdo);
         $danh_sach_don_hang = $dh_model->getAllOrders();
-        include __DIR__ . '/../GiaoDien/QuanTri/don_hang/danh_sach.php';
+        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php';
     }
 
     // Chức năng: Hiển thị chi tiết đơn hàng
@@ -63,12 +63,28 @@ class DieuKhienQuanTri {
             header('Location: admin.php?act=ct_donhang&id=' . $order_id);
         }
     }
+    
+    // Chức năng: Hiển thị trang dashboard mặc định
+    public function dashboard() {
+        // Khởi tạo các model cần thiết
+        $dh_model = new donhang($this->pdo);
+        $sp_model = new sanpham($this->pdo);
+        $user_model = new NguoiDung($this->pdo);
+
+        // Lấy các số liệu thống kê
+        $stats['total_revenue'] = $dh_model->getTotalRevenue() ?? 0;
+        $stats['new_orders_count'] = $dh_model->countNewOrders() ?? 0;
+        $stats['customer_count'] = $user_model->countCustomers() ?? 0;
+        $stats['product_count'] = $sp_model->countAllSanPham() ?? 0;
+
+        include __DIR__ . '/../GiaoDien/QuanTri/bang_dieu_khien.php';
+    }
 
     // Chức năng: Hiển thị form thêm sản phẩm
     public function them_sp() {
         // Lấy danh sách danh mục để hiển thị trong form
         $dm_model = new danhmuc($this->pdo);
-        $danh_sach_danh_muc = $dm_model->getDS_Danhmuc();
+        $danh_sach_danh_muc = $dm_model->getDS_Danhmuc(); // Sửa lỗi gọi hàm không tồn tại
         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
     }
 
@@ -117,7 +133,7 @@ class DieuKhienQuanTri {
             $san_pham = $sp_model->getone_sanoham($id); // Lấy thông tin sản phẩm cần sửa
 
             $dm_model = new danhmuc($this->pdo);
-            $danh_sach_danh_muc = $dm_model->getDS_Danhmuc(); // Lấy danh sách danh mục
+            $danh_sach_danh_muc = $dm_model->getDS_Danhmuc(); // Sửa lỗi gọi hàm không tồn tại
 
             if ($san_pham) {
                 include __DIR__ . '/../GiaoDien/QuanTri/san_pham/sua.php';
@@ -170,11 +186,13 @@ class DieuKhienQuanTri {
     public function ds_danhmuc() {
         $dm_model = new danhmuc($this->pdo);
         $danh_sach_danh_muc = $dm_model->getDS_Danhmuc();
+        // Sử dụng view đã có ở thư mục gốc
         include __DIR__ . '/../danh_sach.php';
     }
 
     public function them_danhmuc() {
-        include __DIR__ . '/../them.php';
+        // Sử dụng view đã có ở thư mục gốc
+         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
     }
 
     public function xl_them_danhmuc() {
@@ -194,6 +212,7 @@ class DieuKhienQuanTri {
         $dm_model = new danhmuc($this->pdo);
         $danh_muc = $dm_model->getDanhMucById($id);
         if ($danh_muc) {
+            // Sử dụng view đã có ở thư mục gốc
             include __DIR__ . '/../sua.php';
         } else {
             header('Location: admin.php?act=ds_danhmuc');
@@ -227,17 +246,53 @@ class DieuKhienQuanTri {
     public function ds_nguoidung() {
         $user_model = new NguoiDung($this->pdo);
         $danh_sach_nguoi_dung = $user_model->getDS_NguoiDung();
-        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/danh_sach.php';
+        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/danh_sach.admin,php';
     }
 
     public function xoa_nguoidung() {
         $id = $_GET['id'] ?? 0;
-        if ($id > 0 && $id != $_SESSION['user_id']) { // Ngăn admin tự xóa mình
+        // Ngăn admin tự xóa tài khoản của chính mình
+        if ($id > 0 && $id != $_SESSION['user_id']) {
             $user_model = new NguoiDung($this->pdo);
             $user_model->deleteUser($id);
         }
         header('Location: admin.php?act=ds_nguoidung&success=deleted');
         exit;
+    }
+
+    public function sua_nguoidung() {
+        $id = $_GET['id'] ?? 0;
+        if ($id <= 0) {
+            header('Location: admin.php?act=ds_nguoidung');
+            exit;
+        }
+
+        $user_model = new NguoiDung($this->pdo);
+        $nguoi_dung = $user_model->findUserById($id);
+
+        if ($nguoi_dung) {
+            // Các vai trò có thể có trong hệ thống
+            $roles = ['customer', 'staff', 'admin'];
+            include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/sua.php';
+        } else {
+            header('Location: admin.php?act=ds_nguoidung&error=notfound');
+            exit;
+        }
+    }
+
+    public function xl_sua_nguoidung() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'] ?? 0;
+            $fullname = $_POST['fullname'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $role = $_POST['role'] ?? 'customer';
+
+            $user_model = new NguoiDung($this->pdo);
+            $user_model->updateUserByAdmin($id, $fullname, $email, $role);
+
+            header('Location: admin.php?act=ds_nguoidung&success=updated');
+            exit;
+        }
     }
 }
 ?>

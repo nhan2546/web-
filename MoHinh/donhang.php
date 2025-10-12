@@ -90,5 +90,28 @@ class donhang {
         $stmt->execute();
         $stmt->close();
     }
+
+    /**
+     * Tính tổng doanh thu từ các đơn hàng đã giao thành công.
+     * @return float Tổng doanh thu.
+     */
+    public function getTotalRevenue() {
+        $db = new CSDL();
+        // Chỉ tính tổng tiền của các đơn hàng có trạng thái 'delivered'
+        $sql = "SELECT SUM(total_amount) as total FROM orders WHERE status = 'delivered'";
+        $result = $db->read($sql);
+        return $result[0]['total'] ?? 0;
+    }
+
+    /**
+     * Đếm số lượng đơn hàng mới (đang chờ xử lý).
+     * @return int Số lượng đơn hàng mới.
+     */
+    public function countNewOrders() {
+        $db = new CSDL();
+        $sql = "SELECT COUNT(id) as count FROM orders WHERE status = 'pending'";
+        $result = $db->read($sql);
+        return $result[0]['count'] ?? 0;
+    }
 }
 ?>
