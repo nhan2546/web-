@@ -1,13 +1,16 @@
 /* cấu trúc layout chung */
 /* Thiết lập cơ bản cho toàn bộ trang */
 html, body {
-    margin: 0;
+    margin: 0 ;
     padding: 0;
     height: 100%;
 }
 
 /* Định dạng cho thẻ body, sử dụng flexbox để đẩy footer xuống cuối trang */
 body {
+     
+    height: 100%;
+    box-sizing: border-box;
     background: #f4f7f6;
     color: #333;
     font-family: 'Poppins', 'Inter', sans-serif;
@@ -195,6 +198,7 @@ body {
     color: #fff;
     text-align: center;
     padding: 12px 0; 
+    width: 100%;
 }
 
 /* các thành phần chung (bảng, nút bấm, badge) */
@@ -308,7 +312,7 @@ h1 {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
     margin-top: 20px;
-    padding: 0; /* Bỏ padding thừa để sản phẩm dàn đều */
+    padding: 0;
     justify-items: center;
 }
 
@@ -483,10 +487,10 @@ h1 {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    color: #ffffff; /* Đổi màu icon SVG (như icon điện thoại) sang màu trắng */
+    color: #ffffff;
     text-decoration: none;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    overflow: hidden; /* Ẩn các phần ảnh thừa ra ngoài hình tròn */
+    overflow: hidden;
     transition: transform 0.2s ease-in-out, background-color 0.2s;
 }
 
@@ -494,7 +498,7 @@ h1 {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 50%; /* Đảm bảo ảnh bên trong cũng được bo tròn */
+    border-radius: 50%; 
 }
 
 .contact-item:hover {
@@ -520,19 +524,19 @@ h1 {
     text-align: center;
     background: #fff;
     padding: 40px;
-    margin: 0 auto; /* Căn giữa form theo chiều ngang */
+    margin: 0 auto; 
     border-radius: 12px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     border: 1px solid #e9ecef;
     width: 100%;
-    max-width: 450px; /* Giới hạn chiều rộng tối đa của form */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng chuyển động mượt mà */
+    max-width: 450px; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
 }
 
 /* Hiệu ứng khi rê chuột vào form */
 .auth-form-container:hover {
-    transform: translateY(-5px); /* Nâng form lên một chút */
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12); /* Tăng độ đậm của bóng đổ */
+    transform: translateY(-5px); 
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12); 
 }
 
 /* Tiêu đề của form (Đăng nhập, Đăng ký) */
@@ -547,7 +551,7 @@ h1 {
 /* Ô nhập liệu trong form */
 .auth-form-container .form-control {
   width: 70%;
-  height: 45px;        /* cùng chiều cao */
+  height: 45px;        
   padding: 10px 15px;
   border-radius: 8px;
   border: 1px solid #ccc;
@@ -570,7 +574,7 @@ h1 {
 /* Vùng chứa nút đăng nhập chính */
 .main-login-btn-wrapper {
     width: 70%;
-    margin: 0 auto; /* Căn giữa */
+    margin: 0 auto; 
 }
 
 /* Nút bấm chính và các nút social trong form */
@@ -615,8 +619,8 @@ h1 {
 
 /* Vùng chứa các nút đăng nhập social */
 .social-login-wrapper {
-    width: 70%; /* Cùng chiều rộng với ô input */
-    margin: 0 auto; /* Căn giữa */
+    width: 70%; 
+    margin: 0 auto; 
 }
 
 /* Nút Đăng nhập với Facebook */
@@ -640,14 +644,14 @@ h1 {
     
 }
 .btn-google:hover {
-    background-color: #f8f9fa; /* Chuyển nền sang màu xám nhạt khi rê chuột */
-    border-color: #dadce0; /* Đổi màu viền để đồng bộ */
+    background-color: #f8f9fa; 
+    border-color: #dadce0; 
 }
 
 /* Định dạng cho icon bên trong nút */
 .btn-icon {
-    margin-right: 10px; /* Tạo khoảng cách giữa icon và chữ */
-    line-height: 1; /* Đảm bảo icon được căn giữa theo chiều dọc */
+    margin-right: 10px; 
+    line-height: 1;
 }
 
 /* Nút Đăng nhập bằng số điện thoại */
@@ -662,8 +666,8 @@ h1 {
 }
 /* Vùng bao bọc các trang xác thực (đăng nhập, đăng ký) */
 .auth-page-wrapper {
-    padding-top: 50px; /* Tạo khoảng đệm 50px phía trên */
-    padding-bottom: 50px; /* Tạo khoảng đệm phía dưới */
+    padding-top: 50px; 
+    padding-bottom: 50px; 
 }
 
 /* Đảm bảo các nút social có chiều rộng bằng nhau khi ở trên cùng một hàng */
@@ -696,8 +700,8 @@ h1 {
     cursor: pointer;
     z-index: 1000;
     transition: transform 0.2s ease-in-out;
-    background-color: #ffffff; /* Thêm màu nền xanh cho nút AI */
-    padding: 0; /* Xóa padding mặc định của button */
+    background-color: #ffffff; 
+    padding: 0; 
 }
 
 /* CSS để ẩn/hiện icon trên nút chatbot */
@@ -734,8 +738,8 @@ h1 {
 /* Cửa sổ chatbot */
 .chatbot-container {
     position: fixed;
-    bottom: 200px; /* Căn chỉnh theo chiều dọc với nhóm nút */
-    right: 82px;  /* Đặt bên trái nhóm nút */
+    bottom: 200px; 
+    right: 82px; 
     width: 300px; 
     background: #fff;
     border-radius: 15px;
@@ -808,14 +812,14 @@ h1 {
 }
 
 .chat-input textarea {
-    flex-grow: 1; /* Cho phép textarea co giãn lấp đầy không gian */
+    flex-grow: 1; 
     border: none;
     outline: none;
     resize: none;
     font-size: 0.95rem;
     padding: 8px 5px;
     background: transparent;
-    max-height: 80px; /* Giới hạn chiều cao tối đa khi gõ nhiều */
+    max-height: 80px; 
 }
 
 /* Nút gửi tin nhắn */
@@ -830,7 +834,7 @@ h1 {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    flex-shrink: 0; /* Ngăn nút bị co lại */
+    flex-shrink: 0; 
     transition: background-color 0.2s ease;
 }
 
@@ -838,13 +842,13 @@ h1 {
     background: #2980b9;
 }
 
-/* --- ĐỊNH DẠNG LẠI PHẦN TIN NHẮN --- */
+/*  ĐỊNH DẠNG LẠI PHẦN TIN NHẮN  */
 
 /* Định dạng chung cho một dòng chat (user hoặc bot) */
 .chat-message {
     display: flex;
     margin-bottom: 15px;
-    align-items: flex-end; /* Căn avatar và bong bóng chat theo chiều dọc */
+    align-items: flex-end;
     gap: 10px;
 }
 
@@ -883,22 +887,22 @@ h1 {
     font-size: 0.95rem;
     padding: 12px 16px;
     margin: 0;
-    border-radius: 18px; /* Bo tròn đều các góc trước */
-    word-wrap: break-word; /* Đảm bảo chữ dài tự xuống dòng */
+    border-radius: 18px; 
+    word-wrap: break-word; 
 }
 
 /* Tùy chỉnh bong bóng chat của bot */
 .chat-message.bot .message-content p {
     background: #e9ecef;
     color: #333;
-    border-bottom-left-radius: 0; /* Tạo hiệu ứng "đuôi" cho bong bóng chat */
+    border-bottom-left-radius: 0;
 }
 
 /* Tùy chỉnh bong bóng chat của người dùng */
 .chat-message.user .message-content p {
     background: #3498db;
     color: #fff;
-    border-bottom-right-radius: 0; /* Tạo hiệu ứng "đuôi" cho bong bóng chat */
+    border-bottom-right-radius: 0; 
 }
 
 /* Hiệu ứng "đang gõ..." cho bot */
@@ -1067,8 +1071,8 @@ h1 {
 
 /* Căn chỉnh nút submit trong form sang bên phải */
 .account-page-wrapper .card-body form button[type="submit"] {
-    align-self: flex-end; /* Đẩy nút về cuối theo trục ngang */
-    margin-top: 10px;     /* Thêm một chút khoảng cách phía trên */
+    align-self: flex-end; 
+    margin-top: 10px;     
 }
 
 /* Tiêu đề cho các khu vực trong trang tài khoản */
