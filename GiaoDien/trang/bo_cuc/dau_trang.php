@@ -91,7 +91,7 @@
                                 <h6 class="title">Samsung</h6>
                                 <ul class="list-unstyled">
                                     <li><a href="#">Galaxy S Series</a></li>
-                                    <li><a href="#">Galaxy ZPhone</a></li>
+                                    <li><a href="#">Galaxy Z Fold</a></li>
                                     <li><a href="#">Galaxy A Series</a></li>
                                     <li><a href="#">Galaxy M Series</a></li>
                                 </ul>
@@ -238,4 +238,4 @@
         </div>
     </nav>
     <main class="main py-4">
-        <div class="container">
+        <div class="main-content-wrapper">

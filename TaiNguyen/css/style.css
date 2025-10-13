@@ -1,33 +1,36 @@
 /* cấu trúc layout chung */
 /* Thiết lập cơ bản cho toàn bộ trang */
 html, body {
-    margin: 0 ;
-    padding: 0;
-    height: 100%;
+    margin: 0;
+    padding-left: 0%;
+    padding-right: 0%
 }
-
 /* Định dạng cho thẻ body, sử dụng flexbox để đẩy footer xuống cuối trang */
-body {
-     
-    height: 100%;
+body { 
+
     box-sizing: border-box;
     background: #f4f7f6;
     color: #333;
     font-family: 'Poppins', 'Inter', sans-serif;
     display: flex;
     flex-direction: column;
+    min-height: 100vh; /* Đảm bảo body luôn chiếm ít nhất toàn bộ chiều cao màn hình */
 }
-/* Đảm bảo vùng nội dung chính co giãn để lấp đầy không gian */
-.main {
+/* Cho phần main chiếm toàn bộ chiều cao còn lại */
+.main{
     flex: 1 0 auto;
 }
-
-/* Thêm padding cho nội dung chính khi dùng container-fluid */
-.main-content-wrapper {
-    padding-left: 30px;
-    padding-right: 30px;
+/* Đảm bảo vùng nội dung chính co giãn để lấp đầy không gian */
+.main-content-wrapper{
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+    
 }
-
 /* header chung */
 /* Định dạng cho thanh header chính */
 .main-header {
@@ -36,13 +39,12 @@ body {
     padding: 15px 0 0; 
     font-weight: 800;
     letter-spacing: .5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Căn chỉnh các thành phần bên trong header (logo, search, actions) */
 .header-content {
-    display: flex;
-    flex-direction: row; /* Đưa các mục header lên cùng một hàng */
+    display: flex; /* Đưa các mục header lên cùng một hàng */
     justify-content: space-between; /* Đẩy tên shop và menu ra hai bên */
     align-items: center;
 }
@@ -196,11 +198,19 @@ body {
 .footer-custom {
     background: #3498db; 
     color: #fff;
-    text-align: center;
     padding: 12px 0; 
-    width: 100%;
 }
 
+/* Áp dụng layout căn giữa cho header, nav và footer */
+.header-content,
+.main-nav-bar .main-nav,
+.footer-custom .container-fluid {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+}
 /* các thành phần chung (bảng, nút bấm, badge) */
 /* Tiêu đề chính của các trang */
 h1 {
@@ -226,7 +236,6 @@ h1 {
 }
 /* Căn chỉnh các mục trong menu */
 .main-nav-bar .main-nav {
-    justify-content: flex-start; 
     gap: 35px;
 }
 
