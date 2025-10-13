@@ -323,7 +323,7 @@ body.admin-body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #e74c3c; /* Màu đỏ cho hành động nguy hiểm */
+    color: #e74c3c;
     text-decoration: none;
     transition: color 0.2s ease;
 }

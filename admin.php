@@ -78,18 +78,18 @@ switch ($act) {
         $adminController->xoa_danhmuc();
         break;
 
-    // Quản lý Người dùng
-    case 'ds_nguoidung':
-        $adminController->ds_nguoidung();
+    // Quản lý Nhan vien    
+    case 'ds_nhanvien':
+        $adminController->ds_nhanvien();
         break;
-    case 'xoa_nguoidung':
-        $adminController->xoa_nguoidung();
+    case 'xoa_nhanvien':
+        $adminController->xoa_nhanvien();
         break;
-    case 'sua_nguoidung':
-        $adminController->sua_nguoidung();
+    case 'sua_nhanvien':
+        $adminController->sua_nhanvien();
         break;
-    case 'xl_sua_nguoidung':
-        $adminController->xl_sua_nguoidung();
+    case 'xl_sua_nhanvien':
+        $adminController->xl_sua_nhanvien();
         break;
 
     // AJAX Endpoints
