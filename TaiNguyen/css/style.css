@@ -384,6 +384,7 @@ h1 {
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
+
 /* Bảng chứa các sản phẩm trong giỏ */
 .cart-items-table {
     border: none;
@@ -464,6 +465,13 @@ h1 {
 .btn-primary:hover {
     background-color: #2980b9; 
     border-color: #2573a7;
+}
+
+/* Đảm bảo các card và section chiếm toàn bộ chiều rộng */
+.cart-section, 
+.order-card, 
+.account-page-wrapper .card { 
+    width: 100%;
 }
 
 /* Ghi đè màu cho nút .btn-danger (được dùng cho nút Google) */
@@ -1011,19 +1019,6 @@ h1 {
     text-decoration: underline; 
 }
 
-/* hiển thị mega menu khi rê chuột */
-/* 
-  Ghi đè hành vi mặc định của Bootstrap (yêu cầu click).
-  Khi rê chuột vào thẻ <li> chứa mega menu, menu con sẽ hiện ra.
-*/
-@media (min-width: 992px) { /* Chỉ áp dụng cho màn hình lớn (desktop) */
-    .main-nav .nav-item.has-megamenu:hover > .megamenu {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0); 
-    }
-}
-
 /* trang thông tin tài khoản */
 .account-page-wrapper h1 {
     border-bottom: none;
@@ -1084,21 +1079,6 @@ h1 {
     margin-top: 10px;     
 }
 
-/* Tiêu đề cho các khu vực trong trang tài khoản */
-.account-section-title {
-    font-size: 20px;
-    font-weight: 600;
-    color: #34495e;
-    margin-bottom: 1.5rem;
-}
-
-/* Đường kẻ ngăn cách giữa các cột trên màn hình lớn */
-@media (min-width: 992px) {
-    .border-end-lg {
-        border-right: 1px solid #e9ecef !important;
-    }
-}
-
 /* Thẻ thông tin người dùng bên phải */
 .profile-summary-card {
     padding: 30px 20px; }
@@ -1107,7 +1087,6 @@ h1 {
     position: relative;
     width: 80px;
     height: 80px;
-    margin: 0 auto 15px;
 }
 
 .profile-avatar-wrapper .avatar-upload-overlay {
@@ -1141,9 +1120,22 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 15px;
     font-size: 36px;
     font-weight: bold;
+    overflow: hidden; /* Đảm bảo ảnh không bị tràn ra ngoài */
+}
+
+/* hiển thị mega menu khi rê chuột */
+/* 
+  Ghi đè hành vi mặc định của Bootstrap (yêu cầu click).
+  Khi rê chuột vào thẻ <li> chứa mega menu, menu con sẽ hiện ra.
+*/
+@media (min-width: 992px) { /* Chỉ áp dụng cho màn hình lớn (desktop) */
+    .main-nav .nav-item.has-megamenu:hover > .megamenu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0); 
+    }
 }
 
 .profile-summary-card .profile-avatar img {

@@ -80,16 +80,16 @@ switch ($act) {
 
     // Quản lý Nhan vien    
     case 'ds_nhanvien':
-        $adminController->ds_nhanvien();
+        $adminController->ds_nhanvien(); // Đã tồn tại
         break;
     case 'xoa_nhanvien':
         $adminController->xoa_nhanvien();
         break;
     case 'sua_nhanvien':
-        $adminController->sua_nhanvien();
+        $adminController->sua_nhanvien(); // Sửa từ sua_nguoidung
         break;
     case 'xl_sua_nhanvien':
-        $adminController->xl_sua_nhanvien();
+        $adminController->xl_sua_nhanvien(); // Sửa từ xl_sua_nguoidung
         break;
 
     // AJAX Endpoints

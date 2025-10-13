@@ -200,6 +200,9 @@ class controller {
         $userModel = new NguoiDung($this->pdo);
         $userModel->updateUserInfo($user_id, $fullname, $phone_number, $address);
 
+        // 4. Cập nhật lại session để tên mới hiển thị ngay lập tức
+        $_SESSION['user_fullname'] = $fullname;
+
         // 4. Chuyển hướng lại trang thông tin với thông báo thành công
         header('Location: index.php?act=thong_tin_tai_khoan&success=1');
         exit();

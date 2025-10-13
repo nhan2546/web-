@@ -23,11 +23,6 @@ class DieuKhienQuanTri {
         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/danh_sach.php';
     }
 
-    // Chức năng: Hiển thị form thêm sản phẩm
-    public function hienthi_themsp() {
-        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
-    }
-
     // Chức năng: Hiển thị danh sách đơn hàng
     public function ds_donhang() {
         // Lấy các tham số lọc và tìm kiếm từ URL
@@ -86,7 +81,7 @@ class DieuKhienQuanTri {
         // Lấy danh sách danh mục để hiển thị trong form
         $dm_model = new danhmuc($this->pdo);
         $danh_sach_danh_muc = $dm_model->getDS_Danhmuc(); // Sửa lỗi gọi hàm không tồn tại
-        include __DIR__ . '/..GiaoDien/QuanTri/san_pham/them.php';
+        include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
     }
 
     // Chức năng: Xử lý thêm sản phẩm mới
@@ -241,13 +236,13 @@ class DieuKhienQuanTri {
     }
 
     // --- QUẢN LÝ NGƯỜI DÙNG ---
-    public function ds_nguoidung() {
+    public function ds_nhanvien() {
         $user_model = new NguoiDung($this->pdo);
-        $danh_sach_nhan_vien = $user_model->getDS_NguoiDung(); // Giả sử hàm này lấy tất cả user
+        $danh_sach_nhan_vien = $user_model->getDS_NguoiDung();
         include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_NV.php';
     }
 
-    public function xoa_nguoidung() {
+    public function xoa_nhanvien() {
         $id = $_GET['id'] ?? 0;
         // Ngăn admin tự xóa tài khoản của chính mình
         if ($id > 0 && $id != $_SESSION['user_id']) {
@@ -255,10 +250,10 @@ class DieuKhienQuanTri {
             $user_model->deleteUser($id);
         }
         header('Location: admin.php?act=ds_nguoidung&success=deleted');
-        exit;
+        exit; // Sửa lỗi: ds_nguoidung không tồn tại, phải là ds_nhanvien
     }
 
-    public function sua_nguoidung() {
+    public function sua_nhanvien() {
         $id = $_GET['id'] ?? 0;
         if ($id <= 0) {
             header('Location: admin.php?act=ds_nguoidung');
@@ -271,14 +266,14 @@ class DieuKhienQuanTri {
         if ($nguoi_dung) {
             // Các vai trò có thể có trong hệ thống
             $roles = ['customer', 'staff', 'admin'];
-            include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/sua.php';
+            include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/sua_nhan_NV.php';
         } else {
             header('Location: admin.php?act=ds_nguoidung&error=notfound');
             exit;
         }
     }
 
-    public function xl_sua_nguoidung() {
+    public function xl_sua_nhanvien() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'] ?? 0;
             $fullname = $_POST['fullname'] ?? '';
