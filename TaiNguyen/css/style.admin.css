@@ -247,6 +247,16 @@ body.admin-body {
     background-color: #c0392b;
 }
 
+/* Nút chính (màu xanh, dùng cho hành động chính như Thêm mới) */
+.admin-btn-primary {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.admin-btn-primary:hover {
+    background-color: #2980b9; /* Darker blue for hover */
+}
+
 /* các form trong trang admin */
 /* Định dạng chung cho các form */
 .admin-card .form-label {

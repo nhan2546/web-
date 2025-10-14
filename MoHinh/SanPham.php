@@ -80,41 +80,11 @@ class sanpham {
     }
 
     /*xử lý dữ liệu */
-    public function themsp(...$args){
-        if (count($args) === 1 && $args[0] instanceof sanpham) {
-            $sp = $args[0];
-        } else {
-            $id_danhmuc = $args[0] ?? 0;
-            $name = $args[1] ?? '';
-            $price = $args[2] ?? 0;
-            $mount = $args[3] ?? 0;
-            $image_url = $args[4] ?? '';
-            $sale = $args[5] ?? 0;
-            $decribe = $args[6] ?? '';
-
-            // Pass the connection when creating a new instance
-            $sp = new sanpham($this->db);
-            $sp->setId_danhmuc($id_danhmuc);
-            $sp->setName($name);
-            $sp->setPrice($price);
-            $sp->setMount($mount);
-            $sp->setImage($image_url);
-            $sp->setSale($sale);
-            $sp->setDecribe($decribe);
-        }
-
-        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `image_url`, `stock_quantity`, `category_id`) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+    public function themsp($name, $description, $price, $image_url, $stock_quantity, $category_id, $sale){
+        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `image_url`, `stock_quantity`, `category_id`, `sale`) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
-
-        $name = $sp->getName();
-        $description = $sp->getDecribe();
-        $price = $sp->getPrice();
-        $image_url = $sp->getImage();
-        $stock_quantity = $sp->getMount();
-        $category_id = $sp->getId_danhmuc();
-        
-        $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id]);
+        return $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id, $sale]);
     }
 
     /*lấy sản phẩm từ bản product*/
