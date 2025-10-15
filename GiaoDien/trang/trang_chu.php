@@ -26,8 +26,12 @@
               <img src="TaiLen/san_pham/<?= htmlspecialchars($sp_sale['image_url']) ?>" alt="<?= htmlspecialchars($sp_sale['name']) ?>">
               <h4><?= htmlspecialchars($sp_sale['name']) ?></h4>
               <div class="cp-price">
-                <span class="now"><?= number_format($sp_sale['sale_price'], 0, ',', '.') ?>₫</span>
-                <del><?= number_format($sp_sale['price'], 0, ',', '.') ?>₫</del>
+                <?php if (isset($sp_sale['sale_price']) && (float)$sp_sale['sale_price'] > 0): ?>
+                  <span class="now"><?= number_format($sp_sale['sale_price'], 0, ',', '.') ?>₫</span>
+                  <del><?= number_format($sp_sale['price'], 0, ',', '.') ?>₫</del>
+                <?php else: ?>
+                  <span class="now"><?= number_format($sp_sale['price'], 0, ',', '.') ?>₫</span>
+                <?php endif; ?>
               </div>
               <span class="cp-badge">Giảm <?= round($sp_sale['discount_percentage']) ?>%</span>
             </a>

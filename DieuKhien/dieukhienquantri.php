@@ -95,7 +95,7 @@ class DieuKhienQuanTri {
             $description = $_POST['description'] ?? '';
             $stock_quantity = $_POST['stock_quantity'] ?? 0;
             $category_id = $_POST['category_id'] ?? 0;
-            $sale_price = $_POST['sale_price'] ?? 0; // Lấy giá sale
+            // $sale_price = $_POST['sale_price'] ?? 0; // Tạm thời vô hiệu hóa
 
             // 2. Xử lý upload hình ảnh
             $image_url = ''; // Mặc định không có ảnh
@@ -114,7 +114,7 @@ class DieuKhienQuanTri {
             // 3. Tạo đối tượng model và gọi hàm thêm
             $sanpham_model = new sanpham($this->pdo);
             // Gọi hàm themsp với đúng thứ tự tham số
-            $sanpham_model->themsp($name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price);
+            $sanpham_model->themsp($name, $description, $price, $image_url, $stock_quantity, $category_id);
 
             // 4. Chuyển hướng về trang danh sách sản phẩm của admin
             header('Location: admin.php?act=ds_sanpham&success=added');
