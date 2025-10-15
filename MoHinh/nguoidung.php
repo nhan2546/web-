@@ -252,8 +252,8 @@ class NguoiDung {
         $sql = "SELECT 
                     u.id, 
                     u.fullname, 
-                    u.email, 
-                    u.is_locked,
+                    u.email,
+                    u.status,
                     SUM(CASE WHEN o.status = 'delivered' THEN o.total_amount ELSE 0 END) as total_spending
                 FROM 
                     users u
@@ -262,7 +262,7 @@ class NguoiDung {
                 WHERE 
                     u.role = 'customer'
                 GROUP BY 
-                    u.id, u.fullname, u.email, u.is_locked
+                    u.id, u.fullname, u.email, u.status
                 ORDER BY 
                     total_spending DESC";
         

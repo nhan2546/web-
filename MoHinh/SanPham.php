@@ -195,5 +195,30 @@ class sanpham {
     public function deletesp($id){
         return $this->xoasp($id);
     }
+
+    /**
+     * Lấy danh sách sản phẩm kèm theo số lượng đã bán.
+     * @param string $order 'DESC' cho bán chạy nhất, 'ASC' cho bán ế nhất.
+     * @param int $limit Giới hạn số lượng sản phẩm trả về.
+     * @return array Mảng sản phẩm.
+     */
+    public function getProductsBySaleVolume($order = 'DESC', $limit = 10) {
+        $sql = "SELECT 
+                    p.id, 
+                    p.name, 
+                    p.image_url, 
+                    p.price, 
+                    p.stock_quantity,
+                    COALESCE(SUM(od.quantity), 0) as total_sold
+                FROM products p
+                LEFT JOIN order_details od ON p.id = od.product_id
+                GROUP BY p.id
+                ORDER BY total_sold " . ($order === 'DESC' ? 'DESC' : 'ASC') . "
+                LIMIT :limit";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
