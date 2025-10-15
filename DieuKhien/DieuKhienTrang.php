@@ -155,27 +155,35 @@ class controller {
                 $voucher = $voucherModel->findVoucherByCode($code);
 
                 if ($voucher) {
-                    // Tính tổng tiền hàng
+                    // 1. Tính tổng tiền hàng (subtotal)
                     $subtotal = 0;
                     foreach ($cart as $item) {
                         $subtotal += $item['price'] * $item['quantity'];
                     }
 
-                    // Tính toán số tiền giảm giá
-                    $discount_amount = 0;
-                    if ($voucher['discount_type'] === 'percentage') {
-                        $discount_amount = ($subtotal * $voucher['discount_value']) / 100;
-                    } else { // 'fixed'
-                        $discount_amount = $voucher['discount_value'];
-                    }
+                    // 2. KIỂM TRA ĐIỀU KIỆN ĐƠN HÀNG TỐI THIỂU
+                    if ($subtotal >= $voucher['min_order_amount']) {
+                        // 3. Tính toán số tiền giảm giá
+                        $discount_amount = 0;
+                        if ($voucher['discount_type'] === 'percentage') {
+                            $discount_amount = ($subtotal * $voucher['discount_value']) / 100;
+                        } else { // 'fixed'
+                            $discount_amount = $voucher['discount_value'];
+                        }
 
-                    // Lưu thông tin voucher vào session
-                    $_SESSION['voucher'] = [
-                        'code' => $voucher['code'],
-                        'discount_amount' => $discount_amount
-                    ];
-                    $_SESSION['voucher_success'] = "Áp dụng voucher thành công!";
+                        // 4. Lưu thông tin voucher vào session
+                        $_SESSION['voucher'] = [
+                            'code' => $voucher['code'],
+                            'discount_amount' => $discount_amount
+                        ];
+                        $_SESSION['voucher_success'] = "Áp dụng voucher thành công!";
+                    } else {
+                        // Báo lỗi nếu không đủ điều kiện
+                        $min_amount_formatted = number_format($voucher['min_order_amount'], 0, ',', '.');
+                        $_SESSION['voucher_error'] = "Voucher này chỉ áp dụng cho đơn hàng từ {$min_amount_formatted}₫.";
+                    }
                 } else {
+                    // Báo lỗi nếu voucher không tồn tại hoặc hết hạn
                     $_SESSION['voucher_error'] = "Mã voucher không hợp lệ hoặc đã hết hạn.";
                 }
             }
@@ -319,16 +327,17 @@ class controller {
         $user_id = $_SESSION['user_id'];
         $shipping_address = $_POST['address'] ?? '';
         $payment_method = $_POST['payment_method'] ?? 'cod'; // Mặc định là COD
+        $voucher_code = $_SESSION['voucher']['code'] ?? null;
+        $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
 
         // Tính lại tổng tiền cuối cùng
         $subtotal = 0;
         foreach ($cart as $item) { $subtotal += $item['price'] * $item['quantity']; }
-        $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
         $final_total = $subtotal - $discount_amount;
 
         // 4. Gọi model để tạo đơn hàng
         $donHangModel = new donhang($this->pdo);
-        $orderId = $donHangModel->createOrder($user_id, $cart, $final_total, $shipping_address, $payment_method);
+        $orderId = $donHangModel->createOrder($user_id, $cart, $final_total, $shipping_address, $payment_method, $voucher_code, $discount_amount);
 
         if ($orderId) {
             // 5. Xóa giỏ hàng và voucher sau khi đặt hàng thành công
@@ -402,7 +411,7 @@ class controller {
     public function thong_tin_tai_khoan() {
         // 1. Kiểm tra người dùng đã đăng nhập chưa
         if (!isset($_SESSION['user_id'])) {
-            header('Location: index.php?act=dang_nhap');
+            header('Location: index.php?act=dang_nhap&redirect=thong_tin_tai_khoan');
             exit();
         }
 

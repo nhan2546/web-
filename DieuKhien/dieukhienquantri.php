@@ -4,6 +4,7 @@ require_once __DIR__ . '/../MoHinh/SanPham.php';
 require_once __DIR__ . '/../MoHinh/DanhMuc.php';
 require_once __DIR__ . '/../MoHinh/DonHang.php';
 require_once __DIR__ . '/../MoHinh/NguoiDung.php';
+require_once __DIR__ . '/../MoHinh/Voucher.php';
 
 class DieuKhienQuanTri {
     private $pdo; // Thuộc tính để lưu trữ kết nối CSDL
@@ -184,7 +185,7 @@ class DieuKhienQuanTri {
     public function ds_danhmuc() {
         $dm_model = new danhmuc($this->pdo);
         $danh_sach_danh_muc = $dm_model->getDS_Danhmuc();
-        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_NV.php';
+        include __DIR__ . '/../GiaoDien/QuanTri/danh_muc/danh_sach.php';
     }
 
     public function them_danhmuc() {
@@ -234,6 +235,83 @@ class DieuKhienQuanTri {
             $dm_model->deleteCategory($id);
         }
         header('Location: admin.php?act=ds_danhmuc&success=deleted');
+        exit;
+    }
+
+    // --- QUẢN LÝ VOUCHER ---
+    public function ds_voucher() {
+        $voucher_model = new Voucher($this->pdo);
+        $danh_sach_voucher = $voucher_model->getAllVouchers();
+        include __DIR__ . '/../GiaoDien/QuanTri/voucher/danh_sach.php';
+    }
+
+    public function them_voucher() {
+        include __DIR__ . '/../GiaoDien/QuanTri/voucher/them.php';
+    }
+
+    public function xl_them_voucher() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $code = strtoupper(trim($_POST['code']));
+            $description = $_POST['description'] ?? '';
+            $discount_type = $_POST['discount_type'] ?? 'fixed';
+            $discount_value = $_POST['discount_value'] ?? 0;
+            $min_order_amount = $_POST['min_order_amount'] ?? 0;
+            $usage_limit = $_POST['usage_limit'] ?? null;
+            $expires_at = $_POST['expires_at'] ?? null;
+            $is_active = isset($_POST['is_active']) ? 1 : 0;
+
+            $voucher_model = new Voucher($this->pdo);
+
+            // KIỂM TRA XEM MÃ VOUCHER ĐÃ TỒN TẠI CHƯA
+            if ($voucher_model->findVoucherByCode($code)) {
+                // Nếu đã tồn tại, chuyển hướng lại với thông báo lỗi
+                header('Location: admin.php?act=them_voucher&error=code_exists');
+                exit;
+            }
+
+            $voucher_model->addVoucher($code, $description, $discount_type, $discount_value, $min_order_amount, $usage_limit, $expires_at, $is_active);
+            
+            header('Location: admin.php?act=ds_voucher&success=added');
+            exit;
+        }
+    }
+
+    public function sua_voucher() {
+        $id = $_GET['id'] ?? 0;
+        $voucher_model = new Voucher($this->pdo);
+        $voucher = $voucher_model->getVoucherById($id);
+        if ($voucher) {
+            include __DIR__ . '/../GiaoDien/QuanTri/voucher/sua.php';
+        } else {
+            header('Location: admin.php?act=ds_voucher');
+        }
+    }
+
+    public function xl_sua_voucher() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'] ?? 0;
+            $code = strtoupper(trim($_POST['code']));
+            $description = $_POST['description'] ?? '';
+            $discount_type = $_POST['discount_type'] ?? 'fixed';
+            $discount_value = $_POST['discount_value'] ?? 0;
+            $min_order_amount = $_POST['min_order_amount'] ?? 0;
+            $usage_limit = $_POST['usage_limit'] ?? null;
+            $expires_at = $_POST['expires_at'] ?? null;
+            $is_active = isset($_POST['is_active']) ? 1 : 0;
+
+            $voucher_model = new Voucher($this->pdo);
+            $voucher_model->updateVoucher($id, $code, $description, $discount_type, $discount_value, $min_order_amount, $usage_limit, $expires_at, $is_active);
+
+            header('Location: admin.php?act=ds_voucher&success=updated');
+            exit;
+        }
+    }
+
+    public function xoa_voucher() {
+        $id = $_GET['id'] ?? 0;
+        $voucher_model = new Voucher($this->pdo);
+        $voucher_model->deleteVoucher($id);
+        header('Location: admin.php?act=ds_voucher&success=deleted');
         exit;
     }
     // --- QUẢN LÝ KHÁCH HÀNG ---

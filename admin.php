@@ -59,6 +59,15 @@ switch ($act) {
     case 'toggle_trangthai_khachhang':
         $adminController->toggle_trangthai_khachhang();
         break;
+    case 'xl_them_voucher':
+        $adminController->xl_them_voucher();
+        break;
+    case 'xl_sua_voucher':
+        $adminController->xl_sua_voucher();
+        break;
+    case 'xoa_voucher':
+        $adminController->xoa_voucher();
+        break;
     case 'ajax_get_chart_data':
         $adminController->ajax_get_chart_data();
         break;
@@ -95,9 +104,6 @@ switch ($act) {
     case 'them_danhmuc':
         $adminController->them_danhmuc();
         break;
-    case 'xl_them_danhmuc':
-        $adminController->xl_them_danhmuc();
-        break;
     case 'sua_danhmuc':
         $adminController->sua_danhmuc();
         break;
@@ -118,8 +124,22 @@ switch ($act) {
         $adminController->ds_khachhang();
         break;
 
+    // Quản lý Voucher
+    case 'ds_voucher':
+        $adminController->ds_voucher();
+        break;
+    case 'them_voucher':
+        $adminController->them_voucher();
+        break;
+    case 'sua_voucher':
+        $adminController->sua_voucher();
+        break;
+
     case 'bao_cao_doanh_thu':
         $adminController->bao_cao_doanh_thu();
+        break;
+    case 'bao_cao_san_pham':
+        $adminController->bao_cao_san_pham();
         break;
 
     // Mặc định: hiển thị Bảng điều khiển

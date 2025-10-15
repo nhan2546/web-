@@ -50,15 +50,15 @@
                             ?>
                         </td>
                         <td>
-                            <?php if ($khach_hang['is_locked']): ?>
-                                <span class="badge badge-danger">Đã khóa</span>
+                            <?php if ($khach_hang['status'] == 'locked'): ?>
+                                <span class="badge badge-cancelled">Đã khóa</span>
                             <?php else: ?>
                                 <span class="badge badge-success">Hoạt động</span>
                             <?php endif; ?>
                         </td>
                         <td class="action-buttons">
-                            <a href="admin.php?act=khoa_khachhang&id=<?php echo $khach_hang['id']; ?>" class="admin-btn admin-btn-warning">
-                                <?php if ($khach_hang['is_locked']): ?>
+                            <a href="admin.php?act=toggle_trangthai_khachhang&id=<?= $khach_hang['id'] ?>&status=<?= ($khach_hang['status'] == 'locked' ? 'active' : 'locked') ?>" class="admin-btn admin-btn-warning">
+                                <?php if ($khach_hang['status'] == 'locked'): ?>
                                     Mở khóa
                                 <?php else: ?>
                                     Khóa

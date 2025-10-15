@@ -89,6 +89,9 @@ class DieuKhienXacThuc {
                 if ($user['role'] === 'admin' || $user['role'] === 'staff') {
                     // Nếu là admin hoặc nhân viên, chuyển đến trang quản trị
                     header('Location: admin.php');
+                } elseif (isset($_POST['redirect']) && !empty($_POST['redirect'])) {
+                    // Nếu có trang chuyển hướng được chỉ định (ví dụ: từ giỏ hàng, tài khoản)
+                    header('Location: index.php?act=' . urlencode($_POST['redirect']));
                 } else {
                     // Nếu là người dùng thường, chuyển về trang chủ
                     header('Location: index.php?act=trangchu');

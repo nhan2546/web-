@@ -119,18 +119,20 @@ class donhang {
      * @param float $totalAmount Tổng số tiền cuối cùng.
      * @param string $shippingAddress Địa chỉ giao hàng.
      * @param string $paymentMethod Phương thức thanh toán.
+     * @param string|null $voucherCode Mã voucher đã áp dụng.
+     * @param float $discountAmount Số tiền đã giảm.
      * @return int|false ID của đơn hàng mới nếu thành công, ngược lại là false.
      */
-    public function createOrder($userId, $cartItems, $totalAmount, $shippingAddress, $paymentMethod) {
+    public function createOrder($userId, $cartItems, $totalAmount, $shippingAddress, $paymentMethod, $voucherCode = null, $discountAmount = 0) {
         try {
             // Bắt đầu một transaction
             $this->pdo->beginTransaction();
 
             // 1. Thêm vào bảng `orders`
-            $sql_order = "INSERT INTO orders (user_id, total_amount, shipping_address, payment_method, status) 
-                          VALUES (?, ?, ?, ?, 'pending')";
+            $sql_order = "INSERT INTO orders (user_id, total_amount, shipping_address, payment_method, voucher_code, discount_amount, status) 
+                          VALUES (?, ?, ?, ?, ?, ?, 'pending')";
             $stmt_order = $this->pdo->prepare($sql_order);
-            $stmt_order->execute([$userId, $totalAmount, $shippingAddress, $paymentMethod]);
+            $stmt_order->execute([$userId, $totalAmount, $shippingAddress, $paymentMethod, $voucherCode, $discountAmount]);
             
             // Lấy ID của đơn hàng vừa tạo
             $orderId = $this->pdo->lastInsertId();
@@ -147,6 +149,12 @@ class donhang {
                 $stmt_details->execute([$orderId, $item['id'], $item['quantity'], $item['price']]);
                 // Cập nhật số lượng tồn kho
                 $stmt_update_stock->execute([$item['quantity'], $item['id']]);
+            }
+
+            // 3. Nếu có voucher, tăng số lần sử dụng
+            if ($voucherCode) {
+                $voucherModel = new Voucher($this->pdo);
+                $voucherModel->incrementVoucherUsage($voucherCode);
             }
 
             // Nếu mọi thứ thành công, commit transaction
