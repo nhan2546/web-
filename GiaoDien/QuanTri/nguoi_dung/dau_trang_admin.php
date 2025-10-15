@@ -30,10 +30,13 @@ $current_act = $_GET['act'] ?? 'dashboard';
     <div class="admin-wrapper">
         <!-- THANH ĐIỀU HƯỚNG BÊN (SIDEBAR) -->
         <aside class="admin-sidebar">
-            <a href="admin.php" class="sidebar-brand">Shop Táo Ngon</a>
+            <!-- Thay đổi: Thay thế văn bản bằng logo hình ảnh -->
+            <a href="index.php?act=trangchu" class="sidebar-brand" target="_blank" title="Xem trang chủ">
+                <img src="TaiNguyen/hinh_anh/ChatGPT_Image_Oct_15__2025__05_00_01_PM-removebg-preview.png" alt="Shop Táo Ngon">
+            </a>
             <ul class="sidebar-nav">
                 <li class="sidebar-nav-item <?php echo ($current_act == 'dashboard') ? 'active' : ''; ?>">
-                    <a href="admin.php?act=dashboard"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-grid-1x2-fill" viewBox="0 0 16 16"><path d="M0 1a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm9 0a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1V1zm0 9a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-5z"/></svg>Bảng điều khiển</a>
+                    <a href="admin.php?act=dashboard"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-grid-1x2-fill" viewBox="0 0 16 16"><path d="M0 1a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm9 0a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1V1zm0 9a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-5z"/></svg>Tổng Doanh Thu</a>
                 </li>
                 <li class="sidebar-nav-item <?php echo (in_array($current_act, ['ds_sanpham', 'them_sp', 'sua_sp'])) ? 'active' : ''; ?>">
                     <a href="admin.php?act=ds_sanpham"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-seam-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.723.023a.75.75 0 0 1 .554 0l7.25 2.95zM-1.25 8.567l-1.5-3-1.5 3L-3 10l1.5 3 1.5-3L-1.25 8.567zM8 4.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 1 0v-3a.5.5 0 0 0-.5-.5z"/></svg>Quản lý Sản phẩm</a>

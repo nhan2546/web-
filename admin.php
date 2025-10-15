@@ -118,6 +118,10 @@ switch ($act) {
         $adminController->ds_khachhang();
         break;
 
+    case 'bao_cao_doanh_thu':
+        $adminController->bao_cao_doanh_thu();
+        break;
+
     // Mặc định: hiển thị Bảng điều khiển
     default:
         $adminController->dashboard();

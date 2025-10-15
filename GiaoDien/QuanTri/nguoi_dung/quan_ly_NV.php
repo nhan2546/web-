@@ -16,56 +16,39 @@
                 <?php endif; ?>
             </form>
         </div>
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Họ và Tên</th>
-                    <th>Email</th>
-                    <th>Vai trò</th>
-                    <th>Trạng thái</th>
-                    <th>Ngày tạo</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (empty($danh_sach_nhan_vien)): ?>
-                    <tr>
-                        <td colspan="7" style="text-align: center;">Không có nhân viên nào.</td>
-                    </tr>
-                <?php else: ?>
-                    <?php foreach ($danh_sach_nhan_vien as $nhan_vien): ?>
-                    <tr>
-                        <td><?php echo $nhan_vien['id']; ?></td>
-                        <td><?php echo htmlspecialchars($nhan_vien['fullname']); ?></td>
-                        <td><?php echo htmlspecialchars($nhan_vien['email']); ?></td>
-                        <td><span class="badge badge-secondary"><?php echo htmlspecialchars($nhan_vien['role']); ?></span></td>
-                        <td>
+
+        <!-- Giao diện lưới thẻ mới -->
+        <div class="admin-grid">
+            <?php if (empty($danh_sach_nhan_vien)): ?>
+                <p class="text-center w-100">Không có nhân viên nào khớp với tìm kiếm của bạn.</p>
+            <?php else: ?>
+                <?php foreach ($danh_sach_nhan_vien as $nhan_vien): ?>
+                <div class="admin-user-card">
+                    <div class="user-card-info">
+                        <h5 class="user-card-name"><?= htmlspecialchars($nhan_vien['fullname']) ?></h5>
+                        <p class="user-card-email"><?= htmlspecialchars($nhan_vien['email']) ?></p>
+                        <div class="user-card-badges">
+                            <span class="badge badge-role-<?= htmlspecialchars($nhan_vien['role']) ?>"><?= ucfirst(htmlspecialchars($nhan_vien['role'])) ?></span>
                             <?php if ($nhan_vien['status'] == 'locked'): ?>
                                 <span class="badge badge-cancelled">Đã khóa</span>
                             <?php else: ?>
                                 <span class="badge badge-success">Hoạt động</span>
                             <?php endif; ?>
-                        </td>
-                        <td><?php echo date('d/m/Y', strtotime($nhan_vien['created_at'])); ?></td>
-                        <td class="action-buttons">
-                            <a href="admin.php?act=sua_nhanvien&id=<?php echo $nhan_vien['id']; ?>" class="admin-btn admin-btn-secondary">Sửa</a>
-                            <?php if ($nhan_vien['id'] != $_SESSION['user_id']): // Không cho phép thao tác với chính mình ?>
-                                <a href="admin.php?act=toggle_trangthai_khachhang&id=<?php echo $nhan_vien['id']; ?>&status=<?php echo ($nhan_vien['status'] == 'locked' ? 'active' : 'locked'); ?>" class="admin-btn admin-btn-warning">
-                                    <?php if ($nhan_vien['status'] == 'locked'): ?>
-                                        Mở khóa
-                                    <?php else: ?>
-                                        Khóa
-                                    <?php endif; ?>
-                                </a>
-                                <a href="admin.php?act=xoa_nhanvien&id=<?php echo $nhan_vien['id']; ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?');" class="admin-btn admin-btn-danger">Xóa</a>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                        </div>
+                    </div>
+                    <div class="user-card-actions">
+                        <a href="admin.php?act=sua_nhanvien&id=<?= $nhan_vien['id'] ?>" class="admin-btn admin-btn-secondary">Sửa</a>
+                        <?php if ($nhan_vien['id'] != $_SESSION['user_id']): // Không cho phép thao tác với chính mình ?>
+                            <a href="admin.php?act=toggle_trangthai_khachhang&id=<?= $nhan_vien['id'] ?>&status=<?= ($nhan_vien['status'] == 'locked' ? 'active' : 'locked') ?>" class="admin-btn admin-btn-warning">
+                                <?= ($nhan_vien['status'] == 'locked') ? 'Mở khóa' : 'Khóa' ?>
+                            </a>
+                            <a href="admin.php?act=xoa_nhanvien&id=<?= $nhan_vien['id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?');" class="admin-btn admin-btn-danger">Xóa</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
 
         <!-- Phân trang -->
         <?php if ($total_pages > 1): ?>

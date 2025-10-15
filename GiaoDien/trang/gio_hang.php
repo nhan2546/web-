@@ -1,75 +1,94 @@
-<?php
-$cart = $_SESSION['cart'] ?? [];
-$total_price = 0;
-?>
-<div class="cart-section">
-    <h2 class="mb-4">Giỏ Hàng Của Bạn</h2>
+<div class="cart-page-wrapper">
+    <div class="cart-header">
+        <h1>Giỏ hàng</h1>
+    </div>
+
     <?php if (empty($cart)): ?>
-        <div class="alert alert-info text-center">Giỏ hàng của bạn đang trống. <a href="index.php?act=hienthi_sp">Bắt đầu mua sắm</a>!</div>
+        <div class="cart-empty-state">
+            <img src="TaiNguyen/hinh_anh/empty-cart.png" alt="Giỏ hàng trống">
+            <p>Giỏ hàng của bạn đang trống</p>
+            <a href="index.php?act=hienthi_sp" class="cp-btn">Tiếp tục mua sắm</a>
+        </div>
     <?php else: ?>
-        <div class="row">
-            <!-- Cột danh sách sản phẩm -->
-            <div class="col-lg-8">
-                <form action="index.php?act=cap_nhat_gio_hang" method="POST" id="cart-update-form">
-                    <div class="cart-items-container">
-                        <table class="table cart-items-table">
-                            <thead>
-                                <tr>
-                                    <th colspan="2">Sản phẩm</th>
-                                    <th class="text-center">Số lượng</th>
-                                    <th class="text-end">Tạm tính</th>
-                                    <th class="text-center">Xóa</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($cart as $item): 
-                                    $subtotal = $item['price'] * $item['quantity'];
-                                    $total_price += $subtotal;
-                                ?>
-                                <tr>
-                                    <td style="width: 80px;">
-                                        <img src="TaiLen/san_pham/<?= htmlspecialchars($item['image_url']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" class="cart-product-image">
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="cart-product-info">
-                                            <a href="index.php?act=chi_tiet_san_pham&id=<?= $item['id'] ?>" class="cart-product-name"><?= htmlspecialchars($item['name']) ?></a>
-                                            <div class="cart-product-price"><?= number_format($item['price'], 0, ',', '.') ?> VND</div>
-                                        </div>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <div class="quantity-controls">
-                                            <input type="number" name="quantities[<?= $item['id'] ?>]" value="<?= htmlspecialchars($item['quantity']) ?>" class="form-control form-control-sm text-center" min="1">
-                                        </div>
-                                    </td>
-                                    <td class="align-middle text-end"><?= number_format($subtotal, 0, ',', '.') ?> VND</td>
-                                    <td class="align-middle text-center">
-                                        <a href="index.php?act=xoa_san_pham_gio_hang&id=<?= $item['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">&times;</a>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                        <button type="submit" class="btn btn-info">Cập nhật giỏ hàng</button>
+        <div class="cart-layout">
+            <!-- Cột trái: Danh sách sản phẩm -->
+            <div class="cart-items-column">
+                <form action="index.php?act=cap_nhat_gio_hang" method="POST">
+                    <div class="cart-items-list">
+                        <?php foreach ($cart as $item): ?>
+                            <div class="cart-item-card">
+                                <div class="cart-item-image">
+                                    <img src="TaiLen/san_pham/<?= htmlspecialchars($item['image_url']) ?>" alt="<?= htmlspecialchars($item['name']) ?>">
+                                </div>
+                                <div class="cart-item-details">
+                                    <a href="index.php?act=chi_tiet_san_pham&id=<?= $item['id'] ?>" class="cart-item-name"><?= htmlspecialchars($item['name']) ?></a>
+                                    <div class="cart-item-price">
+                                        <span class="current-price"><?= number_format($item['price'], 0, ',', '.') ?>₫</span>
+                                        <!-- <del class="old-price">12.000.000₫</del> -->
+                                    </div>
+                                </div>
+                                <div class="cart-item-actions">
+                                    <div class="quantity-selector">
+                                        <button type="button" onclick="this.nextElementSibling.stepDown()">-</button>
+                                        <input type="number" name="quantities[<?= $item['id'] ?>]" value="<?= htmlspecialchars($item['quantity']) ?>" min="1" max="99" readonly>
+                                        <button type="button" onclick="this.previousElementSibling.stepUp()">+</button>
+                                    </div>
+                                    <a href="index.php?act=xoa_san_pham_gio_hang&id=<?= $item['id'] ?>" class="cart-item-delete" title="Xóa sản phẩm" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
+                    <button type="submit" class="cp-btn-secondary" style="margin-top: 15px;">Cập nhật số lượng</button>
                 </form>
             </div>
 
-            <!-- Cột tóm tắt đơn hàng -->
-            <div class="col-lg-4">
-                <div class="cart-summary">
-                    <h4 class="mb-3">Tóm tắt đơn hàng</h4>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Tạm tính</span>
-                        <span><?= number_format($total_price, 0, ',', '.') ?> VND</span>
+            <!-- Cột phải: Tóm tắt đơn hàng -->
+            <div class="cart-summary-column">
+                <div class="order-summary-box">
+                    <h4>Tóm tắt đơn hàng</h4>
+                    
+                    <!-- Voucher -->
+                    <div class="voucher-section">
+                        <form action="index.php?act=ap_dung_voucher" method="POST" class="voucher-form">
+                            <input type="text" name="voucher_code" placeholder="Nhập mã giảm giá" class="voucher-input" value="<?= htmlspecialchars($voucher_code ?? '') ?>">
+                            <button type="submit" class="voucher-apply-btn">Áp dụng</button>
+                        </form>
+                        <?php if ($voucher_error): ?>
+                            <div class="voucher-message error"><?= htmlspecialchars($voucher_error) ?></div>
+                        <?php endif; ?>
+                        <?php if ($voucher_success): ?>
+                            <div class="voucher-message success"><?= htmlspecialchars($voucher_success) ?></div>
+                        <?php endif; ?>
                     </div>
-                    <hr>
-                    <div class="d-flex justify-content-between fw-bold fs-5">
-                        <span>Tổng cộng</span>
-                        <span><?= number_format($total_price, 0, ',', '.') ?> VND</span>
+
+                    <!-- Chi tiết giá -->
+                    <div class="price-details">
+                        <div class="price-row">
+                            <span>Tạm tính</span>
+                            <span><?= number_format($subtotal, 0, ',', '.') ?>₫</span>
+                        </div>
+                        <?php if ($discount_amount > 0): ?>
+                        <div class="price-row discount">
+                            <span>Giảm giá (<?= htmlspecialchars($voucher_code) ?>) 
+                                <a href="index.php?act=xoa_voucher" class="remove-voucher-btn">[Xóa]</a>
+                            </span>
+                            <span>- <?= number_format($discount_amount, 0, ',', '.') ?>₫</span>
+                        </div>
+                        <?php endif; ?>
                     </div>
-                    <div class="d-grid mt-4">
-                        <a href="index.php?act=thanh_toan" class="btn btn-primary btn-lg">Tiến hành Thanh Toán</a>
+
+                    <!-- Tổng cuối cùng -->
+                    <div class="final-total">
+                        <div class="price-row">
+                            <span>Tổng cộng</span>
+                            <span class="total-price"><?= number_format($final_total, 0, ',', '.') ?>₫</span>
+                        </div>
+                        <small>(Đã bao gồm VAT nếu có)</small>
                     </div>
+
+                    <a href="index.php?act=thanh_toan" class="cp-btn checkout-btn">Tiến hành thanh toán</a>
                 </div>
             </div>
         </div>

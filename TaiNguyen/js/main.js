@@ -26,5 +26,23 @@ function    validateForm() {
             document.getElementById("cart-count").innerText = data;
      });
     }
-            
+         // Toggle nav trên mobile
+document.querySelector('.cp-burger')?.addEventListener('click', ()=>{
+  document.querySelector('.cp-header')?.classList.toggle('is-open');
+});
+
+// Đếm ngược đơn giản
+const cd = document.querySelector('.cp-countdown');
+if (cd) {
+  const end = new Date(cd.dataset.end);
+  const tick = () => {
+    const s = Math.max(0, Math.floor((end - new Date())/1000));
+    const h = String(Math.floor(s/3600)).padStart(2,'0');
+    const m = String(Math.floor((s%3600)/60)).padStart(2,'0');
+    const ss= String(s%60).padStart(2,'0');
+    cd.textContent = `${h}:${m}:${ss}`;
+  };
+  tick(); setInterval(tick, 1000);
+}
+   
         

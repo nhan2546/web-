@@ -1,113 +1,72 @@
 <?php
-// Lấy thông báo từ URL để hiển thị cho người dùng
-$success_msg = '';
-$error_msg = '';
-
-if (isset($_GET['success'])) {
-    switch ($_GET['success']) {
-        case '1':
-            $success_msg = 'Cập nhật thông tin tài khoản thành công!';
-            break;
-        case 'password_changed':
-            $success_msg = 'Đổi mật khẩu thành công!';
-            break;
-        case 'avatar_updated':
-            $success_msg = 'Cập nhật ảnh đại diện thành công!';
-            break;
-    }
-}
-
-if (isset($_GET['error'])) {
-    switch ($_GET['error']) {
-        case 'password_mismatch':
-            $error_msg = 'Mật khẩu mới không khớp. Vui lòng thử lại.';
-            break;
-        case 'wrong_password':
-            $error_msg = 'Mật khẩu hiện tại không đúng.';
-            break;
-        case 'avatar_upload_failed':
-            $error_msg = 'Tải ảnh đại diện lên thất bại. Vui lòng thử lại.';
-            break;
-        default:
-            $error_msg = 'Có lỗi xảy ra, vui lòng thử lại.';
-            break;
-    }
-}
-
 // Lấy chữ cái đầu của tên để làm avatar mặc định
 $first_letter = mb_substr($user_info['fullname'], 0, 1, 'UTF-8');
 ?>
 
 <div class="account-page-wrapper">
-    <h1 class="mb-5">Thông tin tài khoản</h1>
-
-    <!-- Hiển thị thông báo -->
-    <?php if ($success_msg): ?>
-        <div class="alert alert-success mb-4"><?= $success_msg ?></div>
-    <?php endif; ?>
-    <?php if ($error_msg): ?>
-        <div class="alert alert-danger mb-4"><?= $error_msg ?></div>
-    <?php endif; ?>
-
-    <div class="row">
-        <!-- Cột trái: Các form cập nhật -->
-        <div class="col-lg-8">
-            <!-- Form cập nhật thông tin cá nhân -->
-            <div class="card mb-4">
-                <div class="card-header"><h3>Thông tin cá nhân</h3></div>
-                <div class="card-body">
-                    <form action="index.php?act=cap_nhat_tai_khoan" method="POST">
-                        <div class="mb-3"><label for="email" class="form-label">Địa chỉ Email</label><input type="email" id="email" class="form-control" value="<?= htmlspecialchars($user_info['email']) ?>" readonly></div>
-                        <div class="mb-3"><label for="fullname" class="form-label">Họ và tên</label><input type="text" id="fullname" name="fullname" class="form-control" value="<?= htmlspecialchars($user_info['fullname']) ?>"></div>
-                        <div class="mb-3"><label for="phone_number" class="form-label">Số điện thoại</label><input type="text" id="phone_number" name="phone_number" class="form-control" value="<?= htmlspecialchars($user_info['phone_number'] ?? '') ?>"></div>
-                        <div class="mb-3"><label for="address" class="form-label">Địa chỉ</label><input type="text" id="address" name="address" class="form-control" value="<?= htmlspecialchars($user_info['address'] ?? '') ?>"></div>
-                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Form đổi mật khẩu -->
-            <div class="card">
-                <div class="card-header"><h3>Đổi mật khẩu</h3></div>
-                <div class="card-body">
-                    <form action="index.php?act=doi_mat_khau" method="POST">
-                        <div class="mb-3"><label for="current_password" class="form-label">Mật khẩu hiện tại</label><input type="password" id="current_password" name="current_password" class="form-control" required></div>
-                        <div class="mb-3"><label for="new_password" class="form-label">Mật khẩu mới</label><input type="password" id="new_password" name="new_password" class="form-control" required></div>
-                        <div class="mb-3"><label for="confirm_new_password" class="form-label">Xác nhận mật khẩu mới</label><input type="password" id="confirm_new_password" name="confirm_new_password" class="form-control" required></div>
-                        <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
-                    </form>
-                </div>
+    <div class="account-dashboard-header">
+        <div class="account-dashboard-avatar">
+            <?php if (!empty($user_info['avatar_url'])): ?>
+                <img src="TaiLen/avatars/<?= htmlspecialchars($user_info['avatar_url']) ?>" alt="Avatar">
+            <?php else: ?>
+                <span><?= htmlspecialchars(strtoupper($first_letter)) ?></span>
+            <?php endif; ?>
+        </div>
+        <div class="account-dashboard-greeting">
+            <p>Xin chào,</p>
+            <div class="greeting-name-rank">
+                <h3><?= htmlspecialchars($user_info['fullname']) ?></h3>
+                <span class="customer-rank-badge <?= $rank_info['class'] ?>"><?= $rank_info['rank'] ?></span>
             </div>
         </div>
+    </div>
 
-        <!-- Cột phải: Tóm tắt thông tin -->
-        <div class="col-lg-4">
-            <div class="card profile-summary-card text-center">
-                <form id="avatar-form" action="index.php?act=cap_nhat_avatar" method="post" enctype="multipart/form-data" class="d-none">
-                    <input type="file" name="avatar" id="avatar-input" accept="image/*" onchange="document.getElementById('avatar-form').submit();">
-                </form>
-
-                <div class="profile-avatar-wrapper mx-auto mb-3">
-                    <div class="profile-avatar">
-                        <?php if (!empty($user_info['avatar_url'])): ?>
-                            <img src="TaiLen/avatars/<?= htmlspecialchars($user_info['avatar_url']) ?>" alt="Avatar">
-                        <?php else: ?>
-                            <span><?= htmlspecialchars(strtoupper($first_letter)) ?></span>
-                        <?php endif; ?>
-                    </div>
-                    <label for="avatar-input" class="avatar-upload-overlay" title="Đổi ảnh đại diện">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-fill" viewBox="0 0 16 16"><path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828-.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/></svg>
-                    </label>
-                </div>
-
-                <h4 class="profile-name"><?= htmlspecialchars($user_info['fullname']) ?></h4>
-                <p class="profile-email text-muted"><?= htmlspecialchars($user_info['email']) ?></p>
-
-                <div class="d-grid gap-2 mt-3">
-                    <a href="index.php?act=lich_su_mua_hang" class="btn btn-outline-primary">Lịch sử mua hàng</a>
-                    <a href="index.php?act=dang_xuat" class="btn btn-outline-danger">Đăng xuất</a>
-                </div>
-            </div>
+    <!-- Khu vực tiến trình nâng hạng -->
+    <div class="rank-progress-container">
+        <div class="rank-progress-bar">
+            <div class="rank-progress-bar-fill" style="width: <?= $rank_info['progress_percentage'] ?>%;"></div>
         </div>
+        <div class="rank-progress-info">
+            <?php if ($rank_info['next_rank']): ?>
+                <p>Chi tiêu thêm <strong><?= number_format($rank_info['needed_for_next'], 0, ',', '.') ?>₫</strong> để lên hạng <strong><?= $rank_info['next_rank'] ?></strong></p>
+            <?php else: ?>
+                <p>🎉 Chúc mừng! Bạn đã đạt hạng cao nhất.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="account-dashboard-grid">
+        <!-- Card: Thông tin tài khoản -->
+        <a href="index.php?act=chinh_sua_thong_tin" class="account-dashboard-card">
+            <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+            <div class="card-info">
+                <h4>Thông tin tài khoản</h4>
+                <p>Chỉnh sửa thông tin cá nhân, email, số điện thoại của bạn.</p>
+            </div>
+        </a>
+
+        <!-- Card: Lịch sử mua hàng -->
+        <a href="index.php?act=lich_su_mua_hang" class="account-dashboard-card">
+            <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            </div>
+            <div class="card-info">
+                <h4>Lịch sử mua hàng</h4>
+                <p>Theo dõi và quản lý các đơn hàng đã đặt.</p>
+            </div>
+        </a>
+
+        <!-- Card: Đăng xuất -->
+        <a href="index.php?act=dang_xuat" class="account-dashboard-card">
+            <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </div>
+            <div class="card-info">
+                <h4>Đăng xuất</h4>
+                <p>Kết thúc phiên đăng nhập của bạn.</p>
+            </div>
+        </a>
     </div>
 </div>

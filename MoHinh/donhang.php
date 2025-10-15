@@ -59,12 +59,21 @@ class donhang {
     /**
      * Lấy danh sách đơn hàng của một người dùng cụ thể.
      * @param int $userId ID của người dùng.
+     * @param string $status Trạng thái cần lọc (tùy chọn).
      * @return array Mảng chứa các đơn hàng của người dùng đó.
      */
-    public function getOrdersByUserId($userId) {
-        $sql = "SELECT * FROM orders WHERE user_id = ? ORDER BY order_date DESC";
+    public function getOrdersByUserId($userId, $status = '') {
+        $sql = "SELECT * FROM orders WHERE user_id = ?";
+        $params = [$userId];
+
+        if (!empty($status)) {
+            $sql .= " AND status = ?";
+            $params[] = $status;
+        }
+
+        $sql .= " ORDER BY order_date DESC";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$userId]);
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -103,6 +112,56 @@ class donhang {
     }
 
     /**
+     * Tạo một đơn hàng mới từ giỏ hàng.
+     * Sử dụng transaction để đảm bảo tính toàn vẹn dữ liệu.
+     * @param int $userId ID người dùng.
+     * @param array $cartItems Mảng các sản phẩm trong giỏ hàng.
+     * @param float $totalAmount Tổng số tiền cuối cùng.
+     * @param string $shippingAddress Địa chỉ giao hàng.
+     * @param string $paymentMethod Phương thức thanh toán.
+     * @return int|false ID của đơn hàng mới nếu thành công, ngược lại là false.
+     */
+    public function createOrder($userId, $cartItems, $totalAmount, $shippingAddress, $paymentMethod) {
+        try {
+            // Bắt đầu một transaction
+            $this->pdo->beginTransaction();
+
+            // 1. Thêm vào bảng `orders`
+            $sql_order = "INSERT INTO orders (user_id, total_amount, shipping_address, payment_method, status) 
+                          VALUES (?, ?, ?, ?, 'pending')";
+            $stmt_order = $this->pdo->prepare($sql_order);
+            $stmt_order->execute([$userId, $totalAmount, $shippingAddress, $paymentMethod]);
+            
+            // Lấy ID của đơn hàng vừa tạo
+            $orderId = $this->pdo->lastInsertId();
+
+            // 2. Thêm vào bảng `order_details` và cập nhật kho
+            $sql_details = "INSERT INTO order_details (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+            $stmt_details = $this->pdo->prepare($sql_details);
+
+            $sql_update_stock = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?";
+            $stmt_update_stock = $this->pdo->prepare($sql_update_stock);
+
+            foreach ($cartItems as $item) {
+                // Thêm chi tiết đơn hàng
+                $stmt_details->execute([$orderId, $item['id'], $item['quantity'], $item['price']]);
+                // Cập nhật số lượng tồn kho
+                $stmt_update_stock->execute([$item['quantity'], $item['id']]);
+            }
+
+            // Nếu mọi thứ thành công, commit transaction
+            $this->pdo->commit();
+
+            return $orderId;
+
+        } catch (Exception $e) {
+            // Nếu có lỗi, rollback transaction
+            $this->pdo->rollBack();
+            // Ghi lại lỗi (tùy chọn) error_log($e->getMessage());
+            return false;
+        }
+    }
+    /**
      * Cập nhật trạng thái của một đơn hàng.
      * @param int $orderId ID của đơn hàng cần cập nhật.
      * @param string $newStatus Trạng thái mới (ví dụ: 'processing', 'shipped', 'delivered').
@@ -139,14 +198,20 @@ class donhang {
     /**
      * Lấy dữ liệu doanh thu theo tháng cho biểu đồ (12 tháng gần nhất).
      * @return array Mảng chứa các tháng và doanh thu tương ứng.
+     * @param int|null $year Năm cần lọc. Nếu null, lấy 12 tháng gần nhất.
      */
-    public function getMonthlyRevenue() {
+    public function getMonthlyRevenue($year = null) {
         $sql = "SELECT 
-                    DATE_FORMAT(order_date, '%Y-%m') as month, 
+                    DATE_FORMAT(order_date, '%c') as month, 
                     SUM(total_amount) as revenue 
                 FROM orders 
-                WHERE status = 'delivered' AND order_date >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
-                GROUP BY DATE_FORMAT(order_date, '%Y-%m')
+                WHERE status = 'delivered'";
+        if ($year) {
+            $sql .= " AND YEAR(order_date) = " . (int)$year;
+        } else {
+            $sql .= " AND order_date >= DATE_SUB(NOW(), INTERVAL 12 MONTH)";
+        }
+        $sql .= " GROUP BY DATE_FORMAT(order_date, '%Y-%m')
                 ORDER BY month ASC";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

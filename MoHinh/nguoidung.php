@@ -284,4 +284,22 @@ class NguoiDung {
         $stmt = $this->pdo->prepare("UPDATE users SET status = ? WHERE id = ?");
         return $stmt->execute([$status, $id]);
     }
+
+    /**
+     * Lấy tổng chi tiêu của một người dùng cụ thể.
+     * @param int $user_id ID của người dùng.
+     * @return float Tổng số tiền đã chi tiêu cho các đơn hàng đã giao.
+     */
+    public function getTotalSpendingByUserId($user_id) {
+        $sql = "SELECT 
+                    SUM(CASE WHEN status = 'delivered' THEN total_amount ELSE 0 END) as total_spending
+                FROM 
+                    orders
+                WHERE 
+                    user_id = ?";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$user_id]);
+        return (float) $stmt->fetchColumn();
+    }
 }

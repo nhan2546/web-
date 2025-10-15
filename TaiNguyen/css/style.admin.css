@@ -1,19 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
+
 /* giao diện trang quản trị (admin) */
 /* Định nghĩa các biến màu và kích thước cho trang admin */
 :root {
-    --admin-bg: #e9f5e9; 
-    --sidebar-bg: #28a745; 
+    --admin-bg: #f5f5f7; /* Thay đổi: Nền xám nhạt giống trang user */
+    --sidebar-bg: #D70018; /* Thay đổi: Màu đỏ chủ đạo */
     --sidebar-width: 250px;
     --text-light: #ecf0f1;
     --text-muted: #95a5a6;
-    --primary-color: #28a745; /* Màu chính là xanh lá */
+    --primary-color: #D70018; /* Thay đổi: Màu chính là đỏ */
     --border-color: #e5e9f2;
 }
 
 /* Định dạng body riêng cho các trang admin */
 body.admin-body {
     background-color: var(--admin-bg);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     color: #34495e;
 }
 
@@ -27,8 +29,8 @@ body.admin-body {
 /* Định dạng chung cho sidebar */
 .admin-sidebar {
     width: var(--sidebar-width);
-    background-color: var(--sidebar-bg);
-    background-image: linear-gradient(180deg, #2ecc71, #28a745); /* Thêm gradient cho đẹp hơn */
+    background-color: var(--sidebar-bg); /* Thay đổi: Màu nền đỏ */
+    background-image: linear-gradient(180deg, #D70018, #b10014); /* Thay đổi: Gradient đỏ */
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -47,6 +49,12 @@ body.admin-body {
     color: var(--text-light);
     text-decoration: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Định dạng cho hình ảnh logo trong sidebar */
+.sidebar-brand img {
+    max-height: 100px;
+    width: auto;
 }
 
 /* Danh sách các mục menu trong sidebar */
@@ -198,6 +206,12 @@ body.admin-body {
     background-color: #e9ecef; 
     color: #212529; 
 }
+/* Huy hiệu xếp hạng khách hàng */
+.badge-diamond { background-color: #b9f2ff; color: #007bff; border: 1px solid #007bff; }
+.badge-gold { background-color: #fff3cd; color: #e6a800; border: 1px solid #e6a800; }
+.badge-silver { background-color: #e2e3e5; color: #6c757d; border: 1px solid #6c757d; }
+.badge-copper { background-color: #f8d7da; color: #721c24; border: 1px solid #721c24; }
+
 
 
 /* Nút bấm trong trang admin */
@@ -230,7 +244,7 @@ body.admin-body {
 }
 
 .admin-btn-primary:hover {
-    background-color: #218838; /* Xanh lá cây đậm hơn khi hover */
+    background-color: #b10014; /* Thay đổi: Đỏ đậm hơn khi hover */
 }
 
 /* Nút phụ (màu xám, dùng cho hành động Hủy, Quay lại) */
@@ -270,7 +284,7 @@ body.admin-body {
 .admin-card .form-control:focus,
 .admin-card .form-select:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(215, 0, 24, 0.15); /* Thay đổi: Hiệu ứng focus màu đỏ */
 }
 
 /* Khoảng cách giữa các nhóm form */
@@ -356,12 +370,12 @@ body.admin-body {
 
 /* Footer của trang admin */
 .admin-footer {
-    background-color: #fff;
-    color: #6c757d;
+    background-color: #111; /* Thay đổi: Nền đen */
+    color: #eee; /* Thay đổi: Chữ màu sáng để dễ đọc trên nền đen */
     padding: 15px 30px;
     text-align: center;
     font-size: 14px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid #333; /* Thay đổi: Đường kẻ tối hơn cho phù hợp */
     margin-top: auto; /* Quan trọng: Đẩy footer xuống cuối flex container */
 }
 

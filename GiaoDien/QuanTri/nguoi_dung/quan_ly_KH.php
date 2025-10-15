@@ -43,7 +43,7 @@
                                         $rank_class = 'badge-silver';
                                         break;
                                     default:
-                                        $rank_class = 'badge-bronze';
+                                        $rank_class = 'badge-copper';
                                         break;
                                 }
                                 echo "<span class='badge {$rank_class}'>{$rank}</span>";
@@ -72,11 +72,3 @@
         </table>
     </div>
 </div>
-
-<style>
-/* Thêm style cho các hạng */
-.badge-diamond { background-color: #b9f2ff; color: #007bff; border: 1px solid #007bff; }
-.badge-gold { background-color: #fff3cd; color: #e6a800; border: 1px solid #e6a800; }
-.badge-silver { background-color: #e2e3e5; color: #6c757d; border: 1px solid #6c757d; }
-.badge-bronze { background-color: #f8d7da; color: #721c24; border: 1px solid #721c24; }
-</style>

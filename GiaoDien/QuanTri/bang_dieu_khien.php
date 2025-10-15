@@ -1,5 +1,6 @@
 <div class="page-header">
     <h1>Tổng Doanh Thu</Table></h1>
+    <h1>Tổng quan</h1>
 </div>
 
 <!-- Lưới các thẻ thống kê -->

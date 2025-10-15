@@ -2,8 +2,11 @@
 // Tệp: DieuKhien/DieuKhienTrang.php
 require_once __DIR__ . '/../MoHinh/Voucher.php';
 
+require_once __DIR__ . '/../MoHinh/DonHang.php';
 require_once __DIR__ . '/../MoHinh/NguoiDung.php';
 require_once __DIR__ . '/../MoHinh/SanPham.php';
+require_once __DIR__ . '/../MoHinh/DanhMuc.php';
+require_once __DIR__ . '/../MoHinh/BinhLuan.php';
 
 class controller {
     private $pdo;
@@ -20,6 +23,7 @@ class controller {
         // Lấy một vài sản phẩm để hiển thị trên trang chủ (ví dụ)
         $sp_model = new sanpham($this->pdo);
         $danh_sach_san_pham = $sp_model->getallsanpham(8); // Lấy 8 sản phẩm
+        $danh_sach_hot_sale = $sp_model->getHotSaleProducts(5); // Lấy 5 sản phẩm hot sale
         include __DIR__.'/../GiaoDien/trang/trang_chu.php';
     }
 
@@ -67,15 +71,28 @@ class controller {
     public function chi_tiet_san_pham() {
         $id = $_GET['id'] ?? 0;
         $sp_model = new sanpham($this->pdo);
-        $san_pham = $sp_model->getsanphambyid($id);
+        $san_pham = $sp_model->getone_sanoham($id); // Sửa lại tên hàm cho đúng
+
+        if (!$san_pham) {
+            header('Location: index.php?act=trangchu');
+            exit;
+        }
+
+        // Lấy thông tin bình luận và đánh giá
+        $reviewModel = new BinhLuan($this->pdo);
+        $reviews = $reviewModel->getReviewsByProductId($id);
+        $rating_info = $reviewModel->getAverageRating($id);
+
         include __DIR__.'/../GiaoDien/trang/chi_tiet_san_pham.php';
     }
 
     public function tim_kiem_san_pham() {
         $keyword = $_GET['keyword'] ?? '';
+        $price_range = $_GET['price_range'] ?? '';
+
         $sp_model = new sanpham($this->pdo);
-        $danh_sach_san_pham = $sp_model->timKiemSanPham($keyword);
-        // Sử dụng một view riêng để hiển thị kết quả
+        $danh_sach_san_pham = $sp_model->timKiemSanPham($keyword, $price_range);
+        
         include __DIR__.'/../GiaoDien/trang/ket_qua_tim_kiem.php';
     }
 
@@ -228,6 +245,132 @@ class controller {
         exit();
     }
 
+    public function them_binh_luan() {
+        // 1. Kiểm tra đăng nhập và phương thức POST
+        if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php');
+            exit();
+        }
+
+        // 2. Thu thập và xác thực dữ liệu
+        $product_id = $_POST['product_id'] ?? 0;
+        $user_id = $_SESSION['user_id'];
+        $rating = $_POST['rating'] ?? 0;
+        $comment = trim($_POST['comment'] ?? '');
+
+        if ($product_id > 0 && $rating > 0 && $rating <= 5) {
+            // 3. Gọi model để thêm bình luận
+            $reviewModel = new BinhLuan($this->pdo);
+            $reviewModel->addReview($product_id, $user_id, $rating, $comment);
+        }
+
+        // 4. Chuyển hướng người dùng trở lại trang sản phẩm
+        header('Location: index.php?act=chi_tiet_san_pham&id=' . $product_id);
+        exit();
+    }
+
+    // --- CÁC HÀM XỬ LÝ THANH TOÁN ---
+
+    public function hien_thi_thanh_toan() {
+        // 1. Kiểm tra đăng nhập
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?act=dang_nhap&redirect=thanh_toan');
+            exit();
+        }
+
+        // 2. Kiểm tra giỏ hàng có rỗng không
+        $cart = $_SESSION['cart'] ?? [];
+        if (empty($cart)) {
+            header('Location: index.php?act=gio_hang');
+            exit();
+        }
+
+        // 3. Lấy thông tin người dùng để điền sẵn
+        $userModel = new NguoiDung($this->pdo);
+        $user_info = $userModel->findUserById($_SESSION['user_id']);
+
+        // 4. Tính toán lại tổng tiền (để đảm bảo)
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += $item['price'] * $item['quantity'];
+        }
+        $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
+        $final_total = $subtotal - $discount_amount;
+
+        // 5. Hiển thị view
+        include __DIR__.'/../GiaoDien/trang/thanh_toan.php';
+    }
+
+    public function xu_ly_dat_hang() {
+        // 1. Kiểm tra đăng nhập và phương thức POST
+        if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php');
+            exit();
+        }
+
+        // 2. Kiểm tra giỏ hàng
+        $cart = $_SESSION['cart'] ?? [];
+        if (empty($cart)) {
+            header('Location: index.php?act=gio_hang');
+            exit();
+        }
+
+        // 3. Thu thập thông tin từ form và session
+        $user_id = $_SESSION['user_id'];
+        $shipping_address = $_POST['address'] ?? '';
+        $payment_method = $_POST['payment_method'] ?? 'cod'; // Mặc định là COD
+
+        // Tính lại tổng tiền cuối cùng
+        $subtotal = 0;
+        foreach ($cart as $item) { $subtotal += $item['price'] * $item['quantity']; }
+        $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
+        $final_total = $subtotal - $discount_amount;
+
+        // 4. Gọi model để tạo đơn hàng
+        $donHangModel = new donhang($this->pdo);
+        $orderId = $donHangModel->createOrder($user_id, $cart, $final_total, $shipping_address, $payment_method);
+
+        if ($orderId) {
+            // 5. Xóa giỏ hàng và voucher sau khi đặt hàng thành công
+            unset($_SESSION['cart']);
+            unset($_SESSION['voucher']);
+
+            // 6. Chuyển hướng đến trang chi tiết đơn hàng vừa tạo
+            header('Location: index.php?act=chi_tiet_don_hang_user&id=' . $orderId . '&success=order_placed');
+            exit();
+        }
+    }
+    public function chi_tiet_don_hang_user() {
+        // 1. Kiểm tra đăng nhập
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?act=dang_nhap');
+            exit();
+        }
+
+        // 2. Lấy ID đơn hàng và ID người dùng
+        $order_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $user_id = $_SESSION['user_id'];
+
+        if ($order_id <= 0) {
+            header('Location: index.php?act=lich_su_mua_hang');
+            exit();
+        }
+
+        // 3. Lấy chi tiết đơn hàng từ model
+        require_once __DIR__ . '/../MoHinh/DonHang.php';
+        $donHangModel = new donhang($this->pdo);
+        $chi_tiet_don_hang = $donHangModel->getOrderDetail($order_id);
+
+        // 4. KIỂM TRA BẢO MẬT: Đảm bảo đơn hàng này thuộc về người dùng đang đăng nhập
+        if (!$chi_tiet_don_hang['order_info'] || $chi_tiet_don_hang['order_info']['user_id'] != $user_id) {
+            header('Location: index.php?act=lich_su_mua_hang&error=unauthorized');
+            exit();
+        }
+
+        // 5. Hiển thị view
+        include __DIR__.'/../GiaoDien/trang/chi_tiet_don_hang_user.php';
+    }
+
     public function lich_su_mua_hang() {
         // 1. Kiểm tra người dùng đã đăng nhập chưa
         if (!isset($_SESSION['user_id'])) {
@@ -235,12 +378,24 @@ class controller {
             exit();
         }
 
-        // 2. Lấy đơn hàng từ CSDL
+        // 2. Lấy trạng thái lọc từ URL
+        $status_filter = $_GET['status'] ?? '';
+
+        // 3. Lấy đơn hàng từ CSDL dựa trên bộ lọc
         require_once __DIR__ . '/../MoHinh/DonHang.php';
         $donHangModel = new donhang($this->pdo);
-        $danh_sach_don_hang = $donHangModel->getOrdersByUserId($_SESSION['user_id']);
+        $danh_sach_don_hang = $donHangModel->getOrdersByUserId($_SESSION['user_id'], $status_filter);
 
-        // 3. Hiển thị view
+        // 4. Định nghĩa các trạng thái để hiển thị trên view
+        $all_statuses = [
+            'pending' => 'Chờ xác nhận',
+            'processing' => 'Đang xử lý',
+            'shipped' => 'Đang giao hàng',
+            'delivered' => 'Đã giao',
+            'cancelled' => 'Đã hủy'
+        ];
+
+        // 5. Hiển thị view
         include __DIR__.'/../GiaoDien/trang/lich_su_mua_hang.php';
     }
 
@@ -254,6 +409,47 @@ class controller {
         // 2. Lấy thông tin người dùng từ CSDL
         $userModel = new NguoiDung($this->pdo);
         $user_info = $userModel->findUserById($_SESSION['user_id']);
+
+        // --- LOGIC TÍNH HẠNG THÀNH VIÊN ---
+        if (!function_exists('getCustomerRank')) {
+            function getCustomerRank($spending)
+            {
+                $ranks = [
+                    'Đồng' => ['threshold' => 0, 'class' => 'rank-copper'],
+                    'Bạc' => ['threshold' => 5000000, 'class' => 'rank-silver'],
+                    'Vàng' => ['threshold' => 15000000, 'class' => 'rank-gold'],
+                    'Kim Cương' => ['threshold' => 30000000, 'class' => 'rank-diamond'],
+                ];
+
+                $current_rank_name = 'Đồng';
+                $next_rank_name = 'Bạc';
+
+                if ($spending >= $ranks['Kim Cương']['threshold']) {
+                    $current_rank_name = 'Kim Cương';
+                    $next_rank_name = null; // Hạng cao nhất
+                } elseif ($spending >= $ranks['Vàng']['threshold']) {
+                    $current_rank_name = 'Vàng';
+                    $next_rank_name = 'Kim Cương';
+                } elseif ($spending >= $ranks['Bạc']['threshold']) {
+                    $current_rank_name = 'Bạc';
+                    $next_rank_name = 'Vàng';
+                }
+
+                $needed_for_next = $next_rank_name ? $ranks[$next_rank_name]['threshold'] - $spending : 0;
+                $progress_percentage = $next_rank_name ? ($spending / $ranks[$next_rank_name]['threshold']) * 100 : 100;
+
+                return [
+                    'rank' => $current_rank_name,
+                    'class' => $ranks[$current_rank_name]['class'],
+                    'next_rank' => $next_rank_name,
+                    'needed_for_next' => $needed_for_next,
+                    'progress_percentage' => min($progress_percentage, 100) // Đảm bảo không vượt quá 100%
+                ];
+            }
+        }
+        // Tính tổng chi tiêu và xác định hạng
+        $total_spending = $userModel->getTotalSpendingByUserId($user_info['id']);
+        $rank_info = getCustomerRank($total_spending);
 
         // 3. Hiển thị view
         include __DIR__.'/../GiaoDien/trang/thong_tin_tai_khoan.php';
@@ -349,6 +545,11 @@ class controller {
         // Nếu có lỗi, chuyển hướng lại
         header('Location: index.php?act=thong_tin_tai_khoan&error=avatar_upload_failed');
         exit();
+    }
+
+    public function thu_cu_doi_moi() {
+        // Chỉ cần hiển thị view, logic chính nằm ở JavaScript
+        include __DIR__.'/../GiaoDien/trang/thu_cu_doi_moi.php';
     }
 }
 ?>

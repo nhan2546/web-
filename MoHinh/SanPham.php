@@ -80,11 +80,11 @@ class sanpham {
     }
 
     /*xử lý dữ liệu */
-    public function themsp($name, $description, $price, $image_url, $stock_quantity, $category_id){
-        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `image_url`, `stock_quantity`, `category_id`) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+    public function themsp($name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price){
+        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `image_url`, `stock_quantity`, `category_id`, `sale_price`) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id]);
+        return $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price]);
     }
 
     /*lấy sản phẩm từ bản product*/
@@ -150,8 +150,27 @@ class sanpham {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Lấy các sản phẩm đang giảm giá (Hot Sale).
+     * @param int $limit Giới hạn số lượng sản phẩm.
+     * @return array Mảng các sản phẩm giảm giá.
+     */
+    public function getHotSaleProducts($limit = 5) {
+        // Lấy các sản phẩm có giá khuyến mãi (sale_price) và đang còn hàng
+        // Sắp xếp theo % giảm giá cao nhất
+        $sql = "SELECT *, ((price - sale_price) / price) * 100 AS discount_percentage 
+                FROM products 
+                WHERE sale_price IS NOT NULL AND sale_price > 0 AND sale_price < price AND stock_quantity > 0
+                ORDER BY discount_percentage DESC
+                LIMIT :limit";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     /*Lấy sản phẩm theo id*/
-    public function getone_sanpham($id){
+    public function getone_sanoham($id){
         $sql = "SELECT * FROM products WHERE id = ? LIMIT 1";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$id]);
@@ -159,10 +178,10 @@ class sanpham {
     }
 
     /*cap nhat san pham*/
-    public function capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id){
-        $sql = "UPDATE products SET name = ?, description = ?, price = ?, image_url = ?, stock_quantity = ?, category_id = ? WHERE id = ?";
+    public function capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price){
+        $sql = "UPDATE products SET name = ?, description = ?, price = ?, image_url = ?, stock_quantity = ?, category_id = ?, sale_price = ? WHERE id = ?";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id, $id]);
+        $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price, $id]);
     }
 
     /*xoa san pham*/

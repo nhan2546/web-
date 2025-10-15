@@ -95,11 +95,12 @@ class DieuKhienQuanTri {
             $description = $_POST['description'] ?? '';
             $stock_quantity = $_POST['stock_quantity'] ?? 0;
             $category_id = $_POST['category_id'] ?? 0;
+            $sale_price = $_POST['sale_price'] ?? 0; // Lấy giá sale
 
             // 2. Xử lý upload hình ảnh
             $image_url = ''; // Mặc định không có ảnh
             if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-                $target_dir = __DIR__ . "/../TaiLen/san_pham/";
+                $target_dir = __DIR__ . "/../TaiLen/san_pham/"; // Sửa lại đường dẫn
                 // Đảm bảo thư mục tồn tại
                 if (!is_dir($target_dir)) {
                     mkdir($target_dir, 0777, true);
@@ -112,8 +113,8 @@ class DieuKhienQuanTri {
 
             // 3. Tạo đối tượng model và gọi hàm thêm
             $sanpham_model = new sanpham($this->pdo);
-            // Sử dụng các setter để thiết lập giá trị
-            $sanpham_model->themsp($category_id, $name, $price, $stock_quantity, $image_url, 0, $description);
+            // Gọi hàm themsp với đúng thứ tự tham số
+            $sanpham_model->themsp($name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price);
 
             // 4. Chuyển hướng về trang danh sách sản phẩm của admin
             header('Location: admin.php?act=ds_sanpham&success=added');
@@ -150,6 +151,7 @@ class DieuKhienQuanTri {
             $description = $_POST['description'] ?? '';
             $stock_quantity = $_POST['stock_quantity'] ?? 0;
             $category_id = $_POST['category_id'] ?? 0;
+            $sale_price = $_POST['sale_price'] ?? 0; // Lấy giá sale
             $existing_image = $_POST['existing_image'] ?? '';
 
             $image_url = $existing_image;
@@ -161,7 +163,7 @@ class DieuKhienQuanTri {
             }
 
             $sp_model = new sanpham($this->pdo);
-            $sp_model->capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id);
+            $sp_model->capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price);
             header('Location: admin.php?act=ds_sanpham&success=updated');
             exit;
         }
@@ -236,9 +238,28 @@ class DieuKhienQuanTri {
     }
     // --- QUẢN LÝ KHÁCH HÀNG ---
     public function ds_khachhang() {
+        // Hàm trợ giúp để xác định thứ hạng khách hàng
+        if (!function_exists('getCustomerRank')) {
+            function getCustomerRank($spending) {
+                if ($spending >= 30000000) {
+                    return 'Kim Cương';
+                } elseif ($spending >= 15000000) {
+                    return 'Vàng';
+                } elseif ($spending >= 5000000) {
+                    return 'Bạc';
+                } else {
+                    return 'Đồng';
+                }
+            }
+        }
+
         $user_model = new NguoiDung($this->pdo);
-        $danh_sach_khach_hang = $user_model->getDS_NguoiDung(['customer']); // Sửa thành mảng để khớp với định dạng hàm
-        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_khach_hang.php';
+        // Lấy danh sách khách hàng cùng với tổng chi tiêu của họ
+        $danh_sach_khach_hang = $user_model->getDS_KhachHang();
+        
+        // Thay vì include file cũ, chúng ta sẽ dùng file mới đã được cập nhật
+        // để hiển thị danh sách khách hàng.
+        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_KH.php';
     }
 
     public function toggle_trangthai_khachhang() {
@@ -374,6 +395,28 @@ class DieuKhienQuanTri {
 
         echo json_encode(['labels' => $labels, 'data' => $data]);
         exit; // Dừng thực thi để chỉ trả về JSON
+    }
+
+    /**
+     * Hiển thị trang báo cáo doanh thu theo tháng/năm.
+     */
+    public function bao_cao_doanh_thu() {
+        $dh_model = new donhang($this->pdo);
+
+        // Lấy năm hiện tại và năm được chọn từ filter
+        $current_year = date('Y');
+        $selected_year = $_GET['year'] ?? $current_year;
+
+        // Lấy dữ liệu doanh thu cho năm được chọn
+        $revenue_data = $dh_model->getMonthlyRevenue($selected_year);
+
+        // Tạo một mảng 12 tháng với doanh thu bằng 0
+        $monthly_revenue = array_fill(1, 12, 0);
+        foreach ($revenue_data as $row) {
+            $monthly_revenue[(int)$row['month']] = (float)$row['revenue'];
+        }
+
+        include __DIR__ . '/../GiaoDien/QuanTri/bao_cao/doanh_thu.php';
     }
 }
 ?>

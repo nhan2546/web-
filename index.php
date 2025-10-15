@@ -1,74 +1,47 @@
 <?php
-session_start(); // Bắt đầu session ở đầu tệp để các biến session hoạt động
-// Load the CSDL class definition
+session_start();
+
+// 1. KHỞI TẠO
 require_once __DIR__ . '/MoHinh/CSDL.php';
-// Create database connection and get PDO
+require_once __DIR__ . '/DieuKhien/DieuKhienTrang.php';
+require_once __DIR__ . '/DieuKhien/DieuKhienXacThuc.php';
+
 $db = new CSDL();
 $pdo = $db->conn;
 
-// Load controller implementations
-include_once __DIR__ . '/DieuKhien/DieuKhienTrang.php';
-include_once __DIR__ . '/DieuKhien/dieukhienxacthuc.php';
-include_once __DIR__ . '/MoHinh/DanhMuc.php'; // Thêm dòng này để load model DanhMuc
+$c = new controller($pdo); // Controller cho các trang nội dung
+$authController = new DieuKhienXacThuc($pdo); // Controller cho xác thực
 
-// Instantiate controllers, passing the PDO connection object
-$c = new controller($pdo);
-$authController = new DieuKhienXacThuc($pdo);
-
-// Lấy danh sách danh mục cho menu
-$danhMucModel = new DanhMuc($pdo);
-$danh_muc_menu = $danhMucModel->getDS_Danhmuc(); // Sửa tên hàm cho đúng với model
-
-// Determine action
+// 3. TÁCH BIỆT LOGIC XỬ LÝ VÀ HIỂN THỊ
 $act = $_GET['act'] ?? 'trangchu';
 
-// TÁCH BIỆT LOGIC XỬ LÝ VÀ HIỂN THỊ
-// Các case xử lý logic (đăng nhập, thêm giỏ hàng,...) sẽ không include view trực tiếp
+// 4. ĐIỀU HƯỚNG (ROUTING)
+// Ưu tiên xử lý các action logic trước khi hiển thị bất kỳ HTML nào.
+// Các phương thức này sẽ tự gọi header() và exit().
 switch ($act) {
-    case 'them_vao_gio':
-        $c->them_vao_gio();
-        break;
-    case 'xoa_san_pham_gio_hang':
-        $c->xoa_san_pham_gio_hang();
-        break;
-    case 'cap_nhat_gio_hang':
-        $c->cap_nhat_gio_hang();
-        break;
-    case 'ap_dung_voucher':
-        $c->ap_dung_voucher();
-        break;
-    case 'xoa_voucher':
-        $c->xoa_voucher();
-        break;
-    case 'xu_ly_dang_nhap':
-        $authController->xu_ly_dang_nhap();
-        break;
-    case 'xu_ly_dang_ky':
-        $authController->xu_ly_dang_ky();
-        break;
-    case 'dang_xuat':
-        $authController->dang_xuat();
-        break;
-    case 'cap_nhat_tai_khoan':
-        $c->cap_nhat_tai_khoan();
-        break;
-    case 'doi_mat_khau':
-        $c->doi_mat_khau();
-        break;
-    case 'cap_nhat_avatar':
-        $c->cap_nhat_avatar();
-        break;
-    // Các case xử lý logic khác...
-
-
+    case 'them_vao_gio':            $c->them_vao_gio(); break;
+    case 'xoa_san_pham_gio_hang':   $c->xoa_san_pham_gio_hang(); break;
+    case 'cap_nhat_gio_hang':       $c->cap_nhat_gio_hang(); break;
+    case 'ap_dung_voucher':         $c->ap_dung_voucher(); break;
+    case 'xoa_voucher':             $c->xoa_voucher(); break;
+    case 'xu_ly_dang_nhap':         $authController->xu_ly_dang_nhap(); break;
+    case 'xu_ly_dang_ky':           $authController->xu_ly_dang_ky(); break;
+    case 'dang_xuat':               $authController->dang_xuat(); break;
+    case 'cap_nhat_tai_khoan':      $c->cap_nhat_tai_khoan(); break;
+    case 'doi_mat_khau':            $c->doi_mat_khau(); break;
+    case 'cap_nhat_avatar':         $c->cap_nhat_avatar(); break;
+    case 'xu_ly_dat_hang':          $c->xu_ly_dat_hang(); break;
+    case 'them_binh_luan':          $c->them_binh_luan(); break;
+    case 'ajax_tim_kiem':           $c->ajax_tim_kiem(); break; // AJAX cũng là logic, không cần layout
 }
 
-// BẮT ĐẦU HIỂN THỊ GIAO DIỆN
-// Include header (biến $danh_muc_menu sẽ có sẵn trong file này)
-include __DIR__.'/GiaoDien/trang/bo_cuc/dau_trang.php';
+// Nếu script vẫn chạy đến đây, nghĩa là action không phải là logic xử lý ở trên.
+// Bây giờ chúng ta có thể an toàn hiển thị layout.
+include __DIR__ . '/GiaoDien/trang/bo_cuc/dau_trang.php'; // 5. HIỂN THỊ HEADER
 
-// Khối switch này chỉ xử lý các action có hiển thị giao diện
+// 6. HIỂN THỊ NỘI DUNG TRANG
 switch ($act) {
+    // Các trang chính
     case 'trangchu':
         $c->trangchu();
         break;
@@ -81,35 +54,43 @@ switch ($act) {
     case 'chi_tiet_san_pham':
         $c->chi_tiet_san_pham();
         break;
-    case 'gio_hang':
-        $c->hien_thi_gio_hang();
-        break;
     case 'tim_kiem':
         $c->tim_kiem_san_pham();
         break;
-    case 'ajax_tim_kiem': // AJAX không cần header/footer nhưng để đây cho gọn
-        $c->ajax_tim_kiem();
+
+    // Giỏ hàng
+    case 'gio_hang':
+        $c->hien_thi_gio_hang();
         break;
     case 'thanh_toan':
-        include __DIR__.'/GiaoDien/trang/thanh_toan.php';
+        $c->hien_thi_thanh_toan();
         break;
+
+    // Xác thực & Tài khoản người dùng
     case 'dang_nhap':
         $authController->hien_thi_dang_nhap();
         break;
     case 'dang_ky':
         $authController->hien_thi_dang_ky();
         break;
-    case 'quen_mat_khau':
-        $authController->hien_thi_quen_mat_khau();
+    case 'thong_tin_tai_khoan':
+        $c->thong_tin_tai_khoan();
         break;
     case 'lich_su_mua_hang':
         $c->lich_su_mua_hang();
         break;
-    case 'thong_tin_tai_khoan':
-        $c->thong_tin_tai_khoan();
+    case 'chi_tiet_don_hang_user':
+        $c->chi_tiet_don_hang_user();
+        break;
+    case 'thu_cu_doi_moi':
+        $c->thu_cu_doi_moi();
+        break;
+
+    default:
+        $c->trangchu();
         break;
 }
 
-// Include footer
-include __DIR__.'/GiaoDien/trang/bo_cuc/chan_trang.php';
+// 7. HIỂN THỊ FOOTER
+include __DIR__ . '/GiaoDien/trang/bo_cuc/chan_trang.php';
 ?>

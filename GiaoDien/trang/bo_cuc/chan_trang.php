@@ -1,8 +1,6 @@
-        </div> <!-- Đóng thẻ .container từ dau_trang.php -->
-    </main> <!-- Đóng thẻ main từ dau_trang.php -->
-
-    <!-- GIAO DIỆN AI CHATBOT TÙY CHỈNH --> 
-    <div class="chatbot-container">
+</main> <!-- Đóng thẻ main từ dau_trang.php -->
+<!-- GIAO DIỆN AI CHATBOT TÙY CHỈNH -->
+<div class="chatbot-container">
         <div class="chatbot-header">
             <h2>Trợ lý AI</h2> 
         </div>
@@ -18,20 +16,19 @@
     </div>  
 
     <!-- CÁC NÚT LIÊN HỆ NỔI -->
-    <div class="contact-float">
-        <!-- Nút bấm để mở/đóng chatbot -->
-        <button class="contact-item chatbot-toggler" style="padding: 5px; border-radius: 50%;">
-            <img src="TaiNguyen/hinh_anh/Chatbot Chat Message.jpg" alt="AI Chat" class="icon-open">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    <div class="cp-fab-container">
+        <button class="cp-fab chatbot-toggler">
+             <img src="TaiNguyen/hinh_anh/Chatbot Chat Message.jpg" alt="AI Chat" class="icon-open">
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-        <!-- Nút Zalo -->
-        <a href="https://zalo.me/0837277347" target="_blank" class="contact-item zalo">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
-        </a>
-        <!-- Nút Gọi điện --> 
-        <a href="tel: 0837277347" class="contact-item phone">
-             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.28 1.465l-2.135 2.136a11.942 11.942 0 0 0 5.586 5.586l2.136-2.135a1.745 1.745 0 0 1 1.465-.28l2.305 1.152a1.745 1.745 0 0 1 .163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03.003-2.137.703-2.877L1.885.511z"/></svg>
-         </a>
+        <div class="cp-fab-options">
+            <a href="https://zalo.me/0837277347" target="_blank" class="cp-fab-item" title="Chat Zalo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
+            </a>
+            <a href="tel:0837277347" class="cp-fab-item" title="Gọi điện">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.28 1.465l-2.135 2.136a11.942 11.942 0 0 0 5.586 5.586l2.136-2.135a1.745 1.745 0 0 1 1.465-.28l2.305 1.152a1.745 1.745 0 0 1 .163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03.003-2.137.703-2.877L1.885.511z"/></svg>
+            </a>
+        </div>
     </div>
 <script>
         // --- JAVASCRIPT CHO TÌM KIẾM TRỰC TIẾP ---
@@ -185,48 +182,86 @@
         }, 500);
     </script>
 
-    <!-- JAVASCRIPT CHO NÚT ẨN/HIỆN MẬT KHẨU -->
+    <!-- JAVASCRIPT CHO SLIDER SẢN PHẨM -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Hàm trợ giúp để xử lý việc chuyển đổi cho một cặp nút và trường nhập
-            const setupPasswordToggle = (toggleButtonId, passwordFieldId) => {
-                const toggleButton = document.getElementById(toggleButtonId);
-                const passwordField = document.getElementById(passwordFieldId);
-
-                // Chỉ chạy nếu cả hai phần tử tồn tại trên trang
-                if (toggleButton && passwordField) {
-                    // SVG cho icon con mắt
-                    const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>`;
-                    const eyeSlashIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16"><path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/><path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/></svg>`;
-
-                    toggleButton.addEventListener('click', function () {
-                        // Lấy loại hiện tại của trường nhập
-                        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-                        passwordField.setAttribute('type', type);
-
-                        // Thay đổi icon trên nút
-                        if (type === 'password') {
-                            this.innerHTML = eyeIcon;
-                        } else {
-                            this.innerHTML = eyeSlashIcon;
-                        }
-                    });
-                }
-            };
-
-            // Thiết lập cho trường mật khẩu chính
-            setupPasswordToggle('togglePassword', 'password');
-
-            // Thiết lập cho trường xác nhận mật khẩu
-            setupPasswordToggle('toggleConfirmPassword', 'confirm_password');
+            var swiper = new Swiper(".product-slider", {
+                loop: true,
+                autoplay: {
+                    delay: 4000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+            });
         });
     </script>
+<!-- JAVASCRIPT CHO NÚT ẨN/HIỆN MẬT KHẨU -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Hàm trợ giúp để xử lý việc chuyển đổi cho một cặp nút và trường nhập
+        const setupPasswordToggle = (toggleButtonId, passwordFieldId) => {
+            const toggleButton = document.getElementById(toggleButtonId);
+            const passwordField = document.getElementById(passwordFieldId);
 
-    <!-- FOOTER -->
-    <footer class="footer-custom mt-auto">
-        <div class="container-fluid">
-            <p>&copy; <?= date('Y') ?> Shop Táo Ngon.</p>
-        </div>
-    </footer>
+            // Chỉ chạy nếu cả hai phần tử tồn tại trên trang
+            if (toggleButton && passwordField) {
+                // SVG cho icon con mắt
+                const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>`;
+                const eyeSlashIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16"><path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/><path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/></svg>`;
+
+                toggleButton.addEventListener('click', function () {
+                    // Lấy loại hiện tại của trường nhập
+                    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordField.setAttribute('type', type);
+
+                    // Thay đổi icon trên nút
+                    if (type === 'password') {
+                        this.innerHTML = eyeIcon;
+                    } else {
+                        this.innerHTML = eyeSlashIcon;
+                    }
+                });
+            }
+        };
+
+        // Thiết lập cho trường mật khẩu chính
+        setupPasswordToggle('togglePassword', 'password');
+
+        // Thiết lập cho trường xác nhận mật khẩu
+        setupPasswordToggle('toggleConfirmPassword', 'confirm_password');
+    });
+</script>
+
+<!-- Footer -->
+<footer class="cp-footer">
+  <div class="cp-container cp-footer__grid">
+    <div>
+      <img class="cp-logo--footer" src="TaiNguyen/hinh_anh/ChatGPT_Image_Oct_15__2025__05_00_01_PM-removebg-preview.png" alt="">
+      <p>Shop Táo Ngon – Chuyên Apple chính hãng.</p>
+    </div>
+    <div>
+      <h5>Hỗ trợ</h5>
+      <a href="#">Chính sách bảo hành</a>
+      <a href="#">Giao hàng & thanh toán</a>
+      <a href="#">Đổi trả</a>
+    </div>
+    <div>
+      <h5>Liên hệ</h5>
+      <a href="tel:18000000">Hotline: 1800 0000</a>
+      <a href="mailto:hello@shoptaongon.vn">hello@shoptaongon.vn</a>
+    </div>
+  </div>
+  <div class="cp-footer__copy">© 2025 Shop Táo Ngon</div>
+</footer>
+
+<script src="TaiNguyen/js/main.js"></script>
 </body>
 </html>
