@@ -9,32 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="TaiNguyen/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-  <style>
-    /* CSS cho hiệu ứng chạy chữ */
-    .cp-topbar {
-      overflow: hidden; /* Ẩn nội dung tràn ra ngoài */
-      padding: 0;
-    }
-    .cp-topbar__marquee {
-      display: flex;
-      animation: marquee 20s linear infinite; /* Tên animation, thời gian, kiểu và lặp lại */
-    }
-    .cp-topbar__items {
-      display: flex;
-      flex-shrink: 0; /* Ngăn các item bị co lại */
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .cp-topbar__items li {
-      padding: 10px 25px; /* Giữ padding như cũ */
-      white-space: nowrap; /* Ngăn text xuống dòng */
-    }
-    @keyframes marquee {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-100%); } /* Di chuyển sang trái đúng bằng chiều rộng của một khối item */
-    }
-  </style>
 </head>
 <body>
 
@@ -42,16 +16,16 @@
 <div class="cp-topbar">
   <div class="cp-topbar__marquee">
     <ul class="cp-topbar__items"> <!-- Khối nội dung gốc -->
-      <li>🚚 Miễn phí giao nhanh</li>
-      <li>🎧 Hotline: 1800 0000</li>
-      <li>📍 Hệ thống cửa hàng</li>
-      <li>🎁 Khuyến mãi</li>
+        <li>🚚 Miễn phí giao nhanh</li>
+        <li>🎧 Hotline: 1800 0000</li>
+        <li>📍 Hệ thống cửa hàng</li>
+        <li>🎁 Khuyến mãi</li>
     </ul>
     <ul class="cp-topbar__items" aria-hidden="true"> <!-- Khối nội dung nhân bản để tạo hiệu ứng lặp lại liền mạch -->
-      <li>🚚 Miễn phí giao nhanh</li>
-      <li>🎧 Hotline: 1800 0000</li>
-      <li>📍 Hệ thống cửa hàng</li>
-      <li>🎁 Khuyến mãi</li>
+        <li>🚚 Miễn phí giao nhanh</li>
+        <li>🎧 Hotline: 1800 0000</li>
+        <li>📍 Hệ thống cửa hàng</li>
+        <li>🎁 Khuyến mãi</li>
     </ul>
   </div>
 </div>
@@ -72,7 +46,15 @@
     </form>
 
     <nav class="cp-quick">
-        <a href="index.php?act=gio_hang">🛒 Giỏ hàng</a>
+        <a href="index.php?act=gio_hang" class="cp-cart-link">
+            🛒 Giỏ hàng
+            <span class="cart-badge" id="cart-badge">
+                <?php
+                    // Tính tổng số lượng sản phẩm trong giỏ hàng
+                    echo isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
+                ?>
+            </span>
+        </a>
         <?php if (isset($_SESSION['user_id'])): 
             // --- LOGIC TÍNH HẠNG THÀNH VIÊN (được chuyển lên header) ---
             if (!function_exists('getHeaderCustomerRank')) {

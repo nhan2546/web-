@@ -80,8 +80,26 @@ class controller {
 
         // Lấy thông tin bình luận và đánh giá
         $reviewModel = new BinhLuan($this->pdo);
-        $reviews = $reviewModel->getReviewsByProductId($id);
+        $flat_reviews = $reviewModel->getReviewsByProductId($id);
         $rating_info = $reviewModel->getAverageRating($id);
+
+        // Sắp xếp bình luận thành cây cha-con
+        $reviews_tree = [];
+        $reviews_by_id = [];
+        foreach ($flat_reviews as $review) {
+            $reviews_by_id[$review['id']] = $review;
+            $reviews_by_id[$review['id']]['replies'] = [];
+        }
+
+        foreach ($reviews_by_id as $review_id => &$review) {
+            if ($review['parent_id'] && isset($reviews_by_id[$review['parent_id']])) {
+                // Đây là một bình luận trả lời, thêm nó vào mảng 'replies' của cha
+                $reviews_by_id[$review['parent_id']]['replies'][] = &$review;
+            } else {
+                // Đây là bình luận gốc
+                $reviews_tree[] = &$review;
+            }
+        }
 
         include __DIR__.'/../GiaoDien/trang/chi_tiet_san_pham.php';
     }
@@ -133,9 +151,14 @@ class controller {
                 ];
             }
         }
-        // Chuyển hướng người dùng về trang giỏ hàng
-        header('Location: index.php?act=gio_hang');
-        exit();
+
+        // Tính toán tổng số lượng mới
+        $new_total_quantity = array_sum(array_column($_SESSION['cart'], 'quantity'));
+
+        // Trả về kết quả dưới dạng JSON
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'new_total_quantity' => $new_total_quantity]);
+        exit(); // Dừng thực thi
     }
 
     public function ap_dung_voucher() {
@@ -188,7 +211,7 @@ class controller {
                 }
             }
         }
-        header('Location: index.php?act=gio_hang');
+        header('Location: index.php?act=thanh_toan');
         exit();
     }
 
@@ -202,16 +225,6 @@ class controller {
         // Lấy thông tin voucher từ session nếu có
         $voucher_code = $_SESSION['voucher']['code'] ?? null;
         $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
-        $final_total = $subtotal - $discount_amount;
-
-        // Lấy thông báo lỗi/thành công từ session
-        $voucher_error = $_SESSION['voucher_error'] ?? null;
-        $voucher_success = $_SESSION['voucher_success'] ?? null;
-
-        // Xóa thông báo sau khi đã lấy để chúng không hiển thị lại
-        unset($_SESSION['voucher_error']);
-        unset($_SESSION['voucher_success']);
-
         include __DIR__.'/../GiaoDien/trang/gio_hang.php';
     }
 
@@ -222,7 +235,7 @@ class controller {
         unset($_SESSION['voucher_success']);
 
         // Chuyển hướng về trang giỏ hàng
-        header('Location: index.php?act=gio_hang');
+        header('Location: index.php?act=thanh_toan');
         exit();
     }
 
@@ -237,20 +250,34 @@ class controller {
 
     public function cap_nhat_gio_hang() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['quantities'])) {
-                foreach ($_POST['quantities'] as $id => $quantity) {
-                    $quantity = (int)$quantity;
-                    if ($quantity > 0 && isset($_SESSION['cart'][$id])) {
-                        $_SESSION['cart'][$id]['quantity'] = $quantity;
-                    } else if ($quantity <= 0 && isset($_SESSION['cart'][$id])) {
-                        // Nếu số lượng <= 0 thì xóa sản phẩm
-                        unset($_SESSION['cart'][$id]);
-                    }
+            $id = $_POST['id'] ?? null;
+            $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 0;
+
+            if ($id && isset($_SESSION['cart'][$id])) {
+                if ($quantity > 0) {
+                    $_SESSION['cart'][$id]['quantity'] = $quantity;
+                } else {
+                    // Nếu số lượng là 0 hoặc nhỏ hơn, xóa sản phẩm khỏi giỏ hàng
+                    unset($_SESSION['cart'][$id]);
                 }
             }
+
+            // Tính toán lại các giá trị tổng
+            $subtotal = 0;
+            foreach ($_SESSION['cart'] as $item) {
+                $subtotal += $item['price'] * $item['quantity'];
+            }
+            $total_quantity = array_sum(array_column($_SESSION['cart'], 'quantity'));
+
+            // Trả về dữ liệu JSON
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => true,
+                'new_subtotal' => $subtotal,
+                'new_total_quantity' => $total_quantity
+            ]);
+            exit();
         }
-        header('Location: index.php?act=gio_hang');
-        exit();
     }
 
     public function them_binh_luan() {
@@ -265,11 +292,12 @@ class controller {
         $user_id = $_SESSION['user_id'];
         $rating = $_POST['rating'] ?? 0;
         $comment = trim($_POST['comment'] ?? '');
+        $parent_id = !empty($_POST['parent_id']) ? (int)$_POST['parent_id'] : null;
 
-        if ($product_id > 0 && $rating > 0 && $rating <= 5) {
+        if ($product_id > 0 && ($parent_id !== null || ($rating > 0 && $rating <= 5))) {
             // 3. Gọi model để thêm bình luận
             $reviewModel = new BinhLuan($this->pdo);
-            $reviewModel->addReview($product_id, $user_id, $rating, $comment);
+            $reviewModel->addReview($product_id, $user_id, $rating, $comment, $parent_id);
         }
 
         // 4. Chuyển hướng người dùng trở lại trang sản phẩm
@@ -302,10 +330,20 @@ class controller {
         foreach ($cart as $item) {
             $subtotal += $item['price'] * $item['quantity'];
         }
+        
+        // Lấy thông tin voucher và các thông báo
+        $voucher_code = $_SESSION['voucher']['code'] ?? null;
         $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
         $final_total = $subtotal - $discount_amount;
 
-        // 5. Hiển thị view
+        $voucher_error = $_SESSION['voucher_error'] ?? null;
+        $voucher_success = $_SESSION['voucher_success'] ?? null;
+
+        // Xóa thông báo sau khi đã lấy để chúng không hiển thị lại
+        unset($_SESSION['voucher_error']);
+        unset($_SESSION['voucher_success']);
+
+        // 5. Hiển thị view và truyền các biến
         include __DIR__.'/../GiaoDien/trang/thanh_toan.php';
     }
 
