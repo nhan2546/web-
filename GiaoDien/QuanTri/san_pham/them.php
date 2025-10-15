@@ -8,13 +8,22 @@
                 <label class="form-label">Tên sản phẩm</label>
                 <input type="text" name="name" class="form-control" required>
             </div>
+            
             <div class="mb-3">
-                <label class="form-label">Mô tả</label>
-                <textarea name="description" class="form-control" rows="3"></textarea>
+                <label class="form-label">Danh mục</label>
+                <select name="category_id" class="form-select" required>
+                    <option value="">-- Chọn danh mục --</option>
+                    <?php 
+                    // Biến $danh_sach_danh_muc này do controller cung cấp
+                    foreach ($danh_sach_danh_muc as $danh_muc): ?>
+                        <option value="<?= $danh_muc['id'] ?>"><?= htmlspecialchars($danh_muc['name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
+
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Giá</label>
+                    <label class="form-label">Giá (VNĐ)</label>
                     <input type="number" name="price" class="form-control" required>
                 </div>
                 <div class="col-md-6 mb-3">
@@ -22,18 +31,15 @@
                     <input type="number" name="stock_quantity" class="form-control" required>
                 </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Danh mục</label>
-                <select name="category_id" class="form-select" required>
-                    <option value="">-- Chọn danh mục --</option>
-                    <?php foreach ($danh_sach_danh_muc as $danh_muc): ?>
-                        <option value="<?= $danh_muc['id'] ?>"><?= htmlspecialchars($danh_muc['name']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+            
             <div class="mb-3">
                 <label class="form-label">Hình ảnh sản phẩm</label>
-                <input type="file" name="image" class="form-control">
+                <input type="file" name="image" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Mô tả</label>
+                <textarea name="description" class="form-control" rows="3"></textarea>
             </div>
             
             <div class="d-flex justify-content-end">

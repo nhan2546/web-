@@ -80,11 +80,11 @@ class sanpham {
     }
 
     /*xử lý dữ liệu */
-    public function themsp($name, $description, $price, $image_url, $stock_quantity, $category_id, $sale){
-        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `image_url`, `stock_quantity`, `category_id`, `sale`) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public function themsp($name, $description, $price, $image_url, $stock_quantity, $category_id){
+        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `image_url`, `stock_quantity`, `category_id`) 
+                VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id, $sale]);
+        return $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id]);
     }
 
     /*lấy sản phẩm từ bản product*/
@@ -151,7 +151,7 @@ class sanpham {
     }
 
     /*Lấy sản phẩm theo id*/
-    public function getone_sanoham($id){
+    public function getone_sanpham($id){
         $sql = "SELECT * FROM products WHERE id = ? LIMIT 1";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$id]);

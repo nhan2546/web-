@@ -66,7 +66,7 @@ class controller {
     public function chi_tiet_san_pham() {
         $id = $_GET['id'] ?? 0;
         $sp_model = new sanpham($this->pdo);
-        $san_pham = $sp_model->getsanphambyid($id);
+        $san_pham = $sp_model->getone_sanpham($id);
         include __DIR__.'/../GiaoDien/trang/chi_tiet_san_pham.php';
     }
 

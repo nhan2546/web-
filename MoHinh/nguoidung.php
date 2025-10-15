@@ -43,6 +43,20 @@ class NguoiDung {
     }
 
     /**
+     * Tạo người dùng mới bởi admin.
+     * @param string $fullname Họ và tên.
+     * @param string $email Email.
+     * @param string $password Mật khẩu (chưa mã hóa).
+     * @param string $role Vai trò.
+     * @return bool True nếu tạo thành công, ngược lại false.
+     */
+    public function createUserByAdmin($fullname, $email, $password, $role) {
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $this->pdo->prepare("INSERT INTO users (fullname, email, password, role) VALUES (?, ?, ?, ?)");
+        return $stmt->execute([$fullname, $email, $hashed_password, $role]);
+    }
+
+    /**
      * Xử lý đăng nhập.
      * @param string $email Email.
      * @param string $password Mật khẩu.
@@ -150,5 +164,48 @@ class NguoiDung {
         $stmt = $this->pdo->prepare("SELECT COUNT(id) FROM users WHERE role = 'customer'");
         $stmt->execute();
         return $stmt->fetchColumn();
+    }
+
+    /**
+     * Lấy danh sách khách hàng cùng với tổng chi tiêu của họ.
+     * @return array Mảng chứa danh sách khách hàng và chi tiêu.
+     */
+    public function getDS_KhachHang() {
+        $sql = "SELECT 
+                    u.id, 
+                    u.fullname, 
+                    u.email, 
+                    u.is_locked,
+                    SUM(CASE WHEN o.status = 'delivered' THEN o.total_amount ELSE 0 END) as total_spending
+                FROM 
+                    users u
+                LEFT JOIN 
+                    orders o ON u.id = o.user_id
+                WHERE 
+                    u.role = 'customer'
+                GROUP BY 
+                    u.id, u.fullname, u.email, u.is_locked
+                ORDER BY 
+                    total_spending DESC";
+        
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Thay đổi trạng thái khóa của người dùng.
+     * @param int $id ID người dùng.
+     * @return bool True nếu cập nhật thành công.
+     */
+    public function toggleLockStatus($id) {
+        // Lấy trạng thái hiện tại rồi đảo ngược nó
+        $stmt_current = $this->pdo->prepare("SELECT is_locked FROM users WHERE id = ?");
+        $stmt_current->execute([$id]);
+        $current_status = $stmt_current->fetchColumn();
+        
+        $new_status = $current_status ? 0 : 1; // Đảo ngược trạng thái
+
+        $stmt_update = $this->pdo->prepare("UPDATE users SET is_locked = ? WHERE id = ?");
+        return $stmt_update->execute([$new_status, $id]);
     }
 }

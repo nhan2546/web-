@@ -113,7 +113,7 @@ class DieuKhienQuanTri {
             // 3. Tạo đối tượng model và gọi hàm thêm
             $sanpham_model = new sanpham($this->pdo);
             // Sử dụng các setter để thiết lập giá trị
-            $sanpham_model->themsp($category_id, $name, $price, $stock_quantity, $image_url, 0, $description);
+            $sanpham_model->themsp($name, $description, $price, $image_url, $stock_quantity, $category_id);
 
             // 4. Chuyển hướng về trang danh sách sản phẩm của admin
             header('Location: admin.php?act=ds_sanpham&success=added');
@@ -126,7 +126,7 @@ class DieuKhienQuanTri {
         $id = $_GET['id'] ?? 0;
         if ($id > 0) {
             $sp_model = new sanpham($this->pdo);
-            $san_pham = $sp_model->getone_sanoham($id); // Lấy thông tin sản phẩm cần sửa
+            $san_pham = $sp_model->getone_sanpham($id); // Lấy thông tin sản phẩm cần sửa
 
             $dm_model = new danhmuc($this->pdo);
             $danh_sach_danh_muc = $dm_model->getDS_Danhmuc(); // Sửa lỗi gọi hàm không tồn tại
@@ -236,6 +236,43 @@ class DieuKhienQuanTri {
     }
 
     // --- QUẢN LÝ NGƯỜI DÙNG ---
+
+    // --- QUẢN LÝ KHÁCH HÀNG ---
+    public function ds_khachhang() {
+        $user_model = new NguoiDung($this->pdo);
+        $danh_sach_khach_hang = $user_model->getDS_KhachHang();
+        
+        // Định nghĩa các ngưỡng xếp hạng
+        define('DIAMOND_THRESHOLD', 50000000);
+        define('GOLD_THRESHOLD', 20000000);
+        define('SILVER_THRESHOLD', 5000000);
+
+        // Hàm để xác định xếp hạng
+        function getCustomerRank($spending) {
+            if ($spending >= DIAMOND_THRESHOLD) {
+                return 'Kim Cương';
+            } elseif ($spending >= GOLD_THRESHOLD) {
+                return 'Vàng';
+            } elseif ($spending >= SILVER_THRESHOLD) {
+                return 'Bạc';
+            } else {
+                return 'Đồng';
+            }
+        }
+
+        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_KH.php';
+    }
+
+    public function khoa_khachhang() {
+        $id = $_GET['id'] ?? 0;
+        if ($id > 0) {
+            $user_model = new NguoiDung($this->pdo);
+            $user_model->toggleLockStatus($id);
+        }
+        header('Location: admin.php?act=ds_khachhang&success=toggled');
+        exit;
+    }
+
     public function ds_nhanvien() {
         $user_model = new NguoiDung($this->pdo);
         $danh_sach_nhan_vien = $user_model->getDS_NguoiDung();
@@ -284,6 +321,25 @@ class DieuKhienQuanTri {
             $user_model->updateUserByAdmin($id, $fullname, $email, $role);
 
             header('Location: admin.php?act=ds_nguoidung&success=updated');
+            exit;
+        }
+    }
+
+    public function them_nv() {
+        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/them_NV.php';
+    }
+
+    public function xl_them_nv() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $fullname = $_POST['fullname'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $password = $_POST['password'] ?? '';
+            $role = $_POST['role'] ?? 'customer';
+
+            $user_model = new NguoiDung($this->pdo);
+            $user_model->createUserByAdmin($fullname, $email, $password, $role);
+
+            header('Location: admin.php?act=ds_nhanvien&success=added');
             exit;
         }
     }

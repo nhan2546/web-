@@ -44,6 +44,9 @@ $current_act = $_GET['act'] ?? 'dashboard';
                 <li class="sidebar-nav-item <?php echo (in_array($current_act, ['ds_nhanvien', 'sua_nhanvien'])) ? 'active' : ''; ?>">
                     <a href="admin.php?act=ds_nhanvien">Quản lý Nhân viên</a>
                 </li>
+                <li class="sidebar-nav-item <?php echo ($current_act == 'ds_khachhang') ? 'active' : ''; ?>">
+                    <a href="admin.php?act=ds_khachhang">Quản lý Khách Hàng</a>
+                </li>
                 <!-- Thêm mục Xem trang người dùng -->
                 <li class="sidebar-nav-item" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
                     <a href="index.php" target="_blank">
