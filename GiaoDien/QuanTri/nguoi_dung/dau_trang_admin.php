@@ -67,5 +67,5 @@ $current_act = $_GET['act'] ?? 'dashboard';
                     </a>
                 </div>
             </header>
-            <div class="admin-page-content">
+            <main class="admin-page-content">
                 <!-- Nội dung của từng trang sẽ được include vào đây -->
