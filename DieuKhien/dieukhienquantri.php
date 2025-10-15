@@ -152,7 +152,7 @@ class DieuKhienQuanTri {
             $description = $_POST['description'] ?? '';
             $stock_quantity = $_POST['stock_quantity'] ?? 0;
             $category_id = $_POST['category_id'] ?? 0;
-            $sale_price = $_POST['sale_price'] ?? 0; // Lấy giá sale
+            // $sale_price = $_POST['sale_price'] ?? 0; // Tạm thời vô hiệu hóa
             $existing_image = $_POST['existing_image'] ?? '';
 
             $image_url = $existing_image;
@@ -164,7 +164,8 @@ class DieuKhienQuanTri {
             }
 
             $sp_model = new sanpham($this->pdo);
-            $sp_model->capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price);
+            $sp_model->capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id);
+
             header('Location: admin.php?act=ds_sanpham&success=updated');
             exit;
         }

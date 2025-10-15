@@ -156,15 +156,21 @@ class sanpham {
      * @return array Mảng các sản phẩm giảm giá.
      */
     public function getHotSaleProducts($limit = 5) {
-        $sql = "SELECT *, (100 * (price - sale_price) / price) as discount_percentage 
-                FROM products 
-                WHERE sale_price IS NOT NULL AND sale_price > 0 AND sale_price < price 
-                ORDER BY discount_percentage DESC 
-                LIMIT :limit";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $sql = "SELECT *, sale as sale_price, (100 * (price - sale) / price) as discount_percentage 
+                    FROM products 
+                    WHERE sale IS NOT NULL AND sale > 0 AND sale < price 
+                    ORDER BY discount_percentage DESC 
+                    LIMIT :limit";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Log the error here if you have a logging system.
+            // Returning an empty array to prevent the site from crashing.
+            return [];
+        }
     }
 
     /*Lấy sản phẩm theo id*/
