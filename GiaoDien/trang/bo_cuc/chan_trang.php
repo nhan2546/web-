@@ -20,7 +20,7 @@
     <!-- CÁC NÚT LIÊN HỆ NỔI -->
     <div class="contact-float">
         <!-- Nút bấm để mở/đóng chatbot -->
-        <button class="contact-item chatbot-toggler">
+        <button class="contact-item chatbot-toggler" style="padding: 5px; border-radius: 50%;">
             <img src="TaiNguyen/hinh_anh/Chatbot Chat Message.jpg" alt="AI Chat" class="icon-open">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>

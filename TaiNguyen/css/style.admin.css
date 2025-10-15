@@ -343,6 +343,16 @@ body.admin-body {
     color: #c0392b; /* Màu đỏ đậm hơn khi rê chuột */
 }
 
+/* Footer của trang admin */
+.admin-footer {
+    background-color: #2c3e50; /* Giữ màu nền tối để hợp với sidebar */
+    color: var(--text-light);
+    padding: 15px 30px;
+    text-align: center;
+    margin-top: auto; /* Đẩy footer xuống cuối */
+    font-size: 14px;
+}
+
 /* Định dạng cho khu vực thông tin người dùng trên header admin */
 .admin-header .user-profile {
     display: flex;

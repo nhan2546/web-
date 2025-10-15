@@ -9,7 +9,7 @@ html, body {
 body { 
 
     box-sizing: border-box;
-    background: #f4f7f6;
+    background: #e9f5e9; /* Đổi nền sang màu xanh lá cây nhạt */
     color: #333;
     font-family: 'Poppins', 'Inter', sans-serif;
     display: flex;
@@ -34,9 +34,9 @@ body {
 /* header chung */
 /* Định dạng cho thanh header chính */
 .main-header {
-    background: #3498db; 
+    background: #28a745; 
     color: #fff;
-    padding: 15px 0 0; 
+    padding: 5px 0; /* Giảm padding để giữ chiều cao header */
     font-weight: 800;
     letter-spacing: .5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -65,11 +65,17 @@ body {
     align-items: center; 
     gap: 12px;
 }
-
-/* Định dạng cho ảnh logo */
+/* Định dạng cho logo cửa hàng */
 .shop-logo {
-    height: 40px; 
-    width: auto;
+  height: 80px;              /* Tăng kích thước logo */
+  width: auto;
+  object-fit: contain;
+  display: block;
+  background-color: #28a745;  /* Đồng bộ màu với header */
+  border-radius: 8px;         /* bo nhẹ cho mềm mại */
+  padding: 4px;               /* tạo khoảng cách logo trong nền */
+  box-shadow: none; 
+  margin-bottom: -10px; /* Cho phép logo tràn nhẹ xuống dưới */
 }
 
 /* thanh tìm kiếm trên header */
@@ -196,8 +202,9 @@ body {
 /* footer */
 /* Định dạng cho chân trang */
 .footer-custom {
-    background: #3498db; 
+    background: #28a745; 
     color: #fff;
+    text-align: center;
     padding: 12px 0; 
 }
 
@@ -231,7 +238,7 @@ h1 {
 /* thanh menu danh mục */
 /* Thanh nav chứa các danh mục sản phẩm */
 .main-nav-bar {
-    background: #3498db; 
+    background: #28a745; 
     padding: 0;
 }
 /* Căn chỉnh các mục trong menu */
@@ -560,7 +567,7 @@ h1 {
 .auth-form-title {
     text-align: center;
     margin-bottom: 25px;
-    color: #3498db;
+    color: #28a745;
     font-size: 24px;
     font-weight: 600;
 }

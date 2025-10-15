@@ -12,8 +12,8 @@
         <div class="container">
             <div class="header-content">
                 <a href="index.php?act=trangchu" class="shop-title-link">
-                    <img src="TaiNguyen/hinh_anh/ChatGPT Image Oct 12, 2025, 01_19_04 PM.png" alt="Shop Táo Ngon Logo" class="shop-logo">
-                    <h1 class="shop-title">Shop Táo Ngon</h1>
+                    <img src="TaiNguyen/hinh_anh/ChatGPT_Image_Oct_15__2025__05_00_01_PM-removebg-preview.png" alt="Shop Táo Ngon Logo" class="shop-logo">
+                    
                 </a>
                 <!-- Thanh tìm kiếm ở giữa -->
                 <div class="header-search-container">
