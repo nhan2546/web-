@@ -6,7 +6,7 @@
     --sidebar-width: 250px;
     --text-light: #ecf0f1;
     --text-muted: #95a5a6;
-    --primary-color: #28a745; /* Màu chính là xanh lá
+    --primary-color: #28a745; /* Màu chính là xanh lá */
     --border-color: #e5e9f2;
 }
 
@@ -28,7 +28,7 @@ body.admin-body {
 .admin-sidebar {
     width: var(--sidebar-width);
     background-color: var(--sidebar-bg);
-    color: var(--text-light);
+    background-image: linear-gradient(180deg, #2ecc71, #28a745); /* Thêm gradient cho đẹp hơn */
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -44,7 +44,7 @@ body.admin-body {
     font-size: 24px;
     font-weight: bold;
     text-align: center;
-    color: #fff;
+    color: var(--text-light);
     text-decoration: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -63,21 +63,25 @@ body.admin-body {
     align-items: center;
     gap: 15px;
     padding: 15px 20px;
-    color: var(--text-light);
+    color: rgba(255, 255, 255, 0.8); /* Giảm độ sáng chữ một chút */
     text-decoration: none;
-    transition: background-color 0.2s, color 0.2s;
+    transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
     font-size: 16px;
+    border-left: 4px solid transparent; /* Chuẩn bị cho hiệu ứng active */
 }
 
 .sidebar-nav-item a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border-left-color: rgba(255, 255, 255, 0.5);
 }
 
 /* Định dạng cho mục menu đang được chọn (active) */
 .sidebar-nav-item.active a {
-    background-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.15);
     color: #fff;
     font-weight: bold;
+    border-left-color: #fff; /* Đường viền trắng nổi bật */
 }
 
 .sidebar-nav-item a svg {
@@ -92,7 +96,7 @@ body.admin-body {
     width: calc(100% - var(--sidebar-width));
     display: flex;
     flex-direction: column;
-    padding-bottom: 55px; /* Tạo khoảng trống cho footer */
+    min-height: 100vh; /* Đảm bảo nội dung chính cao ít nhất bằng màn hình */
 }
 
 /* Header của trang admin (chứa thông tin user) */
@@ -182,42 +186,13 @@ body.admin-body {
     color: #2c3e50;
 }
 
-/* bảng dữ liệu trong trang admin */
-/* Định dạng chung cho bảng */
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-/* Các ô trong bảng */
-.admin-table th, .admin-table td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.admin-table thead th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #34495e;
-}
-
-.admin-table tbody tr:hover {
-    background-color: #f8f9fa;
-}
-
-/* Các nút hành động (Sửa, Xóa) trong bảng */
-.admin-table .action-buttons a {
-    margin-right: 10px;
-    text-decoration: none;
-}
-
 /* Định dạng cho các nhãn trạng thái (status badge) */
 .badge { padding: 5px 10px; border-radius: 12px; color: #fff; font-size: 12px; font-weight: bold; text-transform: capitalize; }
 .badge-pending { background: #ffc107; color: #333; }
 .badge-processing { background: #007bff; }
 .badge-shipped { background: #17a2b8; }
 .badge-delivered { background: #28a745; }
+.badge-success { background-color: #28a745; } /* Thêm màu cho trạng thái thành công/hoạt động */
 .badge-cancelled { background: #dc3545; }
 .badge-secondary {
     background-color: #e9ecef; 
@@ -266,6 +241,14 @@ body.admin-body {
     background-color: #5a6268;
 }
 
+/* Nút cảnh báo (màu vàng, dùng cho hành động Khóa/Mở khóa) */
+.admin-btn-warning {
+    background-color: #ffc107;
+    color: #212529; /* Chữ đen cho dễ đọc trên nền vàng */
+}
+.admin-btn-warning:hover {
+    background-color: #e0a800;
+}
 /* các form trong trang admin */
 /* Định dạng chung cho các form */
 .admin-card .form-label {
@@ -351,18 +334,10 @@ body.admin-body {
     text-decoration: none;
 }
 
-/* Định dạng cho các nhãn trạng thái (status badge) */
-.badge { padding: 5px 10px; border-radius: 12px; color: #fff; font-size: 12px; font-weight: bold; text-transform: capitalize; }
-.badge-pending { background: #ffc107; color: #333; }
-.badge-processing { background: #007bff; }
-.badge-shipped { background: #17a2b8; }
-.badge-delivered { background: #28a745; }
-.badge-cancelled { background: #dc3545; }
-/* Định dạng cho khu vực thông tin người dùng trên header admin */
-.admin-header .user-profile {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* Khoảng cách giữa lời chào và nút đăng xuất */
+/* Định dạng riêng cho cột số điện thoại trong bảng */
+.admin-table .phone-number {
+    color: #000000; /* Màu đen */
+    font-weight: 500; /* Hơi đậm hơn một chút cho dễ đọc */
 }
 
 /* Nút đăng xuất */
@@ -381,15 +356,13 @@ body.admin-body {
 
 /* Footer của trang admin */
 .admin-footer {
-    position: fixed; /* Cố định footer ở cuối trang */
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #28a745; /* Đồng bộ màu xanh lá cây với footer trang user */
-    color: var(--text-light);
+    background-color: #fff;
+    color: #6c757d;
     padding: 15px 30px;
     text-align: center;
     font-size: 14px;
+    border-top: 1px solid var(--border-color);
+    margin-top: auto; /* Quan trọng: Đẩy footer xuống cuối flex container */
 }
 
 /* Định dạng cho khu vực thông tin người dùng trên header admin */
@@ -410,5 +383,5 @@ body.admin-body {
 }
 
 .admin-logout-link:hover {
-    color: #c0392b; /* Màu đỏ đậm hơn khi rê chuột */
+    color: #c0392b; 
 }

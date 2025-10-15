@@ -67,7 +67,7 @@ body {
 }
 /* Định dạng cho logo cửa hàng */
 .shop-logo {
-  height: 80px;              /* Tăng kích thước logo */
+  height: 90px;              /* Tăng kích thước logo */
   width: auto;
   object-fit: contain;
   display: block;
@@ -75,7 +75,7 @@ body {
   border-radius: 8px;         /* bo nhẹ cho mềm mại */
   padding: 4px;               /* tạo khoảng cách logo trong nền */
   box-shadow: none; 
-  margin-bottom: -10px; /* Cho phép logo tràn nhẹ xuống dưới */
+  margin-bottom: -15px; /* Tăng margin âm để logo tràn xuống dưới nhiều hơn */
 }
 
 /* thanh tìm kiếm trên header */

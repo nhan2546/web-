@@ -1,5 +1,6 @@
 <?php
 // Tệp: DieuKhien/DieuKhienTrang.php
+require_once __DIR__ . '/../MoHinh/Voucher.php';
 
 require_once __DIR__ . '/../MoHinh/NguoiDung.php';
 require_once __DIR__ . '/../MoHinh/SanPham.php';
@@ -66,7 +67,7 @@ class controller {
     public function chi_tiet_san_pham() {
         $id = $_GET['id'] ?? 0;
         $sp_model = new sanpham($this->pdo);
-        $san_pham = $sp_model->getone_sanpham($id);
+        $san_pham = $sp_model->getsanphambyid($id);
         include __DIR__.'/../GiaoDien/trang/chi_tiet_san_pham.php';
     }
 
@@ -120,9 +121,84 @@ class controller {
         exit();
     }
 
+    public function ap_dung_voucher() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $code = $_POST['voucher_code'] ?? '';
+            $cart = $_SESSION['cart'] ?? [];
+            
+            // Xóa voucher cũ trước khi áp dụng cái mới
+            unset($_SESSION['voucher']);
+            unset($_SESSION['voucher_error']);
+            unset($_SESSION['voucher_success']);
+
+            if (empty($code)) {
+                $_SESSION['voucher_error'] = "Vui lòng nhập mã voucher.";
+            } else {
+                $voucherModel = new Voucher($this->pdo);
+                $voucher = $voucherModel->findVoucherByCode($code);
+
+                if ($voucher) {
+                    // Tính tổng tiền hàng
+                    $subtotal = 0;
+                    foreach ($cart as $item) {
+                        $subtotal += $item['price'] * $item['quantity'];
+                    }
+
+                    // Tính toán số tiền giảm giá
+                    $discount_amount = 0;
+                    if ($voucher['discount_type'] === 'percentage') {
+                        $discount_amount = ($subtotal * $voucher['discount_value']) / 100;
+                    } else { // 'fixed'
+                        $discount_amount = $voucher['discount_value'];
+                    }
+
+                    // Lưu thông tin voucher vào session
+                    $_SESSION['voucher'] = [
+                        'code' => $voucher['code'],
+                        'discount_amount' => $discount_amount
+                    ];
+                    $_SESSION['voucher_success'] = "Áp dụng voucher thành công!";
+                } else {
+                    $_SESSION['voucher_error'] = "Mã voucher không hợp lệ hoặc đã hết hạn.";
+                }
+            }
+        }
+        header('Location: index.php?act=gio_hang');
+        exit();
+    }
+
     public function hien_thi_gio_hang() {
-        $cart = $_SESSION['cart'] ?? [];
+        $cart = $_SESSION['cart'] ?? []; // Lấy giỏ hàng từ session
+        $subtotal = 0; // Tạm tính
+        foreach ($cart as $item) {
+            $subtotal += $item['price'] * $item['quantity'];
+        }
+
+        // Lấy thông tin voucher từ session nếu có
+        $voucher_code = $_SESSION['voucher']['code'] ?? null;
+        $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
+        $final_total = $subtotal - $discount_amount;
+
+        // Lấy thông báo lỗi/thành công từ session
+        $voucher_error = $_SESSION['voucher_error'] ?? null;
+        $voucher_success = $_SESSION['voucher_success'] ?? null;
+
+        // Xóa thông báo sau khi đã lấy để chúng không hiển thị lại
+        unset($_SESSION['voucher_error']);
+        unset($_SESSION['voucher_success']);
+
         include __DIR__.'/../GiaoDien/trang/gio_hang.php';
+    }
+
+    public function xoa_voucher() {
+        // Xóa thông tin voucher khỏi session
+        unset($_SESSION['voucher']);
+        unset($_SESSION['voucher_error']);
+        unset($_SESSION['voucher_success']);
+
+        // Chuyển hướng về trang giỏ hàng
+        header('Location: index.php?act=gio_hang');
+        exit();
     }
 
     public function xoa_san_pham_gio_hang() {

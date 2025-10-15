@@ -34,6 +34,12 @@ switch ($act) {
     case 'cap_nhat_gio_hang':
         $c->cap_nhat_gio_hang();
         break;
+    case 'ap_dung_voucher':
+        $c->ap_dung_voucher();
+        break;
+    case 'xoa_voucher':
+        $c->xoa_voucher();
+        break;
     case 'xu_ly_dang_nhap':
         $authController->xu_ly_dang_nhap();
         break;

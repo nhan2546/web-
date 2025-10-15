@@ -113,7 +113,7 @@ class DieuKhienQuanTri {
             // 3. Tạo đối tượng model và gọi hàm thêm
             $sanpham_model = new sanpham($this->pdo);
             // Sử dụng các setter để thiết lập giá trị
-            $sanpham_model->themsp($name, $description, $price, $image_url, $stock_quantity, $category_id);
+            $sanpham_model->themsp($category_id, $name, $price, $stock_quantity, $image_url, 0, $description);
 
             // 4. Chuyển hướng về trang danh sách sản phẩm của admin
             header('Location: admin.php?act=ds_sanpham&success=added');
@@ -126,7 +126,7 @@ class DieuKhienQuanTri {
         $id = $_GET['id'] ?? 0;
         if ($id > 0) {
             $sp_model = new sanpham($this->pdo);
-            $san_pham = $sp_model->getone_sanpham($id); // Lấy thông tin sản phẩm cần sửa
+            $san_pham = $sp_model->getone_sanoham($id); // Lấy thông tin sản phẩm cần sửa
 
             $dm_model = new danhmuc($this->pdo);
             $danh_sach_danh_muc = $dm_model->getDS_Danhmuc(); // Sửa lỗi gọi hàm không tồn tại
@@ -234,49 +234,80 @@ class DieuKhienQuanTri {
         header('Location: admin.php?act=ds_danhmuc&success=deleted');
         exit;
     }
-
-    // --- QUẢN LÝ NGƯỜI DÙNG ---
-
     // --- QUẢN LÝ KHÁCH HÀNG ---
     public function ds_khachhang() {
         $user_model = new NguoiDung($this->pdo);
-        $danh_sach_khach_hang = $user_model->getDS_KhachHang();
-        
-        // Định nghĩa các ngưỡng xếp hạng
-        define('DIAMOND_THRESHOLD', 50000000);
-        define('GOLD_THRESHOLD', 20000000);
-        define('SILVER_THRESHOLD', 5000000);
-
-        // Hàm để xác định xếp hạng
-        function getCustomerRank($spending) {
-            if ($spending >= DIAMOND_THRESHOLD) {
-                return 'Kim Cương';
-            } elseif ($spending >= GOLD_THRESHOLD) {
-                return 'Vàng';
-            } elseif ($spending >= SILVER_THRESHOLD) {
-                return 'Bạc';
-            } else {
-                return 'Đồng';
-            }
-        }
-
-        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_KH.php';
+        $danh_sach_khach_hang = $user_model->getDS_NguoiDung(['customer']); // Sửa thành mảng để khớp với định dạng hàm
+        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_khach_hang.php';
     }
 
-    public function khoa_khachhang() {
+    public function toggle_trangthai_khachhang() {
         $id = $_GET['id'] ?? 0;
-        if ($id > 0) {
+        $status = $_GET['status'] ?? '';
+        if ($id > 0 && in_array($status, ['active', 'locked'])) {
             $user_model = new NguoiDung($this->pdo);
-            $user_model->toggleLockStatus($id);
+            $user_model->toggleUserStatus($id, $status);
         }
         header('Location: admin.php?act=ds_khachhang&success=toggled');
         exit;
     }
 
+    // --- QUẢN LÝ NGƯỜI DÙNG ---
     public function ds_nhanvien() {
+        $search_term = $_GET['search'] ?? ''; // Lấy từ khóa tìm kiếm
+
+        // Logic phân trang
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $limit = 5; // Số nhân viên mỗi trang
+        $offset = ($page - 1) * $limit;
+
         $user_model = new NguoiDung($this->pdo);
-        $danh_sach_nhan_vien = $user_model->getDS_NguoiDung();
+
+        // Lấy tổng số nhân viên để tính tổng số trang
+        $total_nhanvien = $user_model->countNhanVien(['admin', 'staff'], $search_term);
+        $total_pages = ceil($total_nhanvien / $limit);
+
+        // Truyền cả vai trò và từ khóa tìm kiếm vào model
+        $danh_sach_nhan_vien = $user_model->getDS_NguoiDung(['admin', 'staff'], $search_term, $limit, $offset); 
         include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_NV.php';
+    }
+
+    public function them_nv() {
+        // Các vai trò có thể tạo
+        $roles = ['staff', 'admin', 'manager'];
+        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/them_nv.php';
+    }
+
+    public function xl_them_nv() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $fullname = $_POST['fullname'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $password = $_POST['password'] ?? '';
+            $confirm_password = $_POST['confirm_password'] ?? '';
+            $role = $_POST['role'] ?? 'staff';
+
+            // --- VALIDATION ---
+            if (empty($fullname) || empty($email) || empty($password)) {
+                // Có thể thêm thông báo lỗi chi tiết hơn
+                header('Location: admin.php?act=them_nv&error=empty');
+                exit;
+            }
+
+            if ($password !== $confirm_password) {
+                header('Location: admin.php?act=them_nv&error=password_mismatch');
+                exit;
+            }
+
+            $user_model = new NguoiDung($this->pdo);
+            if ($user_model->findUserByEmail($email)) {
+                header('Location: admin.php?act=them_nv&error=email_exists');
+                exit;
+            }
+
+            $user_model->createUserByAdmin($fullname, $email, $password, $role);
+            header('Location: admin.php?act=ds_nhanvien&success=user_added');
+            exit;
+        }
     }
 
     public function xoa_nhanvien() {
@@ -286,26 +317,26 @@ class DieuKhienQuanTri {
             $user_model = new NguoiDung($this->pdo);
             $user_model->deleteUser($id);
         }
-        header('Location: admin.php?act=ds_nguoidung&success=deleted');
-        exit; // Sửa lỗi: ds_nguoidung không tồn tại, phải là ds_nhanvien
+        header('Location: admin.php?act=ds_nhanvien&success=deleted');
+        exit;
     }
 
     public function sua_nhanvien() {
         $id = $_GET['id'] ?? 0;
         if ($id <= 0) {
-            header('Location: admin.php?act=ds_nguoidung');
+            header('Location: admin.php?act=ds_nhanvien');
             exit;
         }
 
         $user_model = new NguoiDung($this->pdo);
-        $nguoi_dung = $user_model->findUserById($id);
+        $nhan_vien = $user_model->findUserById($id);
 
-        if ($nguoi_dung) {
+        if ($nhan_vien) {
             // Các vai trò có thể có trong hệ thống
             $roles = ['customer', 'staff', 'admin'];
             include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/sua_nhan_NV.php';
         } else {
-            header('Location: admin.php?act=ds_nguoidung&error=notfound');
+            header('Location: admin.php?act=ds_nhanvien&error=notfound');
             exit;
         }
     }
@@ -320,26 +351,7 @@ class DieuKhienQuanTri {
             $user_model = new NguoiDung($this->pdo);
             $user_model->updateUserByAdmin($id, $fullname, $email, $role);
 
-            header('Location: admin.php?act=ds_nguoidung&success=updated');
-            exit;
-        }
-    }
-
-    public function them_nv() {
-        include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/them_NV.php';
-    }
-
-    public function xl_them_nv() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $fullname = $_POST['fullname'] ?? '';
-            $email = $_POST['email'] ?? '';
-            $password = $_POST['password'] ?? '';
-            $role = $_POST['role'] ?? 'customer';
-
-            $user_model = new NguoiDung($this->pdo);
-            $user_model->createUserByAdmin($fullname, $email, $password, $role);
-
-            header('Location: admin.php?act=ds_nhanvien&success=added');
+            header('Location: admin.php?act=ds_nhanvien&success=updated');
             exit;
         }
     }

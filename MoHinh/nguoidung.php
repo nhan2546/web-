@@ -126,11 +126,89 @@ class NguoiDung {
 
     /**
      * Lấy danh sách tất cả người dùng cho trang admin.
+     * @param array $roles Mảng các vai trò cần lọc.
+     * @param string $searchTerm Từ khóa tìm kiếm (tên hoặc email).
+     * @param int|null $limit Giới hạn số lượng kết quả.
+     * @param int|null $offset Vị trí bắt đầu lấy kết quả.
      * @return array Mảng chứa danh sách người dùng.
      */
-    public function getDS_NguoiDung() {
-        $stmt = $this->pdo->query("SELECT id, fullname, email, role, created_at FROM users ORDER BY created_at DESC");
+    public function getDS_NguoiDung($roles = [], $searchTerm = '', $limit = null, $offset = null) {
+        // Câu truy vấn SQL cơ bản, đã bao gồm cột 'status'
+        $sql = "SELECT id, fullname, email, role, status, phone_number, created_at FROM users";
+        $conditions = [];
+        $params = [];
+        
+        // Nếu có truyền vào vai trò, thêm điều kiện WHERE
+        if (!empty($roles)) {
+            // Tạo chuỗi placeholder (?, ?, ...) cho mệnh đề IN
+            $placeholders = implode(',', array_fill(0, count($roles), '?'));
+            $conditions[] = "role IN ($placeholders)";
+            $params = array_merge($params, $roles);
+        }
+
+        // Nếu có từ khóa tìm kiếm, thêm điều kiện
+        if (!empty($searchTerm)) {
+            $conditions[] = "(fullname LIKE ? OR email LIKE ?)";
+            $params[] = "%" . $searchTerm . "%";
+            $params[] = "%" . $searchTerm . "%";
+        }
+
+        if (!empty($conditions)) {
+            $sql .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        $sql .= " ORDER BY created_at DESC";
+
+        if ($limit !== null && $offset !== null) {
+            $sql .= " LIMIT ? OFFSET ?";
+        }
+        
+        $stmt = $this->pdo->prepare($sql);
+
+        // Bind các tham số của WHERE
+        $paramIndex = 1;
+        foreach ($params as $value) {
+            $stmt->bindValue($paramIndex++, $value);
+        }
+
+        // Bind các tham số của LIMIT/OFFSET một cách tường minh với kiểu INT
+        if ($limit !== null && $offset !== null) {
+            $stmt->bindValue($paramIndex++, (int) $limit, PDO::PARAM_INT);
+            $stmt->bindValue($paramIndex++, (int) $offset, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Đếm tổng số nhân viên/admin dựa trên điều kiện lọc.
+     * @param array $roles Mảng các vai trò cần đếm.
+     * @param string $searchTerm Từ khóa tìm kiếm.
+     * @return int Tổng số người dùng khớp điều kiện.
+     */
+    public function countNhanVien($roles = [], $searchTerm = '') {
+        $sql = "SELECT COUNT(id) FROM users";
+        $conditions = [];
+        $params = [];
+
+        if (!empty($roles)) {
+            $placeholders = implode(',', array_fill(0, count($roles), '?'));
+            $conditions[] = "role IN ($placeholders)";
+            $params = array_merge($params, $roles);
+        }
+        if (!empty($searchTerm)) {
+            $conditions[] = "(fullname LIKE ? OR email LIKE ?)";
+            $params[] = "%" . $searchTerm . "%";
+            $params[] = "%" . $searchTerm . "%";
+        }
+        if (!empty($conditions)) {
+            $sql .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return (int) $stmt->fetchColumn();
     }
 
     /**
@@ -194,18 +272,16 @@ class NguoiDung {
 
     /**
      * Thay đổi trạng thái khóa của người dùng.
-     * @param int $id ID người dùng.
+     * @param int $id ID người dùng cần cập nhật.
+     * @param string $status Trạng thái mới ('active' hoặc 'locked').
      * @return bool True nếu cập nhật thành công.
      */
-    public function toggleLockStatus($id) {
-        // Lấy trạng thái hiện tại rồi đảo ngược nó
-        $stmt_current = $this->pdo->prepare("SELECT is_locked FROM users WHERE id = ?");
-        $stmt_current->execute([$id]);
-        $current_status = $stmt_current->fetchColumn();
-        
-        $new_status = $current_status ? 0 : 1; // Đảo ngược trạng thái
-
-        $stmt_update = $this->pdo->prepare("UPDATE users SET is_locked = ? WHERE id = ?");
-        return $stmt_update->execute([$new_status, $id]);
+    public function toggleUserStatus($id, $status) {
+        // Đảm bảo trạng thái hợp lệ để tránh lỗi SQL Injection
+        if (!in_array($status, ['active', 'locked'])) {
+            return false;
+        }
+        $stmt = $this->pdo->prepare("UPDATE users SET status = ? WHERE id = ?");
+        return $stmt->execute([$status, $id]);
     }
 }
