@@ -43,11 +43,7 @@ class controller {
         include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
     }
 
-<<<<<<< HEAD
     public function hienthi_sp_theo_danhmuc($return_data = false) {
-=======
-    public function hienthi_sp_theo_danhmuc() {
->>>>>>> 131131163eea637d151ba5c79653a574821a174d
         $category_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         if ($category_id <= 0) {
             header('Location: index.php?act=trangchu');
@@ -59,12 +55,9 @@ class controller {
 
         // Lấy thông tin danh mục để hiển thị tiêu đề
         $category_info = $dm_model->getDanhMucById($category_id);
-<<<<<<< HEAD
         if ($return_data) {
             return $category_info;
         }
-=======
->>>>>>> 131131163eea637d151ba5c79653a574821a174d
 
         // Logic phân trang
         $products_per_page = 8;
@@ -78,22 +71,13 @@ class controller {
         include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
     }
 
-<<<<<<< HEAD
     public function chi_tiet_san_pham($return_data = false) {
-=======
-    public function chi_tiet_san_pham() {
->>>>>>> 131131163eea637d151ba5c79653a574821a174d
         $id = $_GET['id'] ?? 0;
         $sp_model = new sanpham($this->pdo);
         $san_pham = $sp_model->getone_sanoham($id); // Sửa lại tên hàm cho đúng
-
-<<<<<<< HEAD
         if ($return_data) {
             return $san_pham;
         }
-
-=======
->>>>>>> 131131163eea637d151ba5c79653a574821a174d
         if (!$san_pham) {
             header('Location: index.php?act=trangchu');
             exit;

@@ -5,10 +5,7 @@ session_start();
 require_once __DIR__ . '/MoHinh/CSDL.php';
 require_once __DIR__ . '/DieuKhien/DieuKhienTrang.php';
 require_once __DIR__ . '/DieuKhien/DieuKhienXacThuc.php';
-<<<<<<< HEAD
 require_once __DIR__ . '/GiaoDien/trang/bo_cuc/breadcrumb_helper.php';
-=======
->>>>>>> 131131163eea637d151ba5c79653a574821a174d
 
 $db = new CSDL();
 $pdo = $db->conn;
@@ -39,12 +36,8 @@ switch ($act) {
     case 'ajax_tim_kiem':           $c->ajax_tim_kiem(); break; // AJAX cũng là logic, không cần layout
 }
 
-<<<<<<< HEAD
 // Tạo dữ liệu breadcrumb trước khi hiển thị header
 $breadcrumb_data = [];
-
-=======
->>>>>>> 131131163eea637d151ba5c79653a574821a174d
 // Nếu script vẫn chạy đến đây, nghĩa là action không phải là logic xử lý ở trên.
 // Bây giờ chúng ta có thể an toàn hiển thị layout.
 include __DIR__ . '/GiaoDien/trang/bo_cuc/dau_trang.php'; // 5. HIỂN THỊ HEADER
@@ -59,7 +52,6 @@ switch ($act) {
         $c->hienthi_sp();
         break;
     case 'danhmuc':
-<<<<<<< HEAD
         $breadcrumb_data['category_info'] = $c->hienthi_sp_theo_danhmuc(true);
         $c->hienthi_sp_theo_danhmuc();
         break;
@@ -69,14 +61,6 @@ switch ($act) {
         break;
     case 'tim_kiem':
         $breadcrumb_data['keyword'] = $_GET['keyword'] ?? '';
-=======
-        $c->hienthi_sp_theo_danhmuc();
-        break;
-    case 'chi_tiet_san_pham':
-        $c->chi_tiet_san_pham();
-        break;
-    case 'tim_kiem':
->>>>>>> 131131163eea637d151ba5c79653a574821a174d
         $c->tim_kiem_san_pham();
         break;
 
@@ -113,15 +97,10 @@ switch ($act) {
         break;
 }
 
-<<<<<<< HEAD
 // Tạo breadcrumb HTML và JSON-LD
 $breadcrumbs = generate_breadcrumbs($pdo, $act, $breadcrumb_data);
-
 // Hiển thị breadcrumb
 include __DIR__ . '/GiaoDien/trang/bo_cuc/breadcrumb_view.php';
-
-=======
->>>>>>> 131131163eea637d151ba5c79653a574821a174d
 // 7. HIỂN THỊ FOOTER
 include __DIR__ . '/GiaoDien/trang/bo_cuc/chan_trang.php';
 ?>

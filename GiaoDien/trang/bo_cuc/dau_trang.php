@@ -231,8 +231,3 @@
     </div>
   </div>
 </header>
-<<<<<<< HEAD
-=======
-
-<main class="cp-container cp-section">
->>>>>>> 131131163eea637d151ba5c79653a574821a174d
