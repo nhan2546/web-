@@ -50,14 +50,27 @@ class DieuKhienQuanTri {
     // Chức năng: Cập nhật trạng thái đơn hàng
     public function capnhat_trangthai_donhang() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $order_id = isset($_POST['order_id']) ? (int)$_POST['order_id'] : 0;
+            $order_id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
             $new_status = isset($_POST['status']) ? $_POST['status'] : '';
 
-            if ($order_id > 0 && !empty($new_status)) {
+            // Thêm kiểm tra hợp lệ cho trạng thái mới
+            $allowed_statuses = ['pending', 'confirmed', 'shipping', 'delivered', 'success', 'cancelled'];
+            if ($order_id > 0 && !empty($new_status) && in_array($new_status, $allowed_statuses)) {
                 $dh_model = new donhang($this->pdo);
-                $dh_model->updateOrderStatus($order_id, $new_status);
+                if ($dh_model->updateOrderStatus($order_id, $new_status)) {
+                    echo 'OK';
+                    exit; // Dừng script sau khi trả về kết quả
+                } else {
+                    // Trả về lỗi nếu model không cập nhật được
+                    header("HTTP/1.1 500 Internal Server Error");
+                    echo "Lỗi khi cập nhật trạng thái trong CSDL.";
+                    exit;
+                }
             }
-            header('Location: admin.php?act=ct_donhang&id=' . $order_id);
+            // Trả về lỗi nếu dữ liệu không hợp lệ
+            header("HTTP/1.1 400 Bad Request");
+            echo "Dữ liệu không hợp lệ hoặc thiếu thông tin.";
+            exit;
         }
     }
     

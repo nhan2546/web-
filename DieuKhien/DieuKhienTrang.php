@@ -293,6 +293,10 @@ class controller {
             exit();
         }
 
+        // Lấy lỗi từ session nếu có (sau khi xử lý đơn hàng thất bại)
+        $order_error = $_SESSION['order_error'] ?? null;
+        unset($_SESSION['order_error']); // Xóa lỗi khỏi session sau khi đọc
+
         // 3. Lấy thông tin người dùng để điền sẵn
         $userModel = new NguoiDung($this->pdo);
         $user_info = $userModel->findUserById($_SESSION['user_id']);
@@ -325,7 +329,13 @@ class controller {
 
         // 3. Thu thập thông tin từ form và session
         $user_id = $_SESSION['user_id'];
-        $shipping_address = $_POST['address'] ?? '';
+        // Lấy đầy đủ thông tin giao hàng
+        $fullname = $_POST['fullname'] ?? '';
+        $phone_number = $_POST['phone_number'] ?? '';
+        $address = $_POST['address'] ?? '';
+        // Kết hợp thông tin giao hàng thành một chuỗi
+        $shipping_address = "Họ tên: $fullname\nSố điện thoại: $phone_number\nĐịa chỉ: $address";
+        
         $payment_method = $_POST['payment_method'] ?? 'cod'; // Mặc định là COD
         $voucher_code = $_SESSION['voucher']['code'] ?? null;
         $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
@@ -335,7 +345,20 @@ class controller {
         foreach ($cart as $item) { $subtotal += $item['price'] * $item['quantity']; }
         $final_total = $subtotal - $discount_amount;
 
-        // 4. Gọi model để tạo đơn hàng
+        // 4a. KIỂM TRA SỐ LƯỢNG TỒN KHO
+        $sp_model = new sanpham($this->pdo);
+        foreach ($cart as $item) {
+            $product = $sp_model->getone_sanoham($item['id']);
+            if (!$product || $product['stock_quantity'] < $item['quantity']) {
+                // Nếu sản phẩm không tồn tại hoặc không đủ hàng, đặt thông báo lỗi vào session
+                $_SESSION['cart_error'] = "Sản phẩm '{$item['name']}' không đủ số lượng tồn kho. Vui lòng cập nhật giỏ hàng của bạn.";
+                // Chuyển hướng về trang giỏ hàng
+                header('Location: index.php?act=gio_hang');
+                exit();
+            }
+        }
+
+        // 4b. Gọi model để tạo đơn hàng
         $donHangModel = new donhang($this->pdo);
         $orderId = $donHangModel->createOrder($user_id, $cart, $final_total, $shipping_address, $payment_method, $voucher_code, $discount_amount);
 
@@ -344,12 +367,32 @@ class controller {
             unset($_SESSION['cart']);
             unset($_SESSION['voucher']);
 
-            // 6. Chuyển hướng đến trang chi tiết đơn hàng vừa tạo
-            header('Location: index.php?act=chi_tiet_don_hang_user&id=' . $orderId . '&success=order_placed');
+            // 6. Chuyển hướng đến trang chi tiết đơn hàng
+            header('Location: index.php?act=dat_hang_thanh_cong&id=' . $orderId);
+            exit();
+        } else {
+            // Nếu có lỗi, chuyển hướng về trang thanh toán với thông báo lỗi
+            header('Location: index.php?act=thanh_toan&error=order_failed');
             exit();
         }
     }
-    public function chi_tiet_don_hang_user() {
+
+    public function dat_hang_thanh_cong() {
+        $order_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        if ($order_id <= 0) {
+            header('Location: index.php?act=trangchu');
+            exit();
+        }
+        // Để bảo mật, bạn có thể kiểm tra xem đơn hàng này có thực sự thuộc về người dùng đang đăng nhập không
+        // $donHangModel = new donhang($this->pdo);
+        // $order_info = $donHangModel->getOrderDetail($order_id)['order_info'];
+        // if (!$order_info || $order_info['user_id'] != $_SESSION['user_id']) {
+        //     header('Location: index.php?act=trangchu');
+        //     exit();
+        // }
+        include __DIR__.'/../GiaoDien/trang/dat_hang_thanh_cong.php';
+    }
+    public function chi_tiet_don_hang() {
         // 1. Kiểm tra đăng nhập
         if (!isset($_SESSION['user_id'])) {
             header('Location: index.php?act=dang_nhap');
@@ -377,7 +420,7 @@ class controller {
         }
 
         // 5. Hiển thị view
-        include __DIR__.'/../GiaoDien/trang/chi_tiet_don_hang_user.php';
+        include __DIR__.'/../GiaoDien/trang/chi_tiet_don_hang.php';
     }
 
     public function lich_su_mua_hang() {
@@ -561,4 +604,3 @@ class controller {
         include __DIR__.'/../GiaoDien/trang/thu_cu_doi_moi.php';
     }
 }
-?>

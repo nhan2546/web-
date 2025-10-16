@@ -3,6 +3,13 @@
         <h1>Giỏ hàng</h1>
     </div>
 
+    <?php
+    if (isset($_SESSION['cart_error'])) {
+        echo '<div class="alert alert-danger" style="margin-bottom: 15px;">' . htmlspecialchars($_SESSION['cart_error']) . '</div>';
+        unset($_SESSION['cart_error']); // Xóa thông báo sau khi hiển thị
+    }
+    ?>
+
     <?php if (empty($cart)): ?>
         <div class="cart-empty-state">
             <img src="TaiNguyen/hinh_anh/empty-cart.png" alt="Giỏ hàng trống">

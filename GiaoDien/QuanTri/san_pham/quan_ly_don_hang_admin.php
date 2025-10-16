@@ -1,7 +1,7 @@
 <?php
 // Các biến như $danh_sach_don_hang, $status_filter, $search_term đã được controller chuẩn bị
 // Chúng ta chỉ cần sử dụng chúng ở đây.
-$opts=['pending'=>'Chờ xử lý','processing'=>'Đang xử lý','shipped'=>'Đã gửi','delivered'=>'Đã giao','cancelled'=>'Đã hủy'];
+$opts=['pending'=>'Chờ xác nhận','confirmed'=>'Xác nhận đơn hàng','shipping'=>'Đang giao','delivered'=>'Đã giao','success'=>'Thành công','cancelled'=>'Đã hủy'];
 ?>
 
 <h1>Quản lý đơn hàng</h1>
@@ -41,7 +41,7 @@ $opts=['pending'=>'Chờ xử lý','processing'=>'Đang xử lý','shipped'=>'Đ
           <td><?=date('d/m/Y H:i', strtotime($don_hang['order_date']))?></td>
           <td><?=number_format($don_hang['total_amount'],0,',','.')?>₫</td>
           <td>
-            <form class="frm-status" method="post" action="/web-/DieuKhien/donhang_update_trangthai.php" style="display:flex; gap:6px; align-items:center">
+            <form class="frm-status" method="post" action="admin.php?act=capnhat_trangthai_donhang" style="display:flex; gap:6px; align-items:center">
               <input type="hidden" name="id" value="<?=$don_hang['id']?>">
               <select name="status" class="form-control" style="min-width:130px">
                 <?php foreach($opts as $k=>$v){ $sel=$don_hang['status']===$k?'selected':''; echo "<option $sel value='$k'>$v</option>"; } ?>

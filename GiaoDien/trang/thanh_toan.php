@@ -1,6 +1,20 @@
 <div class="checkout-page-wrapper">
     <h1>Thanh Toán</h1>
 
+    <?php if (!empty($order_error)): ?>
+        <div class="alert alert-danger" style="margin-bottom: 15px;">
+            <strong>Đã có lỗi hệ thống nghiêm trọng xảy ra!</strong><br>
+            <p>Chúng tôi không thể xử lý đơn hàng của bạn vào lúc này. Vui lòng liên hệ với quản trị viên để được hỗ trợ.</p>
+            <small><i>Chi tiết lỗi: <?= htmlspecialchars($order_error) ?></i></small>
+        </div>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['error']) && $_GET['error'] === 'order_failed'): ?>
+        <div class="alert alert-danger" style="margin-bottom: 15px;">
+            <strong>Đã có lỗi xảy ra!</strong> Không thể xử lý đơn hàng của bạn vào lúc này. Điều này có thể do một sản phẩm trong giỏ hàng đã hết hàng. Vui lòng kiểm tra lại giỏ hàng và thử lại.
+        </div>
+    <?php endif; ?>
+
     <form action="index.php?act=xu_ly_dat_hang" method="POST" class="checkout-form">
         <div class="checkout-grid">
             <!-- Cột bên trái: Thông tin giao hàng và thanh toán -->

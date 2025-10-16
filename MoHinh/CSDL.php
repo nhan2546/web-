@@ -31,4 +31,3 @@ class CSDL {
         $this->conn = null;
     }
 }
-?>

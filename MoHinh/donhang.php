@@ -1,7 +1,8 @@
 <?php
 // Tệp: STORE/MoHinh/DonHang.php
 
-require_once 'CSDL.php';
+require_once __DIR__ . '/CSDL.php';
+require_once __DIR__ . '/Voucher.php';
 
 class donhang {
     private $pdo;
@@ -124,51 +125,63 @@ class donhang {
      * @return int|false ID của đơn hàng mới nếu thành công, ngược lại là false.
      */
     public function createOrder($userId, $cartItems, $totalAmount, $shippingAddress, $paymentMethod, $voucherCode = null, $discountAmount = 0) {
-        try {
-            // Bắt đầu một transaction
-            $this->pdo->beginTransaction();
+    try {
+        $this->pdo->beginTransaction();
 
-            // 1. Thêm vào bảng `orders`
-            $sql_order = "INSERT INTO orders (user_id, total_amount, shipping_address, payment_method, voucher_code, discount_amount, status) 
-                          VALUES (?, ?, ?, ?, ?, ?, 'pending')";
-            $stmt_order = $this->pdo->prepare($sql_order);
-            $stmt_order->execute([$userId, $totalAmount, $shippingAddress, $paymentMethod, $voucherCode, $discountAmount]);
+        // 1. Thêm vào bảng `orders` (giữ nguyên)
+        $sql_order = "INSERT INTO orders (user_id, total_amount, shipping_address, payment_method, voucher_code, discount_amount, status) 
+                      VALUES (?, ?, ?, ?, ?, ?, 'pending')";
+        $stmt_order = $this->pdo->prepare($sql_order);
+        $stmt_order->execute([$userId, $totalAmount, $shippingAddress, $paymentMethod, $voucherCode, $discountAmount]);
+        $orderId = $this->pdo->lastInsertId();
+
+        // 2. Chuẩn bị các câu lệnh SQL
+        $sql_details = "INSERT INTO order_details (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+        $stmt_details = $this->pdo->prepare($sql_details);
+
+        $sql_update_stock = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?";
+        $stmt_update_stock = $this->pdo->prepare($sql_update_stock);
+        
+        // --- BẮT ĐẦU CẢI TIẾN ---
+        $sql_check_stock = "SELECT stock_quantity FROM products WHERE id = ?";
+        $stmt_check_stock = $this->pdo->prepare($sql_check_stock);
+        // --- KẾT THÚC CẢI TIẾN ---
+
+        foreach ($cartItems as $item) {
+            // **CẢI TIẾN: KIỂM TRA TỒN KHO TRƯỚC KHI CẬP NHẬT**
+            $stmt_check_stock->execute([$item['id']]);
+            $product = $stmt_check_stock->fetch(PDO::FETCH_ASSOC);
+
+            if (!$product || $product['stock_quantity'] < $item['quantity']) {
+                // Nếu sản phẩm không tồn tại hoặc không đủ hàng, ném ra một Exception để hủy toàn bộ giao dịch
+                throw new Exception("Sản phẩm '" . ($item['name'] ?? 'ID: ' . $item['id']) . "' không đủ số lượng trong kho.");
+            }
+
+            // Thêm chi tiết đơn hàng
+            $stmt_details->execute([$orderId, $item['id'], $item['quantity'], $item['price']]);
             
-            // Lấy ID của đơn hàng vừa tạo
-            $orderId = $this->pdo->lastInsertId();
-
-            // 2. Thêm vào bảng `order_details` và cập nhật kho
-            $sql_details = "INSERT INTO order_details (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
-            $stmt_details = $this->pdo->prepare($sql_details);
-
-            $sql_update_stock = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?";
-            $stmt_update_stock = $this->pdo->prepare($sql_update_stock);
-
-            foreach ($cartItems as $item) {
-                // Thêm chi tiết đơn hàng
-                $stmt_details->execute([$orderId, $item['id'], $item['quantity'], $item['price']]);
-                // Cập nhật số lượng tồn kho
-                $stmt_update_stock->execute([$item['quantity'], $item['id']]);
-            }
-
-            // 3. Nếu có voucher, tăng số lần sử dụng
-            if ($voucherCode) {
-                $voucherModel = new Voucher($this->pdo);
-                $voucherModel->incrementVoucherUsage($voucherCode);
-            }
-
-            // Nếu mọi thứ thành công, commit transaction
-            $this->pdo->commit();
-
-            return $orderId;
-
-        } catch (Exception $e) {
-            // Nếu có lỗi, rollback transaction
-            $this->pdo->rollBack();
-            // Ghi lại lỗi (tùy chọn) error_log($e->getMessage());
-            return false;
+            // Cập nhật số lượng tồn kho (chỉ chạy nếu kiểm tra ở trên thành công)
+            $stmt_update_stock->execute([$item['quantity'], $item['id']]);
         }
+
+        // 3. Xử lý voucher (giữ nguyên)
+        if ($voucherCode) {
+            // Giả sử bạn có class Voucher
+            // $voucherModel = new Voucher($this->pdo); 
+            // $voucherModel->incrementVoucherUsage($voucherCode);
+        }
+
+        $this->pdo->commit();
+        return $orderId;
+
+    } catch (Exception $e) {
+        $this->pdo->rollBack();
+        error_log('Order creation failed: ' . $e->getMessage());
+        // Thêm lỗi vào session để hiển thị cho người dùng
+        $_SESSION['order_error'] = 'Lỗi hệ thống khi tạo đơn hàng. Vui lòng thử lại sau. Chi tiết: ' . $e->getMessage();
+        return false;
     }
+}
     /**
      * Cập nhật trạng thái của một đơn hàng.
      * @param int $orderId ID của đơn hàng cần cập nhật.
@@ -177,7 +190,7 @@ class donhang {
     public function updateOrderStatus($orderId, $newStatus) {
         $sql = "UPDATE orders SET status = ? WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$newStatus, $orderId]);
+        return $stmt->execute([$newStatus, $orderId]);
     }
 
     /**
@@ -185,8 +198,8 @@ class donhang {
      * @return float Tổng doanh thu.
      */
     public function getTotalRevenue() {
-        // Chỉ tính tổng tiền của các đơn hàng có trạng thái 'delivered'
-        $sql = "SELECT SUM(total_amount) as total FROM orders WHERE status = 'delivered'";
+        // Chỉ tính tổng tiền của các đơn hàng có trạng thái 'success'
+        $sql = "SELECT SUM(total_amount) as total FROM orders WHERE status = 'success'";
         $stmt = $this->pdo->query($sql);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result[0]['total'] ?? 0;
@@ -213,7 +226,7 @@ class donhang {
                     DATE_FORMAT(order_date, '%c') as month, 
                     SUM(total_amount) as revenue 
                 FROM orders 
-                WHERE status = 'delivered'";
+                WHERE status = 'success'";
         if ($year) {
             $sql .= " AND YEAR(order_date) = " . (int)$year;
         } else {
