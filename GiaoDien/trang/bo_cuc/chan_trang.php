@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 <main class="cp-container cp-section">
     <!-- Nội dung chính của trang được hiển thị ở đây, giữa header và footer -->
+=======
+</main> <!-- Đóng thẻ main từ dau_trang.php -->
+>>>>>>> 131131163eea637d151ba5c79653a574821a174d
 <!-- GIAO DIỆN AI CHATBOT TÙY CHỈNH -->
 <div class="chatbot-container">
         <div class="chatbot-header">
@@ -31,7 +35,10 @@
             </a>
         </div>
     </div>
+<<<<<<< HEAD
 </main> <!-- Đóng thẻ main -->
+=======
+>>>>>>> 131131163eea637d151ba5c79653a574821a174d
 <script>
         // --- JAVASCRIPT CHO TÌM KIẾM TRỰC TIẾP ---
         const searchInput = document.getElementById('search-input');
