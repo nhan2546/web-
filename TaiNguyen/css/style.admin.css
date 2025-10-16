@@ -1,0 +1,401 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
+
+/* giao diện trang quản trị (admin) */
+/* Định nghĩa các biến màu và kích thước cho trang admin */
+:root {
+    --admin-bg: #f5f5f7; /* Thay đổi: Nền xám nhạt giống trang user */
+    --sidebar-bg: #D70018; /* Thay đổi: Màu đỏ chủ đạo */
+    --sidebar-width: 250px;
+    --text-light: #ecf0f1;
+    --text-muted: #95a5a6;
+    --primary-color: #D70018; /* Thay đổi: Màu chính là đỏ */
+    --border-color: #e5e9f2;
+}
+
+/* Định dạng body riêng cho các trang admin */
+body.admin-body {
+    background-color: var(--admin-bg);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    color: #34495e;
+}
+
+/* Vùng bao bọc toàn bộ layout admin */
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* thanh bên (sidebar) của trang admin */
+/* Định dạng chung cho sidebar */
+.admin-sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg); /* Thay đổi: Màu nền đỏ */
+    background-image: linear-gradient(180deg, #D70018, #b10014); /* Thay đổi: Gradient đỏ */
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 100;
+}
+
+/* Logo/Tên trang web trên sidebar */
+.sidebar-brand {
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--text-light);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Định dạng cho hình ảnh logo trong sidebar */
+.sidebar-brand img {
+    max-height: 100px;
+    width: auto;
+}
+
+/* Danh sách các mục menu trong sidebar */
+.sidebar-nav {
+    list-style: none;
+    padding: 20px 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+/* Từng mục menu */
+.sidebar-nav-item a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    color: rgba(255, 255, 255, 0.8); /* Giảm độ sáng chữ một chút */
+    text-decoration: none;
+    transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
+    font-size: 16px;
+    border-left: 4px solid transparent; /* Chuẩn bị cho hiệu ứng active */
+}
+
+.sidebar-nav-item a:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border-left-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Định dạng cho mục menu đang được chọn (active) */
+.sidebar-nav-item.active a {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-weight: bold;
+    border-left-color: #fff; /* Đường viền trắng nổi bật */
+}
+
+.sidebar-nav-item a svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* vùng nội dung chính của trang admin */
+/* Vùng chứa header và nội dung trang */
+.admin-main-content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Đảm bảo nội dung chính cao ít nhất bằng màn hình */
+}
+
+/* Header của trang admin (chứa thông tin user) */
+.admin-header {
+    background-color: #fff;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Thông tin người dùng đăng nhập */
+.user-profile {
+    color: #34495e;
+}
+
+/* Vùng nội dung chính của từng trang (dashboard, product list, ...) */
+.admin-page-content {
+    padding: 30px; 
+    flex-grow: 1;
+}
+
+/* Tiêu đề của trang admin (ví dụ: "Bảng điều khiển", "Quản lý sản phẩm") */
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #2c3e50;
+}
+
+/* các thành phần giao diện trong trang admin */
+/* Khung thẻ (card) chung để bao bọc nội dung */
+.admin-card {
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    margin-bottom: 20px;
+    width: 100%; /* Đảm bảo card luôn chiếm toàn bộ chiều rộng */
+}
+
+/* Tiêu đề của card */
+.admin-card-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Thân của card */
+.admin-card-body {
+    padding: 20px;
+}
+
+/* Lưới các thẻ thống kê trên trang dashboard */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* Từng thẻ thống kê (doanh thu, đơn hàng, ...) */
+.dashboard-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+/* Tiêu đề nhỏ của thẻ thống kê */
+.dashboard-card .card-title {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+/* Giá trị (số liệu) của thẻ thống kê */
+.dashboard-card .card-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* Định dạng cho các nhãn trạng thái (status badge) */
+.badge { padding: 5px 10px; border-radius: 12px; color: #fff; font-size: 12px; font-weight: bold; text-transform: capitalize; }
+.badge-pending { background: #ffc107; color: #333; }
+.badge-processing { background: #007bff; }
+.badge-shipped { background: #17a2b8; }
+.badge-delivered { background: #28a745; }
+.badge-success { background-color: #28a745; } /* Thêm màu cho trạng thái thành công/hoạt động */
+.badge-cancelled { background: #dc3545; }
+.badge-secondary {
+    background-color: #e9ecef; 
+    color: #212529; 
+}
+/* Huy hiệu xếp hạng khách hàng */
+.badge-diamond { background-color: #b9f2ff; color: #007bff; border: 1px solid #007bff; }
+.badge-gold { background-color: #fff3cd; color: #e6a800; border: 1px solid #e6a800; }
+.badge-silver { background-color: #e2e3e5; color: #6c757d; border: 1px solid #6c757d; }
+.badge-copper { background-color: #f8d7da; color: #721c24; border: 1px solid #721c24; }
+
+
+
+/* Nút bấm trong trang admin */
+/* Định dạng chung cho nút bấm */
+.admin-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    font-size: 14px;
+    color: #fff; /* Màu chữ mặc định cho các nút */
+}
+
+/* Nút nguy hiểm (màu đỏ, dùng cho hành động xóa) */
+.admin-btn-danger {
+    background-color: #e74c3c;
+}
+.admin-btn-danger:hover {
+    background-color: #c0392b;
+}
+
+/* Nút chính (màu xanh, dùng cho hành động chính như Thêm mới) */
+.admin-btn-primary {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.admin-btn-primary:hover {
+    background-color: #b10014; /* Thay đổi: Đỏ đậm hơn khi hover */
+}
+
+/* Nút phụ (màu xám, dùng cho hành động Hủy, Quay lại) */
+.admin-btn-secondary {
+    background-color: #6c757d;
+}
+.admin-btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Nút cảnh báo (màu vàng, dùng cho hành động Khóa/Mở khóa) */
+.admin-btn-warning {
+    background-color: #ffc107;
+    color: #212529; /* Chữ đen cho dễ đọc trên nền vàng */
+}
+.admin-btn-warning:hover {
+    background-color: #e0a800;
+}
+/* các form trong trang admin */
+/* Định dạng chung cho các form */
+.admin-card .form-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #34495e;
+}
+
+/* Ghi đè style của Bootstrap để nhất quán với giao diện admin */
+.admin-card .form-control,
+.admin-card .form-select {
+    border-radius: 5px;
+    border: 1px solid #ced4da; /* Làm đậm viền input */
+    padding: 10px 15px;
+    background-color: #f8f9fa; /* Thêm nền nhạt để phân biệt với nền trắng của card */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-card .form-control:focus,
+.admin-card .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(215, 0, 24, 0.15); /* Thay đổi: Hiệu ứng focus màu đỏ */
+}
+
+/* Khoảng cách giữa các nhóm form */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Căn chỉnh label và input trong form cho thẳng hàng */
+.form-group-grid {
+    display: grid;
+    grid-template-columns: 150px 1fr; /* Cột label 150px, cột input chiếm phần còn lại */
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+/* Điều chỉnh lại margin-bottom của label khi dùng grid */
+.form-group-grid .form-label {
+    margin-bottom: 0;
+    text-align: right; /* Căn phải cho label đẹp hơn */
+}
+
+/* Căn chỉnh các nút trong form */
+.admin-card-body .d-flex.justify-content-end {
+    gap: 10px; /* Tạo khoảng cách giữa các nút */
+}
+
+/* Container để giới hạn chiều rộng và căn giữa các form */
+.admin-form-container {
+    max-width: 800px; /* Giới hạn chiều rộng tối đa của form */
+    margin: 0 auto;   /* Tự động căn giữa theo chiều ngang */
+}
+
+/* bảng dữ liệu trong trang admin */
+/* Định dạng chung cho bảng */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Các ô trong bảng */
+.admin-table th, .admin-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #34495e;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Các nút hành động (Sửa, Xóa) trong bảng */
+.admin-table .action-buttons a {
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+/* Định dạng riêng cho cột số điện thoại trong bảng */
+.admin-table .phone-number {
+    color: #000000; /* Màu đen */
+    font-weight: 500; /* Hơi đậm hơn một chút cho dễ đọc */
+}
+
+/* Nút đăng xuất */
+.admin-logout-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e74c3c;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.admin-logout-link:hover {
+    color: #c0392b; /* Màu đỏ đậm hơn khi rê chuột */
+}
+
+/* Footer của trang admin */
+.admin-footer {
+    background-color: #111; /* Thay đổi: Nền đen */
+    color: #eee; /* Thay đổi: Chữ màu sáng để dễ đọc trên nền đen */
+    padding: 15px 30px;
+    text-align: center;
+    font-size: 14px;
+    border-top: 1px solid #333; /* Thay đổi: Đường kẻ tối hơn cho phù hợp */
+    margin-top: auto; /* Quan trọng: Đẩy footer xuống cuối flex container */
+}
+
+/* Định dạng cho khu vực thông tin người dùng trên header admin */
+.admin-header .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Khoảng cách giữa lời chào và nút đăng xuất */
+}
+
+/* Nút đăng xuất */
+.admin-logout-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e74c3c; /* Màu đỏ cho hành động nguy hiểm */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.admin-logout-link:hover {
+    color: #c0392b; 
+}

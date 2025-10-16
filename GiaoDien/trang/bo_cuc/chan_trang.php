@@ -1,0 +1,404 @@
+<main class="cp-container cp-section">
+    <!-- Nội dung chính của trang được hiển thị ở đây, giữa header và footer -->
+<!-- GIAO DIỆN AI CHATBOT TÙY CHỈNH -->
+<div class="chatbot-container">
+        <div class="chatbot-header">
+            <h2>Trợ lý AI</h2> 
+        </div>
+        <div class="chatbot-box" id="chatbot-box">
+            <!-- Tin nhắn sẽ được thêm vào đây bằng JavaScript -->
+        </div>
+        <div class="chat-input">
+            <textarea id="chat-input-field" placeholder="Nhập tin nhắn..." required></textarea>
+            <button id="send-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div> 
+    </div>  
+
+    <!-- CÁC NÚT LIÊN HỆ NỔI -->
+    <div class="cp-fab-container">
+        <button class="cp-fab chatbot-toggler">
+             <img src="TaiNguyen/hinh_anh/Chatbot Chat Message.jpg" alt="AI Chat" class="icon-open">
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div class="cp-fab-options">
+            <a href="https://zalo.me/0837277347" target="_blank" class="cp-fab-item" title="Chat Zalo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
+            </a>
+            <a href="tel:0837277347" class="cp-fab-item" title="Gọi điện">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.28 1.465l-2.135 2.136a11.942 11.942 0 0 0 5.586 5.586l2.136-2.135a1.745 1.745 0 0 1 1.465-.28l2.305 1.152a1.745 1.745 0 0 1 .163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03.003-2.137.703-2.877L1.885.511z"/></svg>
+            </a>
+        </div>
+    </div>
+</main> <!-- Đóng thẻ main -->
+<script>
+        // --- JAVASCRIPT CHO TÌM KIẾM TRỰC TIẾP ---
+        const searchInput = document.getElementById('search-input');
+        const resultsContainer = document.getElementById('search-results-container');
+
+        if (searchInput && resultsContainer) {
+            searchInput.addEventListener('keyup', function() {
+                const keyword = this.value.trim();
+
+                if (keyword.length > 1) {
+                    fetch(`index.php?act=ajax_tim_kiem&keyword=${keyword}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            resultsContainer.innerHTML = ''; // Xóa kết quả cũ
+                            if (data.length > 0) {
+                                const ul = document.createElement('ul');
+                                ul.className = 'search-results-list';
+                                data.forEach(product => {
+                                    const li = document.createElement('li');
+                                    li.className = 'search-result-item';
+                                    li.innerHTML = `
+                                        <a href="index.php?act=chi_tiet_san_pham&id=${product.id}">
+                                            <img src="TaiLen/san_pham/${product.image_url}" alt="${product.name}">
+                                            <span>${product.name}</span>
+                                        </a>
+                                    `;
+                                    ul.appendChild(li);
+                                });
+                                resultsContainer.appendChild(ul);
+                                resultsContainer.style.display = 'block';
+                            } else {
+                                resultsContainer.style.display = 'none';
+                            }
+                        });
+                } else {
+                    resultsContainer.innerHTML = '';
+                    resultsContainer.style.display = 'none';
+                }
+            });
+            // Ẩn kết quả khi click ra ngoài
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target)) {
+                    resultsContainer.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+    <!-- JAVASCRIPT CHO AI CHATBOT -->
+    <script>
+        const chatbotToggler = document.querySelector(".chatbot-toggler");
+        const chatbotContainer = document.querySelector(".chatbot-container");
+        const chatbotBox = document.getElementById('chatbot-box');
+        const inputField = document.getElementById('chat-input-field');
+        const sendBtn = document.getElementById('send-btn');
+        
+        // ĐÂY LÀ ĐIỂM KẾT NỐI QUAN TRỌNG NHẤT
+        const RASA_SERVER_URL = 'http://localhost:5005/webhooks/rest/webhook';
+        const BOT_AVATAR_URL = 'TaiNguyen/hinh_anh/Chatbot Chat Message.jpg'; // Đường dẫn tới ảnh avatar của bot
+
+        // ----- Logic bật/tắt chatbot -----
+        chatbotToggler.addEventListener("click", () => {
+            chatbotContainer.classList.toggle("show");
+            chatbotToggler.classList.toggle("show-close");
+        });
+
+        // ----- Logic hiển thị tin nhắn -----
+        const displayMessage = (message, className) => {
+            const chatDiv = document.createElement('div');
+            // Sử dụng class `chat-message` và `user`/`bot` để khớp với CSS
+            chatDiv.classList.add('chat-message', className);
+
+            let chatContent = '';
+            if (className === 'bot') { // Tin nhắn của Bot (có avatar)
+                chatContent = `
+                    <div class="bot-avatar">
+                        <img src="${BOT_AVATAR_URL}" alt="AI Avatar">
+                    </div>
+                    <div class="message-content"><p>${message}</p></div>
+                `;
+            } else { // Tin nhắn của Người dùng (không có avatar)
+                chatContent = `<div class="message-content"><p>${message}</p></div>`;
+            }
+            chatDiv.innerHTML = chatContent;
+            chatbotBox.appendChild(chatDiv);
+            chatbotBox.scrollTop = chatbotBox.scrollHeight;
+        }
+
+        // ----- Logic gửi và nhận tin nhắn -----
+        const handleSendMessage = async () => {
+            const userMessage = inputField.value.trim();
+            if (!userMessage) return;
+
+            displayMessage(userMessage, 'user');
+            inputField.value = '';
+            inputField.style.height = 'auto'; // Reset chiều cao textarea
+
+            // Hiển thị tin nhắn chờ của bot
+            displayMessage("...", 'bot');
+
+            try {
+                const response = await fetch(RASA_SERVER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sender: 'user', message: userMessage })
+                });
+
+                // Xóa tin nhắn chờ "..."
+                chatbotBox.removeChild(chatbotBox.lastChild);
+
+                // Kiểm tra xem yêu cầu có thành công không (status 200-299)
+                if (!response.ok) {
+                    // Nếu có lỗi (ví dụ: 404, 500), hiển thị thông báo lỗi chung
+                    console.error("Lỗi từ Rasa server:", response.status, response.statusText);
+                    displayMessage("Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng thử lại sau.", 'bot');
+                    return; // Dừng hàm tại đây
+                }
+
+                const botResponses = await response.json();
+                // Đảm bảo botResponses là một mảng trước khi lặp
+                if (Array.isArray(botResponses)) {
+                    botResponses.forEach(botMessage => {
+                        displayMessage(botMessage.text || "Tôi chưa hiểu ý bạn.", 'bot');
+                    });
+                }
+            } catch (error) {
+                chatbotBox.removeChild(chatbotBox.lastChild); // Xóa tin nhắn chờ "..."
+                console.error("Lỗi khi kết nối đến Rasa server:", error);
+                displayMessage("Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng thử lại sau.", 'bot');
+            }
+        }
+
+        sendBtn.addEventListener('click', handleSendMessage);
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) { // Gửi khi nhấn Enter, xuống dòng bằng Shift + Enter
+                e.preventDefault();
+                handleSendMessage();
+            }
+        });
+
+        // Tự động điều chỉnh chiều cao ô nhập liệu
+        inputField.addEventListener('input', () => {
+            inputField.style.height = 'auto';
+            inputField.style.height = (inputField.scrollHeight) + 'px';
+        });
+        
+        // Tin nhắn chào mừng ban đầu
+        setTimeout(() => {
+            displayMessage("Xin chào! Tôi có thể giúp gì cho bạn?", 'bot');
+        }, 500);
+    </script>
+
+    <!-- JAVASCRIPT CHO GIỎ HÀNG AJAX -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartBadge = document.getElementById('cart-badge');
+
+            // Hàm cập nhật hiển thị của huy hiệu
+            const updateBadgeVisibility = () => {
+                const count = parseInt(cartBadge.textContent, 10);
+                if (count > 0) {
+                    cartBadge.style.transform = 'scale(1)';
+                } else {
+                    cartBadge.style.transform = 'scale(0)';
+                }
+            };
+
+            // Bắt sự kiện submit của TẤT CẢ các form "Thêm vào giỏ"
+            document.querySelectorAll('form[action="index.php?act=them_vao_gio"]').forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    // Ngăn chặn hành vi submit mặc định của form (tải lại trang)
+                    event.preventDefault();
+
+                    // Tạo đối tượng FormData từ form được click
+                    const formData = new FormData(this);
+                    const actionUrl = this.getAttribute('action');
+
+                    // Gửi yêu cầu AJAX
+                    fetch(actionUrl, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Cập nhật số trên huy hiệu
+                            cartBadge.textContent = data.new_total_quantity;
+                            updateBadgeVisibility();
+
+                            // Tạo hiệu ứng "nhảy" cho huy hiệu
+                            cartBadge.style.transform = 'scale(1.3)';
+                            setTimeout(() => {
+                                cartBadge.style.transform = 'scale(1)';
+                            }, 200);
+
+                            // (Tùy chọn) Hiển thị thông báo thành công
+                            // alert('Đã thêm sản phẩm vào giỏ hàng!');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi thêm vào giỏ hàng:', error);
+                    });
+                });
+            });
+
+            // Cập nhật hiển thị huy hiệu khi tải trang lần đầu
+            updateBadgeVisibility();
+        }, 500);
+    </script>
+
+    <!-- JAVASCRIPT CHO CẬP NHẬT GIỎ HÀNG TỰ ĐỘNG -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cartPage = document.querySelector('.cart-page-wrapper');
+        // Chỉ chạy script này nếu đang ở trang giỏ hàng
+        if (!cartPage) return;
+
+        const cartBadge = document.getElementById('cart-badge');
+        const subtotalEl = document.getElementById('cart-subtotal');
+        const finalTotalEl = document.getElementById('cart-final-total');
+
+        // Hàm định dạng số
+        const formatCurrency = (number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
+
+        // Hàm gửi yêu cầu cập nhật lên server
+        const updateCart = (productId, quantity) => {
+            const formData = new FormData();
+            formData.append('id', productId);
+            formData.append('quantity', quantity);
+
+            fetch('index.php?act=cap_nhat_gio_hang', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Cập nhật tổng tiền và số lượng trên header
+                    subtotalEl.textContent = formatCurrency(data.new_subtotal);
+                    finalTotalEl.textContent = formatCurrency(data.new_subtotal);
+                    cartBadge.textContent = data.new_total_quantity;
+
+                    // Nếu số lượng sản phẩm về 0, xóa dòng đó khỏi giao diện
+                    if (quantity <= 0) {
+                        const itemCard = document.querySelector(`.cart-item-card[data-id='${productId}']`);
+                        if (itemCard) {
+                            itemCard.remove();
+                        }
+                        // Kiểm tra nếu giỏ hàng rỗng thì reload trang để hiển thị trạng thái "Giỏ hàng trống"
+                        if (data.new_total_quantity === 0) {
+                            window.location.reload();
+                        }
+                    }
+                }
+            })
+            .catch(error => console.error('Lỗi cập nhật giỏ hàng:', error));
+        };
+
+        // Lắng nghe sự kiện click trên các nút +/-
+        cartPage.querySelectorAll('.quantity-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('.quantity-input');
+                let currentValue = parseInt(input.value);
+                if (this.classList.contains('plus')) {
+                    currentValue++;
+                } else {
+                    currentValue--;
+                }
+                input.value = currentValue;
+                // Kích hoạt sự kiện 'change' để xử lý cập nhật
+                input.dispatchEvent(new Event('change'));
+            });
+        });
+
+        // Lắng nghe sự kiện thay đổi trên các ô input số lượng
+        cartPage.querySelectorAll('.quantity-input').forEach(input => {
+            input.addEventListener('change', function() {
+                const productId = this.dataset.id;
+                const quantity = parseInt(this.value);
+                updateCart(productId, quantity);
+            });
+        });
+    });
+    </script>
+
+    <!-- JAVASCRIPT CHO SLIDER SẢN PHẨM -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Khởi tạo Swiper cho banner chính
+            var heroSwiper = new Swiper(".hero-slider", {
+                loop: true,
+                autoplay: {
+                    delay: 3000, // Thời gian chuyển slide (3 giây)
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                navigation: {
+                    // Sử dụng selector cụ thể hơn để tránh xung đột
+                    nextEl: ".hero-slider .swiper-button-next",
+                    prevEl: ".hero-slider .swiper-button-prev",
+                },
+            });
+        });
+    </script>
+<!-- JAVASCRIPT CHO NÚT ẨN/HIỆN MẬT KHẨU -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Hàm trợ giúp để xử lý việc chuyển đổi cho một cặp nút và trường nhập
+        const setupPasswordToggle = (toggleButtonId, passwordFieldId) => {
+            const toggleButton = document.getElementById(toggleButtonId);
+            const passwordField = document.getElementById(passwordFieldId);
+
+            // Chỉ chạy nếu cả hai phần tử tồn tại trên trang
+            if (toggleButton && passwordField) {
+                // SVG cho icon con mắt
+                const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>`;
+                const eyeSlashIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16"><path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/><path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/></svg>`;
+
+                toggleButton.addEventListener('click', function () {
+                    // Lấy loại hiện tại của trường nhập
+                    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordField.setAttribute('type', type);
+
+                    // Thay đổi icon trên nút
+                    if (type === 'password') {
+                        this.innerHTML = eyeIcon;
+                    } else {
+                        this.innerHTML = eyeSlashIcon;
+                    }
+                });
+            }
+        };
+
+        // Thiết lập cho trường mật khẩu chính
+        setupPasswordToggle('togglePassword', 'password');
+
+        // Thiết lập cho trường xác nhận mật khẩu
+        setupPasswordToggle('toggleConfirmPassword', 'confirm_password');
+    });
+</script>
+
+<!-- Footer -->
+<footer class="cp-footer">
+  <div class="cp-container cp-footer__grid">
+    <div>
+      <img class="cp-logo--footer" src="TaiNguyen/hinh_anh/ChatGPT_Image_Oct_15__2025__05_00_01_PM-removebg-preview.png" alt="">
+      <p>Shop Táo Ngon – Chuyên Apple chính hãng.</p>
+    </div>
+    <div>
+      <h5>Hỗ trợ</h5>
+      <a href="#">Chính sách bảo hành</a>
+      <a href="#">Giao hàng & thanh toán</a>
+      <a href="#">Đổi trả</a>
+    </div>
+    <div>
+      <h5>Liên hệ</h5>
+      <a href="tel:18000000">Hotline: 1800 0000</a>
+      <a href="mailto:hello@shoptaongon.vn">hello@shoptaongon.vn</a>
+    </div>
+  </div>
+  <div class="cp-footer__copy">© 2025 Shop Táo Ngon</div>
+</footer>
+
+<script src="TaiNguyen/js/main.js"></script>
+</body>
+</html>
