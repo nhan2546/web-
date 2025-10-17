@@ -43,10 +43,10 @@ switch ($act) {
 
 // Prepare breadcrumb data
 $breadcrumb_data = [];
+$breadcrumbs = generate_breadcrumbs($pdo, $act, $breadcrumb_data); // Di chuyển việc tạo breadcrumbs lên trước
 
 // 5. HIỂN THỊ HEADER
 include __DIR__ . '/GiaoDien/trang/bo_cuc/dau_trang.php';
-
 // 6. HIỂN THỊ NỘI DUNG TRANG
 switch ($act) {
     case 'trangchu':
@@ -56,7 +56,7 @@ switch ($act) {
         $c->hienthi_sp();
         break;
     case 'danhmuc':
-        $breadcrumb_data['category_info'] = $c->hienthi_sp_theo_danhmuc(true);
+        $breadcrumbs = generate_breadcrumbs($pdo, $act, ['category_info' => $c->hienthi_sp_theo_danhmuc(true)]);
         $c->hienthi_sp_theo_danhmuc();
         break;
     case 'chi_tiet_san_pham':
@@ -100,10 +100,6 @@ switch ($act) {
 }
 
 // 7. HIỂN THỊ FOOTER
-// Tạo breadcrumb HTML và JSON-LD
-$breadcrumbs = generate_breadcrumbs($pdo, $act, $breadcrumb_data);
-// Hiển thị breadcrumb
-include __DIR__ . '/GiaoDien/trang/bo_cuc/breadcrumb_view.php';
 include __DIR__ . '/GiaoDien/trang/bo_cuc/chan_trang.php';
 
 ?>

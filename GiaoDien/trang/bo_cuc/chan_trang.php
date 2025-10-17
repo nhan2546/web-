@@ -1,7 +1,3 @@
-
-<main class="cp-container cp-section">
-    <!-- Nội dung chính của trang được hiển thị ở đây, giữa header và footer -->
-</main> <!-- Đóng thẻ main từ dau_trang.php -->
 <!-- GIAO DIỆN AI CHATBOT TÙY CHỈNH -->
 <div class="chatbot-container">
         <div class="chatbot-header">

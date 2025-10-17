@@ -52,7 +52,6 @@ if (!function_exists('generate_breadcrumbs')) {
                 break;
 
             case 'thanh_toan':
-                $breadcrumbs[] = ['title' => 'Giỏ hàng', 'url' => 'index.php?act=gio_hang'];
                 $breadcrumbs[] = ['title' => 'Thanh toán', 'url' => null];
                 break;
 

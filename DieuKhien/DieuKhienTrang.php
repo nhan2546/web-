@@ -387,11 +387,11 @@ class controller {
         }
 
         $checkout_cart = $_SESSION['checkout_cart'] ?? [];
-        $full_cart = $_SESSION['cart'] ?? [];
         
         // The items submitted from the thanh_toan form.
         // This assumes the checkout page form still uses name="selected_items[]" for the products to be purchased.
         $final_selected_ids = $_POST['selected_items'] ?? [];
+        $full_cart = $_SESSION['cart'] ?? [];
 
         // 2. Kiểm tra giỏ hàng và các mục đã chọn
         if (empty($checkout_cart) || empty($final_selected_ids)) {
@@ -414,35 +414,7 @@ class controller {
             exit();
         }
 
-        // 4. Xác định giỏ hàng còn lại từ giỏ hàng đầy đủ ban đầu
-        $remaining_cart = [];
-        foreach ($full_cart as $item_id => $item) {
-            if (!array_key_exists($item_id, $purchased_cart)) {
-                $remaining_cart[$item_id] = $item;
-            }
-        }
-
-        // 5. Thu thập thông tin từ form và session
-        $user_id = $_SESSION['user_id'];
-        $fullname = $_POST['fullname'] ?? '';
-        $phone_number = $_POST['phone_number'] ?? '';
-        $address = $_POST['address'] ?? '';
-        $shipping_address = "Họ tên: $fullname\nSố điện thoại: $phone_number\nĐịa chỉ: $address";
-        
-        $payment_method = $_POST['payment_method'] ?? 'cod';
-        $voucher_code = $_SESSION['voucher']['code'] ?? null;
-        $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
-
-        // 6. Tính lại tổng tiền chỉ cho các sản phẩm đã mua
-        $subtotal = 0;
-        foreach ($purchased_cart as $item) { $subtotal += $item['price'] * $item['quantity']; }
-        
-        $final_total = $subtotal - $discount_amount;
-        if ($final_total < 0) {
-            $final_total = 0; // Đảm bảo tổng tiền không âm
-        }
-
-        // 7. KIỂM TRA SỐ LƯỢNG TỒN KHO
+        // 4. KIỂM TRA SỐ LƯỢNG TỒN KHO (trên các sản phẩm đã mua)
         $sp_model = new sanpham($this->pdo);
         foreach ($purchased_cart as $item) {
             $product = $sp_model->getone_sanoham($item['id']);
@@ -453,12 +425,41 @@ class controller {
             }
         }
 
-        // 8. Gọi model để tạo đơn hàng
+        // 5. Tính toán lại tổng tiền CHỈ DỰA TRÊN các sản phẩm đã mua
+        $subtotal = 0;
+        foreach ($purchased_cart as $item) {
+            $subtotal += $item['price'] * $item['quantity'];
+        }
+
+        $voucher_code = $_SESSION['voucher']['code'] ?? null;
+        $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
+        
+        // Đảm bảo voucher vẫn hợp lệ với subtotal mới
+        // (Logic này có thể cần phức tạp hơn nếu bạn có nhiều loại voucher)
+        if ($subtotal <= 0) {
+            $discount_amount = 0; // Không giảm giá nếu không có sản phẩm
+        }
+
+        $final_total = $subtotal - $discount_amount;
+        if ($final_total < 0) {
+            $final_total = 0; // Đảm bảo tổng tiền không âm
+        }
+
+        // 6. Thu thập thông tin giao hàng
+        $user_id = $_SESSION['user_id'];
+        $fullname = $_POST['fullname'] ?? '';
+        $phone_number = $_POST['phone_number'] ?? '';
+        $address = $_POST['address'] ?? '';
+        $shipping_address = "Họ tên: $fullname\nSố điện thoại: $phone_number\nĐịa chỉ: $address";
+        $payment_method = $_POST['payment_method'] ?? 'cod';
+
+        // 7. Gọi model để tạo đơn hàng
         $donHangModel = new donhang($this->pdo);
         $orderId = $donHangModel->createOrder($user_id, $purchased_cart, $final_total, $shipping_address, $payment_method, $voucher_code, $discount_amount);
 
         if ($orderId) {
-            // 9. Cập nhật lại giỏ hàng session với các sản phẩm còn lại
+            // 8. Cập nhật lại giỏ hàng session với các sản phẩm còn lại
+            $remaining_cart = array_diff_key($full_cart, $purchased_cart);
             $_SESSION['cart'] = $remaining_cart;
             
             // Xóa giỏ hàng thanh toán tạm thời và voucher
@@ -466,7 +467,7 @@ class controller {
             unset($_SESSION['voucher']);
 
             // 10. Chuyển hướng đến trang thành công
-            header('Location: index.php?act=dat_hang_thanh_cong&id=' . $orderId);
+            header('Location: index.php?act=dat_hang_thanh_cong&id=' . $orderId); // Sửa: Chuyển hướng đến trang thành công
             exit();
         } else {
             $_SESSION['order_error'] = 'Không thể tạo đơn hàng do lỗi hệ thống.';
