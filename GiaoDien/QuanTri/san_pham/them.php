@@ -4,7 +4,7 @@
             Thêm sản phẩm mới
         </div>
         <div class="admin-card-body">
-            <form action="admin.php?act=xl_themsp" method="POST" enctype="multipart/form-data">
+            <form action="admin.php?act=them_sp" method="POST" enctype="multipart/form-data">
                 <div class="form-group-grid">
                     <label class="form-label">Tên sản phẩm</label>
                     <input type="text" name="name" class="form-control" required>
@@ -23,12 +23,17 @@
     
                 <div class="form-group-grid">
                     <label class="form-label">Giá (VNĐ)</label>
-                    <input type="number" name="price" class="form-control" required>
+                    <input type="number" name="price" class="form-control" min="0" placeholder="Ví dụ: 25000000" required>
+                </div>
+
+                <div class="form-group-grid">
+                    <label class="form-label">Giá khuyến mãi (VNĐ)</label>
+                    <input type="number" name="sale_price" class="form-control" min="0" placeholder="Để trống hoặc nhập 0 nếu không giảm giá">
                 </div>
 
                 <div class="form-group-grid">
                     <label class="form-label">Số lượng kho</label>
-                    <input type="number" name="stock_quantity" class="form-control" required>
+                    <input type="number" name="stock_quantity" class="form-control" min="0" placeholder="Ví dụ: 100" required>
                 </div>
 
                 <div class="form-group-grid">

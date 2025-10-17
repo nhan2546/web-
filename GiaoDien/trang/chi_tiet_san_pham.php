@@ -5,8 +5,8 @@ if (!$san_pham) {
 }
 ?>
 
-<div class="container my-5">
-    <!-- Main Product Info Card -->
+<!-- Thẻ div container my-5 đã được loại bỏ, vì layout chung đã có cp-container -->
+<!-- Main Product Info Card -->
     <div class="card product-detail-card shadow-sm mb-5">
         <div class="card-body">
             <div class="row g-4">

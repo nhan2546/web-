@@ -232,3 +232,6 @@
     </div>
   </div>
 </header>
+
+<!-- Bắt đầu vùng nội dung chính của trang -->
+<main class="cp-container cp-section">

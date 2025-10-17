@@ -29,7 +29,7 @@
             </a>
         </div>
     </div>
-</main> <!-- Đóng thẻ main -->
+</main> <!-- Đóng thẻ main được mở trong dau_trang.php -->
 <script>
         // --- JAVASCRIPT CHO TÌM KIẾM TRỰC TIẾP ---
         const searchInput = document.getElementById('search-input');
