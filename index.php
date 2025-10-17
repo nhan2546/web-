@@ -1,11 +1,48 @@
 <?php
 // File: index.php
 
-// Đầu tiên, gọi bộ xử lý logic. 
-// Nếu action là logic, nó sẽ xử lý và thoát script.
-require_once __DIR__ . '/logic_handler.php';
+// Start session
+session_start();
 
-// Nếu script tiếp tục ở đây, có nghĩa là chúng ta cần hiển thị một trang.
+// 1. KHỞI TẠO (Merged includes)
+require_once __DIR__ . '/MoHinh/CSDL.php';
+require_once __DIR__ . '/DieuKhien/DieuKhienTrang.php';
+require_once __DIR__ . '/DieuKhien/DieuKhienXacThuc.php';
+require_once __DIR__ . '/GiaoDien/trang/bo_cuc/breadcrumb_helper.php';
+
+// Initialize Database
+$db = new CSDL();
+$pdo = $db->conn;
+
+// Instantiate Controllers
+$c = new controller($pdo);
+$authController = new DieuKhienXacThuc($pdo);
+
+// Get action
+$act = $_GET['act'] ?? 'trangchu';
+
+// Handle logic actions first
+switch ($act) {
+    case 'them_vao_gio':            $c->them_vao_gio(); break;
+    case 'xoa_san_pham_gio_hang':   $c->xoa_san_pham_gio_hang(); break;
+    case 'cap_nhat_gio_hang':       $c->cap_nhat_gio_hang(); break;
+    case 'ap_dung_voucher':         $c->ap_dung_voucher(); break;
+    case 'xoa_voucher':             $c->xoa_voucher(); break;
+    case 'xu_ly_dang_nhap':         $authController->xu_ly_dang_nhap(); break;
+    case 'xu_ly_dang_ky':           $authController->xu_ly_dang_ky(); break;
+    case 'dang_xuat':               $authController->dang_xuat(); break;
+    case 'cap_nhat_tai_khoan':      $c->cap_nhat_tai_khoan(); break;
+    case 'doi_mat_khau':            $c->doi_mat_khau(); break;
+    case 'cap_nhat_avatar':         $c->cap_nhat_avatar(); break;
+    case 'xu_ly_dat_hang':          $c->xu_ly_dat_hang(); break;
+    case 'them_binh_luan':          $c->them_binh_luan(); break;
+    case 'ajax_tim_kiem':           $c->ajax_tim_kiem(); break;
+}
+
+// If we are here, it's a display action.
+
+// Prepare breadcrumb data
+$breadcrumb_data = [];
 
 // 5. HIỂN THỊ HEADER
 include __DIR__ . '/GiaoDien/trang/bo_cuc/dau_trang.php';
@@ -19,12 +56,15 @@ switch ($act) {
         $c->hienthi_sp();
         break;
     case 'danhmuc':
+        $breadcrumb_data['category_info'] = $c->hienthi_sp_theo_danhmuc(true);
         $c->hienthi_sp_theo_danhmuc();
         break;
     case 'chi_tiet_san_pham':
+        $breadcrumb_data['san_pham'] = $c->chi_tiet_san_pham(true);
         $c->chi_tiet_san_pham();
         break;
     case 'tim_kiem':
+        $breadcrumb_data['keyword'] = $_GET['keyword'] ?? '';
         $c->tim_kiem_san_pham();
         break;
     case 'gio_hang':
@@ -60,6 +100,10 @@ switch ($act) {
 }
 
 // 7. HIỂN THỊ FOOTER
+// Tạo breadcrumb HTML và JSON-LD
+$breadcrumbs = generate_breadcrumbs($pdo, $act, $breadcrumb_data);
+// Hiển thị breadcrumb
+include __DIR__ . '/GiaoDien/trang/bo_cuc/breadcrumb_view.php';
 include __DIR__ . '/GiaoDien/trang/bo_cuc/chan_trang.php';
 
 ?>

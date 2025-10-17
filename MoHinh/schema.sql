@@ -20,3 +20,17 @@ CREATE TABLE IF NOT EXISTS `users` (
 INSERT INTO `users` (`fullname`, `email`, `password`, `role`) VALUES
 ('Administrator', 'admin@example.com', '$2y$10$e0NRd1h0QjR5mQZr5pQ/WeQbLr6sYF0VZk1e6yqK7T0C1fQ0Gx8xG', 'admin')
 ON DUPLICATE KEY UPDATE email = email;
+
+-- Reviews table
+CREATE TABLE IF NOT EXISTS `reviews` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `product_id` INT UNSIGNED NOT NULL,
+  `user_id` INT UNSIGNED NOT NULL,
+  `rating` TINYINT UNSIGNED NOT NULL,
+  `comment` TEXT,
+  `parent_id` INT UNSIGNED DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+  INDEX (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

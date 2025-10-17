@@ -16,7 +16,6 @@ class donhang {
      * @return array Mảng chứa tất cả các đơn hàng.
      */
     public function getAllOrders() {
-        $db = new CSDL();
         $sql = "SELECT o.*, u.fullname as customer_name 
                 FROM orders o
                 JOIN users u ON o.user_id = u.id
@@ -178,7 +177,7 @@ class donhang {
         $this->pdo->rollBack();
         error_log('Order creation failed: ' . $e->getMessage());
         // Thêm lỗi vào session để hiển thị cho người dùng
-        $_SESSION['order_error'] = 'Lỗi hệ thống khi tạo đơn hàng. Vui lòng thử lại sau. Chi tiết: ' . $e->getMessage();
+        $_SESSION['order_error'] = 'lỗi khi tạo đơn hàng vui lòng thử lại sau. ' . $e->getMessage();
         return false;
     }
 }
@@ -199,7 +198,7 @@ class donhang {
      */
     public function getTotalRevenue() {
         // Chỉ tính tổng tiền của các đơn hàng có trạng thái 'success'
-        $sql = "SELECT SUM(total_amount) as total FROM orders WHERE status = 'success'";
+        $sql = "SELECT SUM(total_amount) as total FROM orders WHERE status = 'delivered'";
         $stmt = $this->pdo->query($sql);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result[0]['total'] ?? 0;
@@ -226,7 +225,7 @@ class donhang {
                     DATE_FORMAT(order_date, '%c') as month, 
                     SUM(total_amount) as revenue 
                 FROM orders 
-                WHERE status = 'success'";
+                WHERE status = 'delivered'";
         if ($year) {
             $sql .= " AND YEAR(order_date) = " . (int)$year;
         } else {

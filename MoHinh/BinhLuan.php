@@ -10,10 +10,10 @@ class BinhLuan {
     /**
      * Thêm một bình luận/đánh giá mới vào CSDL.
      */
-    public function addReview($product_id, $user_id, $rating, $comment) {
-        $sql = "INSERT INTO reviews (product_id, user_id, rating, comment) VALUES (?, ?, ?, ?)";
+    public function addReview($product_id, $user_id, $rating, $comment, $parent_id = null) {
+        $sql = "INSERT INTO reviews (product_id, user_id, rating, comment, parent_id) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([$product_id, $user_id, $rating, $comment]);
+        return $stmt->execute([$product_id, $user_id, $rating, $comment, $parent_id]);
     }
 
     /**
@@ -23,7 +23,7 @@ class BinhLuan {
         $sql = "SELECT r.*, u.fullname, u.avatar_url 
                 FROM reviews r
                 JOIN users u ON r.user_id = u.id
-                WHERE r.product_id = ?
+                WHERE r.product_id = ? 
                 ORDER BY r.created_at DESC";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$product_id]);

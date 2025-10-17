@@ -15,7 +15,7 @@
         </div>
     <?php endif; ?>
 
-    <form action="index.php?act=xu_ly_dat_hang" method="POST" class="checkout-form">
+    <form action="index.php?act=xu_ly_dat_hang" method="POST" class="checkout-form" id="checkout-form">
         <div class="checkout-grid">
             <!-- Cột bên trái: Thông tin giao hàng và thanh toán -->
             <div class="checkout-left">
@@ -39,22 +39,35 @@
                 <div class="checkout-section">
                     <h3>2. Phương thức thanh toán</h3>
                     <div class="payment-methods">
+                        <!-- Thanh toán khi nhận hàng (COD) -->
                         <label class="payment-method-item">
                             <input type="radio" name="payment_method" value="cod" checked>
+                            <img src="TaiNguyen/hinh_anh/icon/cod.svg" alt="COD" class="payment-method-icon">
                             <div class="payment-method-content">
                                 <strong>Thanh toán khi nhận hàng (COD)</strong>
                                 <p>Bạn sẽ thanh toán bằng tiền mặt cho nhân viên giao hàng.</p>
                             </div>
                         </label>
-                        <!-- Bạn có thể thêm các phương thức khác ở đây, ví dụ:
+
+                        <!-- Chuyển khoản ngân hàng -->
                         <label class="payment-method-item">
                             <input type="radio" name="payment_method" value="bank_transfer">
+                            <img src="TaiNguyen/hinh_anh/icon/bank.svg" alt="Bank Transfer" class="payment-method-icon">
                             <div class="payment-method-content">
                                 <strong>Chuyển khoản ngân hàng</strong>
                                 <p>Chúng tôi sẽ cung cấp thông tin chuyển khoản sau khi bạn đặt hàng.</p>
                             </div>
                         </label>
-                        -->
+
+                        <!-- Ví MoMo -->
+                        <label class="payment-method-item">
+                            <input type="radio" name="payment_method" value="momo">                            
+                            <img src="TaiNguyen/hinh_anh/icon/momo.svg" alt="MoMo" class="payment-method-icon">
+                            <div class="payment-method-content">
+                                <strong>Thanh toán qua ví MoMo</strong>
+                                <p>Quét mã QR MoMo để thanh toán nhanh chóng và tiện lợi.</p>
+                            </div>                            
+                        </label>
                     </div>
                 </div>
             </div>
@@ -66,6 +79,7 @@
                     <div class="order-items">
                         <?php foreach ($cart as $item): ?>
                             <div class="order-item">
+                                <input type="checkbox" name="selected_items[]" value="<?= $item['id'] ?>" checked style="margin-right: 15px;">
                                 <img src="TaiLen/san_pham/<?= htmlspecialchars($item['image_url']) ?>" alt="<?= htmlspecialchars($item['name']) ?>">
                                 <div class="item-info">
                                     <p><?= htmlspecialchars($item['name']) ?></p>
@@ -76,6 +90,25 @@
                                 </div>
                             </div>
                         <?php endforeach; ?>
+                    </div>
+                    <!-- Voucher Section -->
+                    <div class="voucher-section" style="padding: 20px; border-top: 1px solid #e5e5e5;">
+                        <div class="voucher-form">
+                            <input type="text" name="voucher_code" id="voucher-input" placeholder="Nhập mã giảm giá" class="voucher-input" value="<?= htmlspecialchars($voucher_code ?? '') ?>">
+                            <button type="button" id="apply-voucher-btn" class="voucher-apply-btn">Áp dụng</button>
+                        </div>
+                        <?php if (isset($voucher_error) && $voucher_error): ?>
+                            <div class="voucher-message error"><?= htmlspecialchars($voucher_error) ?></div>
+                        <?php endif; ?>
+                        <?php if (isset($voucher_success) && $voucher_success): ?>
+                            <div class="voucher-message success"><?= htmlspecialchars($voucher_success) ?></div>
+                        <?php endif; ?>
+                        <?php if ($discount_amount > 0): ?>
+                            <div class="voucher-message success">
+                                Đã áp dụng mã <strong><?= htmlspecialchars($voucher_code) ?></strong>. 
+                                <a href="index.php?act=xoa_voucher" class="remove-voucher-btn">[Xóa]</a>
+                            </div>
+                        <?php endif; ?>
                     </div>
                     <div class="order-totals">
                         <div class="total-row">
@@ -102,4 +135,68 @@
             <button type="submit" class="cp-btn">Hoàn tất đặt hàng</button>
         </div>
     </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('checkout-form');
+    const itemCheckboxes = form.querySelectorAll('input[name="selected_items[]"]');
+    const subtotalEl = document.querySelector('.order-totals .total-row:first-child span:last-child');
+    const finalTotalEl = document.querySelector('.order-totals .final-total span:last-child');
+    const voucherDiscountEl = document.querySelector('.order-totals .voucher-applied span:last-child');
+
+    // Store initial values passed from PHP
+    const initialDiscount = <?= $discount_amount ?? 0 ?>;
+    const cartData = <?= json_encode($cart) ?>;
+
+    function updateTotals() {
+        let newSubtotal = 0;
+
+        itemCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                const itemId = checkbox.value;
+                const item = cartData[itemId];
+                if (item) {
+                    newSubtotal += item.price * item.quantity;
+                }
+            }
+        });
+
+        // This is a simplified client-side recalculation for UI purposes.
+        // The final, authoritative calculation is done on the server.
+        // We assume the voucher applies if any item is selected.
+        let newDiscount = 0;
+        if (newSubtotal > 0 && initialDiscount > 0) {
+            // A simple assumption: if the subtotal is less than the discount, the discount is capped.
+            // Server-side logic for vouchers might be more complex (e.g., min order value).
+            newDiscount = Math.min(newSubtotal, initialDiscount);
+        } else {
+            // If no items are selected, the discount is zero.
+            newDiscount = 0;
+        }
+
+        const newFinalTotal = newSubtotal - newDiscount;
+
+        // Update the UI text content
+        subtotalEl.textContent = newSubtotal.toLocaleString('vi-VN') + '₫';
+        if (voucherDiscountEl) {
+            voucherDiscountEl.textContent = '- ' + newDiscount.toLocaleString('vi-VN') + '₫';
+        }
+        finalTotalEl.textContent = newFinalTotal.toLocaleString('vi-VN') + '₫';
+    }
+
+    itemCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateTotals);
+    });
+
+    // Also listen to the voucher apply button to re-run calculation if needed
+    const applyVoucherBtn = document.getElementById('apply-voucher-btn');
+    if(applyVoucherBtn) {
+        // The voucher logic reloads the page, so we just need to ensure totals are correct on load.
+        // No complex listener needed here, but good practice to be aware of it.
+    }
+
+    // Initial calculation on page load to set the correct totals.
+    updateTotals();
+});
+</script>
 </div>

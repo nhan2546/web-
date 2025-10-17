@@ -43,7 +43,7 @@ class controller {
         include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
     }
 
-    public function hienthi_sp_theo_danhmuc() {
+    public function hienthi_sp_theo_danhmuc($return_data = false) {
         $category_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         if ($category_id <= 0) {
             header('Location: index.php?act=trangchu');
@@ -55,6 +55,9 @@ class controller {
 
         // Lấy thông tin danh mục để hiển thị tiêu đề
         $category_info = $dm_model->getDanhMucById($category_id);
+        if ($return_data) {
+            return $category_info;
+        }
 
         // Logic phân trang
         $products_per_page = 8;
@@ -68,11 +71,13 @@ class controller {
         include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
     }
 
-    public function chi_tiet_san_pham() {
+    public function chi_tiet_san_pham($return_data = false) {
         $id = $_GET['id'] ?? 0;
         $sp_model = new sanpham($this->pdo);
         $san_pham = $sp_model->getone_sanoham($id); // Sửa lại tên hàm cho đúng
-
+        if ($return_data) {
+            return $san_pham;
+        }
         if (!$san_pham) {
             header('Location: index.php?act=trangchu');
             exit;
@@ -80,8 +85,26 @@ class controller {
 
         // Lấy thông tin bình luận và đánh giá
         $reviewModel = new BinhLuan($this->pdo);
-        $reviews = $reviewModel->getReviewsByProductId($id);
+        $flat_reviews = $reviewModel->getReviewsByProductId($id);
         $rating_info = $reviewModel->getAverageRating($id);
+
+        // Sắp xếp bình luận thành cây cha-con
+        $reviews_tree = [];
+        $reviews_by_id = [];
+        foreach ($flat_reviews as $review) {
+            $reviews_by_id[$review['id']] = $review;
+            $reviews_by_id[$review['id']]['replies'] = [];
+        }
+
+        foreach ($reviews_by_id as $review_id => &$review) {
+            if ($review['parent_id'] && isset($reviews_by_id[$review['parent_id']])) {
+                // Đây là một bình luận trả lời, thêm nó vào mảng 'replies' của cha
+                $reviews_by_id[$review['parent_id']]['replies'][] = &$review;
+            } else {
+                // Đây là bình luận gốc
+                $reviews_tree[] = &$review;
+            }
+        }
 
         include __DIR__.'/../GiaoDien/trang/chi_tiet_san_pham.php';
     }
@@ -133,9 +156,14 @@ class controller {
                 ];
             }
         }
-        // Chuyển hướng người dùng về trang giỏ hàng
-        header('Location: index.php?act=gio_hang');
-        exit();
+
+        // Tính toán tổng số lượng mới
+        $new_total_quantity = array_sum(array_column($_SESSION['cart'], 'quantity'));
+
+        // Trả về kết quả dưới dạng JSON
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'new_total_quantity' => $new_total_quantity]);
+        exit(); // Dừng thực thi
     }
 
     public function ap_dung_voucher() {
@@ -188,7 +216,7 @@ class controller {
                 }
             }
         }
-        header('Location: index.php?act=gio_hang');
+        header('Location: index.php?act=thanh_toan');
         exit();
     }
 
@@ -202,16 +230,6 @@ class controller {
         // Lấy thông tin voucher từ session nếu có
         $voucher_code = $_SESSION['voucher']['code'] ?? null;
         $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
-        $final_total = $subtotal - $discount_amount;
-
-        // Lấy thông báo lỗi/thành công từ session
-        $voucher_error = $_SESSION['voucher_error'] ?? null;
-        $voucher_success = $_SESSION['voucher_success'] ?? null;
-
-        // Xóa thông báo sau khi đã lấy để chúng không hiển thị lại
-        unset($_SESSION['voucher_error']);
-        unset($_SESSION['voucher_success']);
-
         include __DIR__.'/../GiaoDien/trang/gio_hang.php';
     }
 
@@ -222,7 +240,7 @@ class controller {
         unset($_SESSION['voucher_success']);
 
         // Chuyển hướng về trang giỏ hàng
-        header('Location: index.php?act=gio_hang');
+        header('Location: index.php?act=thanh_toan');
         exit();
     }
 
@@ -237,20 +255,34 @@ class controller {
 
     public function cap_nhat_gio_hang() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['quantities'])) {
-                foreach ($_POST['quantities'] as $id => $quantity) {
-                    $quantity = (int)$quantity;
-                    if ($quantity > 0 && isset($_SESSION['cart'][$id])) {
-                        $_SESSION['cart'][$id]['quantity'] = $quantity;
-                    } else if ($quantity <= 0 && isset($_SESSION['cart'][$id])) {
-                        // Nếu số lượng <= 0 thì xóa sản phẩm
-                        unset($_SESSION['cart'][$id]);
-                    }
+            $id = $_POST['id'] ?? null;
+            $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 0;
+
+            if ($id && isset($_SESSION['cart'][$id])) {
+                if ($quantity > 0) {
+                    $_SESSION['cart'][$id]['quantity'] = $quantity;
+                } else {
+                    // Nếu số lượng là 0 hoặc nhỏ hơn, xóa sản phẩm khỏi giỏ hàng
+                    unset($_SESSION['cart'][$id]);
                 }
             }
+
+            // Tính toán lại các giá trị tổng
+            $subtotal = 0;
+            foreach ($_SESSION['cart'] as $item) {
+                $subtotal += $item['price'] * $item['quantity'];
+            }
+            $total_quantity = array_sum(array_column($_SESSION['cart'], 'quantity'));
+
+            // Trả về dữ liệu JSON
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => true,
+                'new_subtotal' => $subtotal,
+                'new_total_quantity' => $total_quantity
+            ]);
+            exit();
         }
-        header('Location: index.php?act=gio_hang');
-        exit();
     }
 
     public function them_binh_luan() {
@@ -265,11 +297,12 @@ class controller {
         $user_id = $_SESSION['user_id'];
         $rating = $_POST['rating'] ?? 0;
         $comment = trim($_POST['comment'] ?? '');
+        $parent_id = !empty($_POST['parent_id']) ? (int)$_POST['parent_id'] : null;
 
-        if ($product_id > 0 && $rating > 0 && $rating <= 5) {
+        if ($product_id > 0 && ($parent_id !== null || ($rating > 0 && $rating <= 5))) {
             // 3. Gọi model để thêm bình luận
             $reviewModel = new BinhLuan($this->pdo);
-            $reviewModel->addReview($product_id, $user_id, $rating, $comment);
+            $reviewModel->addReview($product_id, $user_id, $rating, $comment, $parent_id);
         }
 
         // 4. Chuyển hướng người dùng trở lại trang sản phẩm
@@ -282,13 +315,34 @@ class controller {
     public function hien_thi_thanh_toan() {
         // 1. Kiểm tra đăng nhập
         if (!isset($_SESSION['user_id'])) {
-            header('Location: index.php?act=dang_nhap&redirect=thanh_toan');
+            $_SESSION['redirect_url'] = 'index.php?act=thanh_toan';
+            header('Location: index.php?act=dang_nhap');
             exit();
         }
 
-        // 2. Kiểm tra giỏ hàng có rỗng không
-        $cart = $_SESSION['cart'] ?? [];
-        if (empty($cart)) {
+        $cart_to_checkout = [];
+        $full_cart = $_SESSION['cart'] ?? [];
+
+        // A. User is coming from gio_hang.php with selected items
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['selected_items'])) {
+            $selected_ids = $_POST['selected_items'];
+            foreach ($full_cart as $id => $item) {
+                if (in_array($id, $selected_ids)) {
+                    $cart_to_checkout[$id] = $item;
+                }
+            }
+            // Store the selected cart for processing the order later
+            $_SESSION['checkout_cart'] = $cart_to_checkout;
+        } 
+        // B. User might be redirected here (e.g. after login), or refreshed the page
+        else if (isset($_SESSION['checkout_cart'])) {
+            $cart_to_checkout = $_SESSION['checkout_cart'];
+        }
+
+        // 2. Kiểm tra giỏ hàng (để thanh toán) có rỗng không
+        if (empty($cart_to_checkout)) {
+            // If nothing was ever selected, redirect back to cart with a message
+            $_SESSION['cart_error'] = 'Vui lòng chọn sản phẩm trong giỏ hàng trước khi thanh toán.';
             header('Location: index.php?act=gio_hang');
             exit();
         }
@@ -301,15 +355,27 @@ class controller {
         $userModel = new NguoiDung($this->pdo);
         $user_info = $userModel->findUserById($_SESSION['user_id']);
 
-        // 4. Tính toán lại tổng tiền (để đảm bảo)
+        // 4. Tính toán lại tổng tiền (chỉ cho các sản phẩm được chọn)
         $subtotal = 0;
-        foreach ($cart as $item) {
+        foreach ($cart_to_checkout as $item) {
             $subtotal += $item['price'] * $item['quantity'];
         }
+        
+        // Lấy thông tin voucher và các thông báo
+        $voucher_code = $_SESSION['voucher']['code'] ?? null;
         $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
         $final_total = $subtotal - $discount_amount;
 
-        // 5. Hiển thị view
+        $voucher_error = $_SESSION['voucher_error'] ?? null;
+        $voucher_success = $_SESSION['voucher_success'] ?? null;
+
+        // Xóa thông báo sau khi đã lấy để chúng không hiển thị lại
+        unset($_SESSION['voucher_error']);
+        unset($_SESSION['voucher_success']);
+
+        // 5. Hiển thị view và truyền các biến
+        // Pass the correct cart to the view
+        $cart = $cart_to_checkout; 
         include __DIR__.'/../GiaoDien/trang/thanh_toan.php';
     }
 
@@ -320,59 +386,91 @@ class controller {
             exit();
         }
 
-        // 2. Kiểm tra giỏ hàng
-        $cart = $_SESSION['cart'] ?? [];
-        if (empty($cart)) {
-            header('Location: index.php?act=gio_hang');
+        $checkout_cart = $_SESSION['checkout_cart'] ?? [];
+        $full_cart = $_SESSION['cart'] ?? [];
+        
+        // The items submitted from the thanh_toan form.
+        // This assumes the checkout page form still uses name="selected_items[]" for the products to be purchased.
+        $final_selected_ids = $_POST['selected_items'] ?? [];
+
+        // 2. Kiểm tra giỏ hàng và các mục đã chọn
+        if (empty($checkout_cart) || empty($final_selected_ids)) {
+            $_SESSION['order_error'] = 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.';
+            header('Location: index.php?act=thanh_toan');
             exit();
         }
 
-        // 3. Thu thập thông tin từ form và session
+        // 3. Lọc ra các sản phẩm thực sự được mua từ giỏ hàng thanh toán
+        $purchased_cart = [];
+        foreach ($checkout_cart as $item_id => $item) {
+            if (in_array($item_id, $final_selected_ids)) {
+                $purchased_cart[$item_id] = $item;
+            }
+        }
+        
+        if (empty($purchased_cart)) {
+            $_SESSION['order_error'] = 'Không có sản phẩm nào hợp lệ được chọn để đặt hàng.';
+            header('Location: index.php?act=thanh_toan');
+            exit();
+        }
+
+        // 4. Xác định giỏ hàng còn lại từ giỏ hàng đầy đủ ban đầu
+        $remaining_cart = [];
+        foreach ($full_cart as $item_id => $item) {
+            if (!array_key_exists($item_id, $purchased_cart)) {
+                $remaining_cart[$item_id] = $item;
+            }
+        }
+
+        // 5. Thu thập thông tin từ form và session
         $user_id = $_SESSION['user_id'];
-        // Lấy đầy đủ thông tin giao hàng
         $fullname = $_POST['fullname'] ?? '';
         $phone_number = $_POST['phone_number'] ?? '';
         $address = $_POST['address'] ?? '';
-        // Kết hợp thông tin giao hàng thành một chuỗi
         $shipping_address = "Họ tên: $fullname\nSố điện thoại: $phone_number\nĐịa chỉ: $address";
         
-        $payment_method = $_POST['payment_method'] ?? 'cod'; // Mặc định là COD
+        $payment_method = $_POST['payment_method'] ?? 'cod';
         $voucher_code = $_SESSION['voucher']['code'] ?? null;
         $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
 
-        // Tính lại tổng tiền cuối cùng
+        // 6. Tính lại tổng tiền chỉ cho các sản phẩm đã mua
         $subtotal = 0;
-        foreach ($cart as $item) { $subtotal += $item['price'] * $item['quantity']; }
+        foreach ($purchased_cart as $item) { $subtotal += $item['price'] * $item['quantity']; }
+        
         $final_total = $subtotal - $discount_amount;
+        if ($final_total < 0) {
+            $final_total = 0; // Đảm bảo tổng tiền không âm
+        }
 
-        // 4a. KIỂM TRA SỐ LƯỢNG TỒN KHO
+        // 7. KIỂM TRA SỐ LƯỢNG TỒN KHO
         $sp_model = new sanpham($this->pdo);
-        foreach ($cart as $item) {
+        foreach ($purchased_cart as $item) {
             $product = $sp_model->getone_sanoham($item['id']);
             if (!$product || $product['stock_quantity'] < $item['quantity']) {
-                // Nếu sản phẩm không tồn tại hoặc không đủ hàng, đặt thông báo lỗi vào session
                 $_SESSION['cart_error'] = "Sản phẩm '{$item['name']}' không đủ số lượng tồn kho. Vui lòng cập nhật giỏ hàng của bạn.";
-                // Chuyển hướng về trang giỏ hàng
                 header('Location: index.php?act=gio_hang');
                 exit();
             }
         }
 
-        // 4b. Gọi model để tạo đơn hàng
+        // 8. Gọi model để tạo đơn hàng
         $donHangModel = new donhang($this->pdo);
-        $orderId = $donHangModel->createOrder($user_id, $cart, $final_total, $shipping_address, $payment_method, $voucher_code, $discount_amount);
+        $orderId = $donHangModel->createOrder($user_id, $purchased_cart, $final_total, $shipping_address, $payment_method, $voucher_code, $discount_amount);
 
         if ($orderId) {
-            // 5. Xóa giỏ hàng và voucher sau khi đặt hàng thành công
-            unset($_SESSION['cart']);
+            // 9. Cập nhật lại giỏ hàng session với các sản phẩm còn lại
+            $_SESSION['cart'] = $remaining_cart;
+            
+            // Xóa giỏ hàng thanh toán tạm thời và voucher
+            unset($_SESSION['checkout_cart']);
             unset($_SESSION['voucher']);
 
-            // 6. Chuyển hướng đến trang chi tiết đơn hàng
+            // 10. Chuyển hướng đến trang thành công
             header('Location: index.php?act=dat_hang_thanh_cong&id=' . $orderId);
             exit();
         } else {
-            // Nếu có lỗi, chuyển hướng về trang thanh toán với thông báo lỗi
-            header('Location: index.php?act=thanh_toan&error=order_failed');
+            $_SESSION['order_error'] = 'Không thể tạo đơn hàng do lỗi hệ thống.';
+            header('Location: index.php?act=thanh_toan');
             exit();
         }
     }

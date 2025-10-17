@@ -47,18 +47,31 @@ main.cp-container {
     background: #111;
     color: #eee;
     font-size: 13px;
-    overflow: hidden;
+    overflow: hidden; /* Ẩn nội dung tràn ra ngoài */
+}
+
+.cp-topbar__marquee {
+    display: flex;
+    animation: marquee 20s linear infinite;
 }
 
 .cp-topbar__items {
     display: flex;
-    gap: 18px;
+    flex-shrink: 0; /* Ngăn các item bị co lại */
     align-items: center;
-    height: 36px;
     margin: 0;
     padding: 0;
-    list-style: none;
+    list-style: none;    
     white-space: nowrap;
+}
+
+.cp-topbar__items li {
+    padding: 0 25px; /* Điều chỉnh padding cho các item */
+}
+
+@keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); } /* Di chuyển 50% vì có 2 khối nội dung giống hệt nhau */
 }
 
 /* Đầu trang */
@@ -171,6 +184,31 @@ main.cp-container {
 .cp-quick a:hover {
     opacity: 1;
     text-decoration: underline
+}
+
+/* Liên kết giỏ hàng và huy hiệu số lượng */
+.cp-cart-link {
+    position: relative;
+    padding-right: 10px; /* Tạo không gian cho huy hiệu */
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -5px;
+    background-color: #fff;
+    color: var(--red);
+    border: 1px solid var(--red);
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    transition: transform 0.2s ease, opacity 0.2s;
+    transform: scale(0); /* Mặc định ẩn đi */
 }
 
 /* Menu người dùng ở Header */
@@ -315,14 +353,38 @@ main.cp-container {
 }
 
 /* Vùng hero (banner chính) */
-.cp-hero__banner {
-    height: 320px;
-    background: #fff;
+.hero-slider {
+    width: 100%;
+    height: 380px; /* Tăng chiều cao banner một chút */
     border-radius: 14px;
     box-shadow: var(--shadow);
-    display: grid;
-    place-items: center;
-    color: #999
+    overflow: hidden; /* Quan trọng để bo góc các slide bên trong */
+}
+
+.hero-slider .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-slider .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Đảm bảo ảnh lấp đầy slide mà không bị méo */
+}
+
+/* Tùy chỉnh màu cho các nút điều hướng và phân trang */
+.hero-slider .swiper-button-next,
+.hero-slider .swiper-button-prev {
+    color: var(--red); /* Sử dụng màu chủ đạo */
+}
+
+.hero-slider .swiper-pagination-bullet-active {
+    background-color: var(--red);
 }
 
 /* Vùng nội dung (section) */
@@ -378,18 +440,17 @@ main.cp-container {
 
 .cp-card {
     background: #fff;
-    border-radius: 12px;
+    border-radius: var(--radius);
     box-shadow: var(--shadow);
-    padding: 12px;
-    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    transition: transform .15s
+    transition: transform .2s ease, box-shadow .2s ease;
+    overflow: hidden; /* Ẩn các phần tử con bị tràn ra ngoài */
 }
 
 .cp-card:hover {
-    transform: translateY(-3px)
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 .cp-card a {
@@ -397,19 +458,38 @@ main.cp-container {
     color: inherit
 }
 
-.cp-card img {
+.cp-card__image-container {
+    position: relative;
+    overflow: hidden; /* Quan trọng để hiệu ứng zoom không tràn ra ngoài */
+    background-color: #f9f9f9;
+}
+
+.cp-card__image-container img {
     width: 100%;
     aspect-ratio: 1/1;
-    object-fit: cover;
-    border-radius: 10px;
-    background: #fafafa
+    object-fit: contain; /* Đổi thành contain để thấy toàn bộ sản phẩm */
+    padding: 10px; /* Thêm khoảng đệm nhỏ quanh ảnh */
+    display: block;
+    transition: transform 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
+}
+
+.cp-card:hover .cp-card__image-container img {
+    transform: scale(1.05); /* Phóng to ảnh khi di chuột vào card */
+}
+
+.cp-card__content {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Giúp nội dung co giãn để đẩy nút xuống dưới */
 }
 
 .cp-card h4 {
     margin: 4px 0 0 0;
     font-size: 15px;
     line-height: 1.35;
-    min-height: 40px
+    min-height: 40px;
+    margin-bottom: 8px; /* Thêm khoảng cách dưới tên sản phẩm */
 }
 
 .cp-price {
@@ -429,12 +509,12 @@ main.cp-container {
 }
 
 .cp-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+    position: absolute; /* Đặt huy hiệu bên trong container ảnh */
+    top: 12px;
+    left: 12px;
     background: var(--red);
     color: #fff;
-    padding: 4px 8px;
+    padding: 4px 10px;
     border-radius: 999px;
     font-size: 12px
 }
@@ -700,8 +780,8 @@ main.cp-container {
 .cp-fab .icon-open {
     /* Sử dụng drop-shadow để tạo hiệu ứng viền trắng mà không làm mất màu gốc của icon */
     filter: drop-shadow(1px 0 0 white) 
-            drop-shadow(-1px 0 0 white) 
-            drop-shadow(0 1px 0 white) 
+            drop-shadow(-1px 0 0 white)
+            drop-shadow(0 1px 0 white)
             drop-shadow(0 -1px 0 white);
 }
 
@@ -991,7 +1071,6 @@ main.cp-container {
 .profile-summary-card .btn-outline-danger:hover {
     color: #fff;
 }
-.chatbot-toggler.show-close .icon-close { display: block; }
 
 /* Bảng điều khiển tài khoản (Mới) */
 
@@ -1443,9 +1522,8 @@ main.cp-container {
     border-right: 1px solid #ddd;
     height: 30px;
     -moz-appearance: textfield;
-}
-.quantity-selector input::-webkit-outer-spin-button,
-.quantity-selector input::-webkit-inner-spin-button {
+}.quantity-selector input::-webkit-inner-spin-button,
+.quantity-selector input::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
@@ -1528,4 +1606,265 @@ main.cp-container {
     font-size: 16px;
     margin-top: 20px;
     text-decoration: none;
+}
+/* ============================================= */
+/* === GIAO DIỆN TRANG THANH TOÁN (CHECKOUT) === */
+/* ============================================= */
+
+.checkout-page-wrapper {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 15px;
+}
+
+.checkout-page-wrapper h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px; /* Cột trái linh hoạt, cột phải cố định */
+    gap: 40px;
+}
+
+.checkout-section {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.checkout-section h3 {
+    font-size: 1.25rem;
+    padding: 20px;
+    margin: 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.checkout-left .checkout-section .form-group {
+    padding: 0 20px;
+}
+.checkout-left .checkout-section .form-group:first-of-type {
+    padding-top: 20px;
+}
+.checkout-left .checkout-section .form-group:last-of-type {
+    padding-bottom: 20px;
+}
+
+
+/* --- Thông tin giao hàng --- */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="tel"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(215, 0, 24, 0.15);
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: #777;
+}
+
+/* --- Phương thức thanh toán --- */
+.payment-methods {
+    padding: 20px;
+}
+
+.payment-method-item {
+    display: flex;
+    align-items: center; /* Căn giữa các item theo chiều dọc */
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.payment-method-icon {
+    width: 40px; /* Đặt chiều rộng cố định cho icon */
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.payment-method-item:not(:last-child) {
+    margin-bottom: 15px;
+}
+
+.payment-method-item input[type="radio"] {
+    margin-top: 5px;
+    margin-right: 15px;
+    flex-shrink: 0;
+    /* Sử dụng accent-color để đổi màu radio button cho hợp theme */
+    accent-color: var(--primary-color);
+}
+
+.payment-method-item:has(input:checked) {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(215, 0, 24, 0.15);
+}
+
+.payment-method-content strong {
+    display: block;
+    font-size: 1rem;
+    color: #333;
+}
+
+.payment-method-content p {
+    margin: 5px 0 0 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* --- Tóm tắt đơn hàng (cột phải) --- */
+.checkout-right .order-summary {
+    position: sticky; /* Giữ cố định khi cuộn */
+    top: 20px;
+}
+
+.order-items {
+    padding: 10px 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.order-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #eee;
+}
+
+.order-item .item-info {
+    flex-grow: 1;
+}
+
+.order-item .item-info p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+.order-item .item-info p:first-child {
+    font-weight: 600;
+}
+.order-item .item-info p:last-child {
+    font-size: 0.85rem;
+    color: #777;
+}
+
+.order-item .item-price {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.order-totals {
+    padding: 20px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.total-row span:first-child {
+    color: #555;
+}
+.total-row span:last-child {
+    font-weight: 600;
+    color: #333;
+}
+
+.total-row.voucher-applied span {
+    color: #28a745; /* Màu xanh lá cho voucher */
+}
+
+.total-row.final-total {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed #ccc;
+}
+.total-row.final-total span:last-child {
+    color: var(--primary-color);
+}
+
+/* --- Nút hành động --- */
+.checkout-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* --- Responsive cho di động --- */
+@media (max-width: 992px) {
+    .checkout-grid {
+        grid-template-columns: 1fr; /* Chuyển thành 1 cột */
+    }
+    .checkout-right {
+        grid-row: 1; /* Đẩy tóm tắt đơn hàng lên đầu trên mobile */
+    }
+    .checkout-right .order-summary {
+        position: static; /* Bỏ sticky trên mobile */
+    }
+}
+
+@media (max-width: 576px) {
+    .checkout-page-wrapper h1 {
+        font-size: 2rem;
+    }
+    .checkout-actions {
+        flex-direction: column-reverse; /* Đảo ngược thứ tự nút */
+        gap: 15px;
+        align-items: stretch; /* Kéo dài nút */
+    }
+    .checkout-actions .cp-btn,
+    .checkout-actions .cp-btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
 }

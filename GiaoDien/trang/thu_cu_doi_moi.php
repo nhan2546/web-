@@ -8,6 +8,14 @@
     <div id="step1" class="trade-in-step">
         <h3><span class="step-number">1</span>Chọn dòng máy của bạn</h3>
         <div class="model-grid">
+            <div class="model-item" data-model="iPhone 17 Pro Max">iPhone 17 Pro Max</div>
+            <div class="model-item" data-model="iPhone 17 Pro">iPhone 17 Pro</div>
+            <div class="model-item" data-model="iPhone 16 Pro Max">iPhone 16 Pro Max</div>
+            <div class="model-item" data-model="iPhone 16 Pro">iPhone 16 Pro</div>
+            <div class="model-item" data-model="iPhone 16 Plus">iPhone 16 Plus</div>
+            <div class="model-item" data-model="iPhone 15 Pro Max">iPhone 15 Pro Max</div>
+            <div class="model-item" data-model="iPhone 15 Pro">iPhone 15 Pro</div>
+            <div class="model-item" data-model="iPhone 15 Plus">iPhone 15 Plus</div>
             <div class="model-item" data-model="iPhone 14 Pro Max">iPhone 14 Pro Max</div>
             <div class="model-item" data-model="iPhone 14 Pro">iPhone 14 Pro</div>
             <div class="model-item" data-model="iPhone 14 Plus">iPhone 14 Plus</div>
@@ -22,8 +30,6 @@
             <div class="model-item" data-model="iPhone 11">iPhone 11</div>
         </div>
     </div>
-
-    <!-- Step 2: Chọn dung lượng -->
     <div id="step2" class="trade-in-step" style="display: none;">
         <h3><span class="step-number">2</span>Chọn dung lượng</h3>
         <div class="option-buttons">
@@ -33,8 +39,6 @@
             <button class="option-btn" data-capacity="1TB">1TB</button>
         </div>
     </div>
-
-    <!-- Step 3: Tình trạng máy -->
     <div id="step3" class="trade-in-step" style="display: none;">
         <h3><span class="step-number">3</span>Tình trạng máy của bạn như thế nào?</h3>
         <div class="condition-options">
@@ -80,12 +84,20 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Dữ liệu giá tham khảo (bạn có thể thay bằng API hoặc lấy từ DB)
+    // Lưu ý: Giá cho các dòng iPhone 15, 16, 17 là giả định
     const priceData = {
+        "iPhone 17 Pro Max": {"256GB": 38000000, "512GB": 42000000, "1TB": 46000000},
+        "iPhone 17 Pro":     {"256GB": 35000000, "512GB": 39000000, "1TB": 43000000},
+        "iPhone 16 Pro Max": {"256GB": 32000000, "512GB": 36000000, "1TB": 40000000},
+        "iPhone 16 Pro":     {"128GB": 29000000, "256GB": 31000000, "512GB": 34000000},
+        "iPhone 16 Plus":    {"128GB": 26000000, "256GB": 28000000, "512GB": 31000000},
+        "iPhone 15 Pro Max": {"256GB": 26000000, "512GB": 29000000, "1TB": 32000000},
+        "iPhone 15 Pro":     {"128GB": 23000000, "256GB": 25000000, "512GB": 28000000, "1TB": 31000000},
+        "iPhone 15 Plus":    {"128GB": 20000000, "256GB": 22000000, "512GB": 25000000},
         "iPhone 14 Pro Max": {"128GB": 22000000, "256GB": 23500000, "512GB": 25000000, "1TB": 26000000},
         "iPhone 14 Pro": {"128GB": 20000000, "256GB": 21500000, "512GB": 23000000, "1TB": 24000000},
         "iPhone 13 Pro Max": {"128GB": 17000000, "256GB": 18500000, "512GB": 20000000, "1TB": 21000000},
         "iPhone 12 Pro Max": {"128GB": 13000000, "256GB": 14000000, "512GB": 15000000},
-        // Thêm các dòng máy khác ở đây
     };
 
     const conditionMultiplier = {

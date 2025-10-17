@@ -41,7 +41,7 @@ class DieuKhienQuanTri {
         if ($order_id > 0) {
             $dh_model = new donhang($this->pdo);
             $chi_tiet_don_hang = $dh_model->getOrderDetail($order_id);
-            include __DIR__ . '/../GiaoDien/QuanTri/don_hang/chi_tiet.php';
+            include __DIR__ . '/../GiaoDien/QuanTri/san_pham/chi_tiet_don_hang_admin.php';
         } else {
             header('Location: admin.php?act=ds_donhang'); // Giả sử tệp admin là admin.php
         }
@@ -93,8 +93,8 @@ class DieuKhienQuanTri {
     // Chức năng: Hiển thị form thêm sản phẩm
     public function them_sp() {
         // Lấy danh sách danh mục để hiển thị trong form
-        $dm_model = new danhmuc($this->pdo);
-        $danh_sach_danh_muc = $dm_model->getDS_Danhmuc(); // Sửa lỗi gọi hàm không tồn tại
+        $category_model = new danhmuc($this->pdo);
+        $danh_sach_danh_muc = $category_model->getDS_Danhmuc();
         include __DIR__ . '/../GiaoDien/QuanTri/san_pham/them.php';
     }
 
