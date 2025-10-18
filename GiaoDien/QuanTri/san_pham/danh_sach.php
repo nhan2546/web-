@@ -8,7 +8,6 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Hình ảnh</th>
                     <th>Tên sản phẩm</th>
                     <th>Giá</th>
                     <th>Số lượng</th>
@@ -21,9 +20,6 @@
                     <?php foreach ($danh_sach_san_pham as $san_pham): ?>
                         <tr>
                             <td><?= htmlspecialchars($san_pham['id']) ?></td>
-                            <td>
-                                <img src="../TaiLen/san_pham/<?= htmlspecialchars($san_pham['image_url']) ?>" alt="<?= htmlspecialchars($san_pham['name']) ?>" width="60">
-                            </td>
                             <td><?= htmlspecialchars($san_pham['name']) ?></td>
                             <td><?= number_format($san_pham['price']) ?> VNĐ</td>
                             <td><?= htmlspecialchars($san_pham['stock_quantity']) ?></td>
@@ -38,7 +34,7 @@
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="7" class="text-center">Không có sản phẩm nào.</td>
+                        <td colspan="6" class="text-center">Không có sản phẩm nào.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>

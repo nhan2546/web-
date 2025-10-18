@@ -22,7 +22,7 @@ body.admin-body {
 /* Vùng bao bọc toàn bộ layout admin */
 .admin-wrapper {
     display: flex;
-    min-height: 100vh;
+    min-height: 100vh; /* Đảm bảo layout cao ít nhất bằng màn hình */
 }
 
 /* thanh bên (sidebar) của trang admin */
@@ -127,7 +127,7 @@ body.admin-body {
 .admin-page-content {
     padding: 30px; 
     flex-grow: 1;
-}
+} 
 
 /* Tiêu đề của trang admin (ví dụ: "Bảng điều khiển", "Quản lý sản phẩm") */
 .page-header {
@@ -145,7 +145,7 @@ body.admin-body {
 .admin-card {
     background-color: #fff;
     border-radius: 8px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color); /* Thêm viền mảnh */
     box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     margin-bottom: 20px;
     width: 100%; /* Đảm bảo card luôn chiếm toàn bộ chiều rộng */
@@ -176,7 +176,7 @@ body.admin-body {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color); /* Thêm viền mảnh */
     box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
@@ -195,13 +195,22 @@ body.admin-body {
 }
 
 /* Định dạng cho các nhãn trạng thái (status badge) */
-.badge { padding: 5px 10px; border-radius: 12px; color: #fff; font-size: 12px; font-weight: bold; text-transform: capitalize; }
-.badge-pending { background: #ffc107; color: #333; }
-.badge-processing { background: #007bff; }
-.badge-shipped { background: #17a2b8; }
-.badge-delivered { background: #28a745; }
-.badge-success { background-color: #28a745; } /* Thêm màu cho trạng thái thành công/hoạt động */
-.badge-cancelled { background: #dc3545; }
+.badge { 
+    padding: 5px 10px; 
+    border-radius: 12px; 
+    color: #fff; 
+    font-size: 12px; 
+    font-weight: bold; 
+    text-transform: capitalize; 
+}
+.badge-pending { background-color: #ffc107; color: #333; }
+.badge-processing { background-color: #007bff; }
+.badge-shipped { background-color: #17a2b8; }
+.badge-delivered { background-color: #28a745; }
+.badge-success { background-color: #28a745; }
+.badge-cancelled { background-color: #dc3545; }
+.badge-confirmed { background-color: #007bff; } /* Thêm màu cho trạng thái đã xác nhận */
+
 .badge-secondary {
     background-color: #e9ecef; 
     color: #212529; 
@@ -213,10 +222,7 @@ body.admin-body {
 .badge-copper { background-color: #f8d7da; color: #721c24; border: 1px solid #721c24; }
 /* Huy hiệu vai trò nhân viên */
 .badge-role-admin { background-color: #e83e8c; } /* Màu hồng cho admin */
-.badge-role-staff { background-color: #6f42c1; } /* Màu tím cho nhân viên */
-
-
-
+.badge-role-staff { background-color: #6f42c1; } /* Màu tím cho nhân viên */ 
 
 /* Nút bấm trong trang admin */
 /* Định dạng chung cho nút bấm */
@@ -279,14 +285,14 @@ body.admin-body {
 .admin-card .form-control,
 .admin-card .form-select {
     border-radius: 5px;
-    border: 1px solid #ced4da; /* Làm đậm viền input */
+    border: 1px solid #ced4da;
     padding: 10px 15px;
     background-color: #f8f9fa; /* Thêm nền nhạt để phân biệt với nền trắng của card */
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .admin-card .form-control:focus,
-.admin-card .form-select:focus {
+.admin-card .form-select:focus { 
     border-color: var(--primary-color);
     box-shadow: 0 0 0 0.2rem rgba(215, 0, 24, 0.15); /* Thay đổi: Hiệu ứng focus màu đỏ */
 }
@@ -322,6 +328,28 @@ body.admin-body {
     margin: 0 auto;   /* Tự động căn giữa theo chiều ngang */
 }
 
+/* Định dạng cho khu vực quản lý phiên bản */
+.variants-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+}
+.variant-item {
+    display: flex; /* Chuyển sang flexbox để dễ dàng wrap */
+    flex-wrap: wrap; /* Cho phép các item xuống hàng khi không đủ không gian */
+    gap: 10px;
+    align-items: center;
+}
+c
+/* Áp dụng style cho các ô input bên trong khu vực phiên bản */
+.variant-item .form-control {
+    padding: 10px 15px;
+    background-color: #fff; /* Nền trắng để phân biệt với nền của list */
+}
 /* bảng dữ liệu trong trang admin */
 /* Định dạng chung cho bảng */
 .admin-table {
@@ -331,11 +359,13 @@ body.admin-body {
 
 /* Các ô trong bảng */
 .admin-table th, .admin-table td {
-    padding: 15px;
+    padding: 12px 15px; /* Giảm padding một chút */
     text-align: left;
     border-bottom: 1px solid var(--border-color);
+    vertical-align: middle; /* Căn giữa nội dung theo chiều dọc */
 }
 
+/* Tiêu đề bảng */
 .admin-table thead th {
     background-color: #f8f9fa;
     font-weight: 600;
@@ -347,7 +377,7 @@ body.admin-body {
 }
 
 /* Các nút hành động (Sửa, Xóa) trong bảng */
-.admin-table .action-buttons a {
+.admin-table .action-buttons a, .admin-table .action-buttons button {
     margin-right: 10px;
     text-decoration: none;
 }
@@ -356,20 +386,6 @@ body.admin-body {
 .admin-table .phone-number {
     color: #000000; /* Màu đen */
     font-weight: 500; /* Hơi đậm hơn một chút cho dễ đọc */
-}
-
-/* Nút đăng xuất */
-.admin-logout-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #e74c3c;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.admin-logout-link:hover {
-    color: #c0392b; /* Màu đỏ đậm hơn khi rê chuột */
 }
 
 /* Footer của trang admin */

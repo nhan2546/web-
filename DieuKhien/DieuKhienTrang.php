@@ -55,6 +55,12 @@ class controller {
 
         // Lấy thông tin danh mục để hiển thị tiêu đề
         $category_info = $dm_model->getDanhMucById($category_id);
+        // KIỂM TRA: Nếu không tìm thấy danh mục, chuyển hướng về trang chủ
+        if (!$category_info) {
+            header('Location: index.php?act=trangchu');
+            exit();
+        }
+
         if ($return_data) {
             return $category_info;
         }
@@ -83,10 +89,49 @@ class controller {
             exit;
         }
 
+        // --- LOGIC SẢN PHẨM ĐÃ XEM ---
+        if (!isset($_SESSION['recently_viewed'])) {
+            $_SESSION['recently_viewed'] = [];
+        }
+        $current_product_id = (int)$san_pham['id'];
+        // Xóa ID sản phẩm hiện tại nếu đã tồn tại để đưa lên đầu
+        if (($key = array_search($current_product_id, $_SESSION['recently_viewed'])) !== false) {
+            unset($_SESSION['recently_viewed'][$key]);
+        }
+        // Thêm ID sản phẩm hiện tại vào đầu mảng
+        array_unshift($_SESSION['recently_viewed'], $current_product_id);
+        // Giới hạn số lượng sản phẩm đã xem là 6 (5 sản phẩm cũ + 1 sản phẩm hiện tại)
+        $_SESSION['recently_viewed'] = array_slice($_SESSION['recently_viewed'], 0, 6);
+
+        // Lấy danh sách sản phẩm đã xem (trừ sản phẩm hiện tại) để hiển thị
+        $recently_viewed_products = [];
+        $viewed_ids_to_fetch = array_diff($_SESSION['recently_viewed'], [$current_product_id]);
+        
+        if (!empty($viewed_ids_to_fetch)) {
+            // Giả sử model sanpham có phương thức getProductsByIds
+            $recently_viewed_products = $sp_model->getProductsByIds($viewed_ids_to_fetch);
+        }
+
+        // Tạo breadcrumbs
+        // File helper đã được include trong GiaoDien/trang/bo_cuc/dau_trang.php
+        if (function_exists('generate_breadcrumbs')) {
+            $breadcrumbs = generate_breadcrumbs($this->pdo, 'chi_tiet_san_pham', ['san_pham' => $san_pham]);
+        }
+
         // Lấy thông tin bình luận và đánh giá
         $reviewModel = new BinhLuan($this->pdo);
-        $flat_reviews = $reviewModel->getReviewsByProductId($id);
+
+        // Lấy các bộ lọc từ URL
+        $filters = [
+            'rating' => $_GET['rating'] ?? null,
+            'has_image' => isset($_GET['has_image']),
+            'verified' => isset($_GET['verified']),
+        ];
+
+        $flat_reviews = $reviewModel->getReviewsByProductId($id, $filters);
         $rating_info = $reviewModel->getAverageRating($id);
+        $rating_counts = $reviewModel->getRatingCounts($id);
+
 
         // Sắp xếp bình luận thành cây cha-con
         $reviews_tree = [];
@@ -94,6 +139,11 @@ class controller {
         foreach ($flat_reviews as $review) {
             $reviews_by_id[$review['id']] = $review;
             $reviews_by_id[$review['id']]['replies'] = [];
+        }
+
+        // Lọc riêng cho "Đã mua hàng" sau khi đã lấy dữ liệu
+        if ($filters['verified']) {
+            $flat_reviews = array_filter($flat_reviews, fn($review) => $review['is_verified_purchase']);
         }
 
         foreach ($reviews_by_id as $review_id => &$review) {
@@ -299,10 +349,30 @@ class controller {
         $comment = trim($_POST['comment'] ?? '');
         $parent_id = !empty($_POST['parent_id']) ? (int)$_POST['parent_id'] : null;
 
-        if ($product_id > 0 && ($parent_id !== null || ($rating > 0 && $rating <= 5))) {
+        // Xử lý upload ảnh bình luận (nếu có)
+        $review_image_url = null;
+        if (isset($_FILES['review_image']) && $_FILES['review_image']['error'] == 0) {
+            $target_dir = __DIR__ . "/../TaiLen/reviews/";
+            if (!is_dir($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+            $file_extension = pathinfo($_FILES["review_image"]["name"], PATHINFO_EXTENSION);
+            $new_filename = 'review_' . $product_id . '_' . $user_id . '_' . time() . '.' . $file_extension;
+            $target_file = $target_dir . $new_filename;
+
+            if (move_uploaded_file($_FILES["review_image"]["tmp_name"], $target_file)) {
+                $review_image_url = $new_filename;
+            }
+        }
+
+        // Điều kiện hợp lệ:
+        // - Phải có product_id và comment.
+        // - Hoặc là trả lời (có parent_id).
+        // - Hoặc là đánh giá mới (có rating > 0).
+        if ($product_id > 0 && !empty($comment) && ($parent_id !== null || ($rating > 0 && $rating <= 5))) {
             // 3. Gọi model để thêm bình luận
             $reviewModel = new BinhLuan($this->pdo);
-            $reviewModel->addReview($product_id, $user_id, $rating, $comment, $parent_id);
+            $reviewModel->addReview($product_id, $user_id, $rating, $comment, $parent_id, $review_image_url);
         }
 
         // 4. Chuyển hướng người dùng trở lại trang sản phẩm
@@ -482,14 +552,43 @@ class controller {
             header('Location: index.php?act=trangchu');
             exit();
         }
-        // Để bảo mật, bạn có thể kiểm tra xem đơn hàng này có thực sự thuộc về người dùng đang đăng nhập không
-        // $donHangModel = new donhang($this->pdo);
-        // $order_info = $donHangModel->getOrderDetail($order_id)['order_info'];
-        // if (!$order_info || $order_info['user_id'] != $_SESSION['user_id']) {
-        //     header('Location: index.php?act=trangchu');
-        //     exit();
-        // }
+        // Lấy thông tin chi tiết đơn hàng để hiển thị trên trang xác nhận
+        $donHangModel = new donhang($this->pdo);
+        $chi_tiet_don_hang = $donHangModel->getOrderDetail($order_id);
+
+        // Để bảo mật, kiểm tra xem đơn hàng này có thực sự thuộc về người dùng đang đăng nhập không
+        if (!$chi_tiet_don_hang['order_info'] || $chi_tiet_don_hang['order_info']['user_id'] != $_SESSION['user_id']) {
+            header('Location: index.php?act=trangchu');
+            exit();
+        }
+
         include __DIR__.'/../GiaoDien/trang/dat_hang_thanh_cong.php';
+    }
+
+    public function huy_don_hang() {
+        // 1. Kiểm tra đăng nhập
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?act=dang_nhap');
+            exit();
+        }
+
+        // 2. Lấy ID đơn hàng và ID người dùng
+        $order_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $user_id = $_SESSION['user_id'];
+
+        if ($order_id <= 0) {
+            header('Location: index.php?act=lich_su_mua_hang');
+            exit();
+        }
+
+        // 3. Gọi model để xử lý hủy đơn
+        $donHangModel = new donhang($this->pdo);
+        if ($donHangModel->cancelOrder($order_id, $user_id)) {
+            header('Location: index.php?act=lich_su_mua_hang&success=cancelled');
+        } else {
+            header('Location: index.php?act=lich_su_mua_hang&error=cancel_failed');
+        }
+        exit();
     }
     public function chi_tiet_don_hang() {
         // 1. Kiểm tra đăng nhập
@@ -538,7 +637,7 @@ class controller {
         $danh_sach_don_hang = $donHangModel->getOrdersByUserId($_SESSION['user_id'], $status_filter);
 
         // 4. Định nghĩa các trạng thái để hiển thị trên view
-        $all_statuses = [
+        $order_statuses = [
             'pending' => 'Chờ xác nhận',
             'processing' => 'Đang xử lý',
             'shipped' => 'Đang giao hàng',

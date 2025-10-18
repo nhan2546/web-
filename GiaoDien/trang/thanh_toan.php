@@ -126,13 +126,16 @@
                             <span><?= number_format($final_total, 0, ',', '.') ?>₫</span>
                         </div>
                     </div>
+                    <!-- Nút hoàn tất đặt hàng được chuyển vào đây -->
+                    <div class="summary-actions">
+                        <button type="submit" class="cp-btn">Hoàn tất đặt hàng</button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="checkout-actions">
             <a href="index.php?act=gio_hang" class="cp-btn-secondary">&larr; Quay lại giỏ hàng</a>
-            <button type="submit" class="cp-btn">Hoàn tất đặt hàng</button>
         </div>
     </form>
 
@@ -144,39 +147,45 @@ document.addEventListener('DOMContentLoaded', function() {
     const finalTotalEl = document.querySelector('.order-totals .final-total span:last-child');
     const voucherDiscountEl = document.querySelector('.order-totals .voucher-applied span:last-child');
 
-    // Store initial values passed from PHP
+    // Dữ liệu giỏ hàng và voucher từ PHP
     const initialDiscount = <?= $discount_amount ?? 0 ?>;
-    const cartData = <?= json_encode($cart) ?>;
+    const cartData = <?= json_encode(array_values($cart)) ?>; // Chuyển thành mảng để dễ lặp
 
     function updateTotals() {
         let newSubtotal = 0;
+        const selectedItemIds = [];
 
+        // Lấy ID của các sản phẩm được chọn
+        itemCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                selectedItemIds.push(checkbox.value);
+            }
+        });
         itemCheckboxes.forEach(checkbox => {
             if (checkbox.checked) {
                 const itemId = checkbox.value;
-                const item = cartData[itemId];
+                // Sửa lỗi: Tìm sản phẩm trong mảng cartData bằng ID thay vì dùng key
+                const item = cartData.find(p => p.id == itemId);
                 if (item) {
                     newSubtotal += item.price * item.quantity;
                 }
             }
         });
 
-        // This is a simplified client-side recalculation for UI purposes.
-        // The final, authoritative calculation is done on the server.
-        // We assume the voucher applies if any item is selected.
+        // Tính toán lại giảm giá ở phía client để hiển thị (tính toán cuối cùng vẫn ở server)
         let newDiscount = 0;
         if (newSubtotal > 0 && initialDiscount > 0) {
-            // A simple assumption: if the subtotal is less than the discount, the discount is capped.
-            // Server-side logic for vouchers might be more complex (e.g., min order value).
+            // Giả định đơn giản: nếu tổng tiền nhỏ hơn mức giảm, mức giảm sẽ bằng tổng tiền.
+            // Logic phức tạp hơn (VD: giá trị đơn hàng tối thiểu) được xử lý ở server.
             newDiscount = Math.min(newSubtotal, initialDiscount);
         } else {
-            // If no items are selected, the discount is zero.
+            // Nếu không có sản phẩm nào được chọn, không giảm giá.
             newDiscount = 0;
         }
 
         const newFinalTotal = newSubtotal - newDiscount;
 
-        // Update the UI text content
+        // Cập nhật giao diện
         subtotalEl.textContent = newSubtotal.toLocaleString('vi-VN') + '₫';
         if (voucherDiscountEl) {
             voucherDiscountEl.textContent = '- ' + newDiscount.toLocaleString('vi-VN') + '₫';
@@ -188,14 +197,24 @@ document.addEventListener('DOMContentLoaded', function() {
         checkbox.addEventListener('change', updateTotals);
     });
 
-    // Also listen to the voucher apply button to re-run calculation if needed
-    const applyVoucherBtn = document.getElementById('apply-voucher-btn');
-    if(applyVoucherBtn) {
-        // The voucher logic reloads the page, so we just need to ensure totals are correct on load.
-        // No complex listener needed here, but good practice to be aware of it.
-    }
+    // Xử lý khi submit form
+    form.addEventListener('submit', function(event) {
+        let selectedCount = 0;
+        itemCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                selectedCount++;
+            }
+        });
 
-    // Initial calculation on page load to set the correct totals.
+        if (selectedCount === 0) {
+            // Ngăn form gửi đi nếu không có sản phẩm nào được chọn
+            event.preventDefault();
+            alert('Vui lòng chọn ít nhất một sản phẩm để thanh toán.');
+        }
+        // Nếu có sản phẩm được chọn, form sẽ được gửi đi bình thường.
+    });
+
+    // Tính toán tổng tiền lần đầu khi tải trang
     updateTotals();
 });
 </script>

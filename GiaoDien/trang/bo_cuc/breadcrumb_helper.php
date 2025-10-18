@@ -21,7 +21,8 @@ if (!function_exists('generate_breadcrumbs')) {
                 break;
 
             case 'danhmuc':
-                if (isset($data['category_info'])) {
+                // Thêm kiểm tra is_array để đảm bảo $data['category_info'] không phải là `false`
+                if (isset($data['category_info']) && is_array($data['category_info'])) {
                     $breadcrumbs[] = ['title' => $data['category_info']['name'], 'url' => null];
                 }
                 break;

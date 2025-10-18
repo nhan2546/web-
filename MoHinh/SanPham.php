@@ -80,11 +80,13 @@ class sanpham {
     }
 
     /*xử lý dữ liệu */
-    public function themsp($name, $description, $price, $image_url, $stock_quantity, $category_id){
-        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `image_url`, `stock_quantity`, `category_id`) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+    // Cập nhật: Thêm tham số $variants_json
+    public function themsp($name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price = null, $variants_json = null){
+        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `sale_price`, `image_url`, `stock_quantity`, `category_id`, `variants_json`) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id]);
+        // Cập nhật: Thêm $sale_price và $variants_json vào execute
+        return $stmt->execute([$name, $description, $price, $sale_price, $image_url, $stock_quantity, $category_id, $variants_json]);
     }
 
     /*lấy sản phẩm từ bản product*/
@@ -182,10 +184,12 @@ class sanpham {
     }
 
     /*cap nhat san pham*/
-    public function capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id){
-        $sql = "UPDATE products SET name = ?, description = ?, price = ?, image_url = ?, stock_quantity = ?, category_id = ? WHERE id = ?";
+    // Cập nhật: Thêm tham số $variants_json
+    public function capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price = null, $variants_json = null){
+        $sql = "UPDATE products SET name = ?, description = ?, price = ?, sale_price = ?, image_url = ?, stock_quantity = ?, category_id = ?, variants_json = ? WHERE id = ?";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([$name, $description, $price, $image_url, $stock_quantity, $category_id, $id]);
+        // Cập nhật: Thêm $sale_price và $variants_json vào execute
+        $stmt->execute([$name, $description, $price, $sale_price, $image_url, $stock_quantity, $category_id, $variants_json, $id]);
     }
 
     /*xoa san pham*/
@@ -222,6 +226,29 @@ class sanpham {
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Lấy thông tin của nhiều sản phẩm dựa trên một mảng các ID.
+     * @param array $ids Mảng chứa các ID sản phẩm.
+     * @return array Mảng các sản phẩm.
+     */
+    public function getProductsByIds(array $ids) {
+        if (empty($ids)) {
+            return [];
+        }
+
+        // Tạo chuỗi placeholder (?, ?, ?) cho câu lệnh IN
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+        // Sử dụng ORDER BY FIELD để giữ đúng thứ tự "đã xem gần đây"
+        $sql = "SELECT * FROM products WHERE id IN ($placeholders) ORDER BY FIELD(id, $placeholders)";
+        
+        // Gộp mảng ID hai lần vì nó được dùng cho cả IN() và FIELD()
+        $params = array_merge($ids, $ids);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

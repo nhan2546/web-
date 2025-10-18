@@ -181,6 +181,45 @@ class donhang {
         return false;
     }
 }
+
+    /**
+     * Hủy một đơn hàng bởi người dùng.
+     * Cập nhật trạng thái đơn hàng thành 'cancelled' và hoàn trả số lượng tồn kho.
+     * @param int $orderId ID của đơn hàng.
+     * @param int $userId ID của người dùng (để kiểm tra quyền).
+     * @return bool True nếu hủy thành công, false nếu thất bại.
+     */
+    public function cancelOrder($orderId, $userId) {
+        try {
+            $this->pdo->beginTransaction();
+
+            // 1. Lấy thông tin đơn hàng và kiểm tra quyền
+            $order = $this->getOrderDetail($orderId)['order_info'];
+            if (!$order || $order['user_id'] != $userId || $order['status'] !== 'pending') {
+                // Không có quyền hoặc đơn hàng không ở trạng thái cho phép hủy
+                $this->pdo->rollBack();
+                return false;
+            }
+
+            // 2. Cập nhật trạng thái đơn hàng thành 'cancelled'
+            $this->updateOrderStatus($orderId, 'cancelled');
+
+            // 3. Hoàn trả số lượng tồn kho
+            $items = $this->getOrderDetail($orderId)['order_items'];
+            $stmt_stock = $this->pdo->prepare("UPDATE products SET stock_quantity = stock_quantity + ? WHERE id = ?");
+            foreach ($items as $item) {
+                $stmt_stock->execute([$item['quantity'], $item['product_id']]);
+            }
+
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            error_log("Order cancellation failed: " . $e->getMessage());
+            return false;
+        }
+    }
+
     /**
      * Cập nhật trạng thái của một đơn hàng.
      * @param int $orderId ID của đơn hàng cần cập nhật.

@@ -4,11 +4,13 @@ $order_items = $chi_tiet_don_hang['order_items'];
 
 // Định nghĩa các bước và trạng thái tương ứng
 $all_statuses = [
-    'pending' => 'Chờ xác nhận',
-    'processing' => 'Đang xử lý',
-    'shipped' => 'Đang giao hàng',
-    'delivered' => 'Đã giao',
-    'cancelled' => 'Đã hủy'
+    // Thêm 'icon' và 'date_field' cho mỗi trạng thái
+    'pending' => ['name' => 'Chờ xác nhận', 'icon' => 'fas fa-receipt', 'date_field' => 'order_date'],
+    'processing' => ['name' => 'Đang xử lý', 'icon' => 'fas fa-box-open', 'date_field' => 'processing_date'],
+    'shipped' => ['name' => 'Đang giao hàng', 'icon' => 'fas fa-truck', 'date_field' => 'shipped_date'],
+    'delivered' => ['name' => 'Đã giao', 'icon' => 'fas fa-check-double', 'date_field' => 'delivered_date'],
+    // Trạng thái hủy sẽ được xử lý riêng
+    'cancelled' => ['name' => 'Đã hủy', 'icon' => 'fas fa-times-circle', 'date_field' => 'cancelled_date']
 ];
 
 $current_status = $order_info['status'];
@@ -16,7 +18,7 @@ $current_status_index = array_search($current_status, array_keys($all_statuses))
 
 ?>
 
-<div class="container my-5">
+<div class="cp-container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="auth-form-title mb-0">Chi tiết đơn hàng #<?= htmlspecialchars($order_info['id']) ?></h3>
         <a href="index.php?act=lich_su_mua_hang" class="btn btn-outline-secondary">‹ Quay lại Lịch sử</a>
@@ -27,17 +29,24 @@ $current_status_index = array_search($current_status, array_keys($all_statuses))
     <div class="order-tracking-container mb-5">
         <ul class="order-tracking-steps">
             <?php 
-            $is_past_step = true;
-            foreach ($all_statuses as $status_key => $status_name): 
+            $status_keys = array_keys($all_statuses);
+            foreach ($all_statuses as $status_key => $status_details): 
                 if ($status_key === 'cancelled') continue; // Bỏ qua trạng thái hủy trong thanh tiến trình
 
-                $status_index = array_search($status_key, array_keys($all_statuses));
+                $status_index = array_search($status_key, $status_keys);
                 $is_completed = $status_index < $current_status_index;
                 $is_current = $status_index === $current_status_index;
+
+                // Lấy ngày cập nhật từ CSDL (giả sử các cột này tồn tại)
+                $date_field = $status_details['date_field'];
+                $update_date = $order_info[$date_field] ?? null;
             ?>
             <li class="step-item <?= $is_completed ? 'completed' : '' ?> <?= $is_current ? 'current' : '' ?>">
-                <div class="step-marker"></div>
-                <div class="step-name"><?= $status_name ?></div>
+                <div class="step-marker"><i class="<?= $status_details['icon'] ?>"></i></div>
+                <div class="step-name"><?= $status_details['name'] ?></div>
+                <?php if ($is_completed || $is_current): ?>
+                    <div class="step-date"><?= $update_date ? date('H:i d/m/Y', strtotime($update_date)) : '' ?></div>
+                <?php endif; ?>
             </li>
             <?php endforeach; ?>
         </ul>
@@ -80,6 +89,12 @@ $current_status_index = array_search($current_status, array_keys($all_statuses))
                         <span class="text-danger"><?= number_format($order_info['total_amount'], 0, ',', '.') ?>₫</span>
                     </div>
                 </div>
+                <!-- Nút hủy đơn hàng -->
+                <?php if ($order_info['status'] === 'pending'): ?>
+                    <div class="card-footer text-center">
+                        <a href="index.php?act=huy_don_hang&id=<?= $order_info['id'] ?>" class="cp-btn cp-btn-danger w-100" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')">Hủy đơn hàng</a>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 
