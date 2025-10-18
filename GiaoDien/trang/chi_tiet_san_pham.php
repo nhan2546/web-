@@ -52,20 +52,22 @@ $is_in_stock = $san_pham['stock_quantity'] > 0;
     <div class="product-detail-layout">
         <!-- Cột trái: Hình ảnh, Mô tả -->
         <div class="product-main-content">
-            <!-- {{product_image}} -->
-            <div class="product-image-gallery text-center mb-4">
-                <img src="TaiLen/san_pham/<?= htmlspecialchars($san_pham['image_url']) ?>" alt="<?= htmlspecialchars($san_pham['name']) ?>" class="img-fluid rounded shadow-sm">
-            </div>
-
             <!-- {{product_highlights}} -->
             <div class="featured-highlights-card mb-4">
+                <div class="featured-highlights-card__image">
+                    <img src="TaiLen/san_pham/<?= htmlspecialchars($san_pham['image_url']) ?>" alt="Tính năng nổi bật của <?= htmlspecialchars($san_pham['name']) ?>">
+                </div>
                 <div class="featured-highlights-card__content">
                     <h5 class="card-title">Tính năng nổi bật</h5>
-                    <ul>
-                        <li><i class="fas fa-check-circle"></i> Thiết kế sang trọng với khung viền Titan.</li>
-                        <li><i class="fas fa-check-circle"></i> Chip A17 Pro hiệu năng đột phá, chiến game đỉnh cao.</li>
-                        <li><i class="fas fa-check-circle"></i> Cụm camera 48MP chụp ảnh chuyên nghiệp.</li>
-                        <li><i class="fas fa-check-circle"></i> Cổng sạc USB-C tiện lợi, tốc độ truyền tải nhanh.</li>
+                    <ul> 
+                        <?php
+                        // Tự động phân tích chuỗi highlights thành danh sách
+                        $highlights_text = trim($san_pham['highlights'] ?? '');
+                        $highlights_lines = !empty($highlights_text) ? explode("\n", $highlights_text) : [];
+                        foreach ($highlights_lines as $line):
+                        ?>
+                            <li><i class="fas fa-check-circle"></i> <?= htmlspecialchars(trim($line)) ?></li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
@@ -121,13 +123,24 @@ $is_in_stock = $san_pham['stock_quantity'] > 0;
             <div class="variant-group mb-4">
                 <label class="variant-label">Màu sắc</label>
                 <div class="variant-options" data-group="color">
-                    <!-- Gán ảnh cho từng màu. Thay đổi đường dẫn ảnh cho đúng với sản phẩm của bạn -->
-                    <a href="#" class="variant-tag active" data-value="Vàng" data-image="<?= htmlspecialchars($san_pham['image_url']) ?>">Vàng</a>
-                    <a href="TaiNguyen/hinh_anh/iphone-15-128gb-xanh-la.webp" class="variant-tag" data-value="Xanh lá" data-image="TaiLen/san_pham/iphone-15-pro-max-blue.jpg">Xanh lá</a>
-                    <a href="" class="variant-tag" data-value="Xanh dương" data-image="TaiLen/san_pham/iphone-15-pro-max-white.jpg">Xanh dương</a>
-                    <a href="TaiNguyen/hinh_anh/iphone-15-hong.webp" class="variant-tag" data-value="Hồng" data-image="TaiLen/san_pham/iphone-15-pro-max-pink.jpg">Hồng</a>
-                    <a href="" class="variant-tag" data-value="Đen" data-image="TaiNguyen/hinh_anh/iphone-15-128-gbden.webp">Đen</a>
-
+                    <?php
+                        // Giải mã chuỗi JSON từ CSDL để lấy danh sách các phiên bản màu
+                        $variants = !empty($san_pham['variants_json']) ? json_decode($san_pham['variants_json'], true) : [];
+                        $is_first_color = true;
+                        if (!empty($variants)):
+                            foreach ($variants as $variant):
+                    ?>
+                        <a href="#" 
+                           class="variant-tag <?= $is_first_color ? 'active' : '' ?>" 
+                           data-value="<?= htmlspecialchars($variant['color']) ?>" 
+                           data-image="TaiLen/san_pham/<?= htmlspecialchars($variant['image']) ?>">
+                           <?= htmlspecialchars($variant['color']) ?>
+                        </a>
+                    <?php
+                                $is_first_color = false;
+                            endforeach;
+                        endif;
+                    ?>
                 </div>
             </div>
 
@@ -374,39 +387,8 @@ $is_in_stock = $san_pham['stock_quantity'] > 0;
 </div>
 <?php endif; ?>
 
-<!-- {{sticky_buy_bar}} -->
-<div class="sticky-buy-bar">
-    <div class="cp-container d-flex justify-content-between align-items-center">
-        <div class="sticky-product-info">
-            <img src="TaiLen/san_pham/<?= htmlspecialchars($san_pham['image_url']) ?>" alt="<?= htmlspecialchars($san_pham['name']) ?>">
-            <span><?= htmlspecialchars($san_pham['name']) ?></span>
-        </div>
-        <div class="sticky-product-purchase">
-            <span class="sticky-price"><?= number_format($display_price, 0, ',', '.') ?>₫</span>
-            <button class="btn-buy-now-sticky" onclick="document.querySelector('.btn-buy-now').click()">Mua ngay</button>
-        </div>
-    </div>
-</div>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // --- JS cho thanh mua hàng sticky ---
-    const stickyBar = document.querySelector('.sticky-buy-bar');
-    const purchaseSidebar = document.querySelector('.product-purchase-sidebar');
-    
-    if (stickyBar && purchaseSidebar) {
-        const showStickyBar = () => {
-            const purchaseSidebarRect = purchaseSidebar.getBoundingClientRect();
-            // Hiển thị thanh sticky khi phần sidebar mua hàng không còn trong viewport
-            if (purchaseSidebarRect.bottom < 0) {
-                stickyBar.classList.add('show');
-            } else {
-                stickyBar.classList.remove('show');
-            }
-        };
-        window.addEventListener('scroll', showStickyBar);
-    }
-
     // --- JS cho Modal Đánh giá ---
     const reviewModal = document.getElementById('review-modal');
     const openReviewModalBtn = document.getElementById('open-review-modal-btn');
@@ -494,33 +476,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const finalPriceEl = document.querySelector('.price-box .final-price');
     const stickyPriceEl = document.querySelector('.sticky-price');
     const formPriceInput = document.querySelector('#product-purchase-form input[name="price"]');
-    const mainImageEl = document.querySelector('.product-image-gallery img');
+    const mainImageEl = document.querySelector('.featured-highlights-card__image img');
     const stickyImageEl = document.querySelector('.sticky-product-info img');
 
     // --- DỮ LIỆU GIÁ CHO CÁC PHIÊN BẢN ---
     // Trong thực tế, bạn nên lấy dữ liệu này từ CSDL và in ra bằng PHP
     const basePrice = <?= $display_price ?>;
+    <?php
+        // Tạo đối tượng giá từ PHP để JS sử dụng
+        $js_variant_prices = [
+            "128GB" => [], "256GB" => [], "512GB" => []
+        ];
+        $storages = ["128GB" => 0, "256GB" => 2000000, "512GB" => 5000000];
+
+        if (!empty($variants)) {
+            foreach ($storages as $storage => $price_increase) {
+                foreach ($variants as $variant) {
+                    // Giả sử giá của các màu là như nhau trong cùng một dung lượng
+                    // Bạn có thể thêm logic phức tạp hơn ở đây nếu giá mỗi màu khác nhau
+                    $js_variant_prices[$storage][$variant['color']] = $display_price + $price_increase;
+                }
+            }
+        }
+    ?>
     const variantPrices = {
         "128GB": {
-            "Vàng": basePrice,
-            "Xanh lá": basePrice + 500000,
-            "Xanh dương": basePrice + 500000,
-            "Hồng": basePrice,
-            "Đen": basePrice - 200000,
+            ...<?= json_encode($js_variant_prices['128GB']) ?>
         },
         "256GB": {
-            "Vàng": basePrice + 2000000,
-            "Xanh lá": basePrice + 2500000,
-            "Xanh dương": basePrice + 2500000,
-            "Hồng": basePrice + 2000000,
-            "Đen": basePrice + 1800000,
+            ...<?= json_encode($js_variant_prices['256GB']) ?>
         },
         "512GB": {
-            "Vàng": basePrice + 5000000,
-            "Xanh lá": basePrice + 5500000,
-            "Xanh dương": basePrice + 5500000,
-            "Hồng": basePrice + 5000000,
-            "Đen": basePrice + 4800000,
+            ...<?= json_encode($js_variant_prices['512GB']) ?>
         }
     };
 

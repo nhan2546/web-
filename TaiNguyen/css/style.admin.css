@@ -340,7 +340,7 @@ body.admin-body {
 }
 .variant-item {
     display: flex; /* Chuyển sang flexbox để dễ dàng wrap */
-    flex-wrap: wrap; /* Cho phép các item xuống hàng khi không đủ không gian */
+    flex-wrap: nowrap; /* Giữ các item trên một hàng */
     gap: 10px;
     align-items: center;
 }
@@ -349,6 +349,15 @@ c
 .variant-item .form-control {
     padding: 10px 15px;
     background-color: #fff; /* Nền trắng để phân biệt với nền của list */
+}
+
+/* Căn chỉnh các cột trong một phiên bản */
+.variant-item .variant-color { flex: 1; }
+.variant-item .variant-image-group { flex: 2; }
+.variant-item .remove-variant-btn { flex-shrink: 0; }
+
+.variant-image-group .form-text {
+    font-size: 12px; color: #6c757d; margin-top: 5px; display: block;
 }
 /* bảng dữ liệu trong trang admin */
 /* Định dạng chung cho bảng */

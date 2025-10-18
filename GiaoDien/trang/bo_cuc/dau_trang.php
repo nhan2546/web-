@@ -113,6 +113,11 @@
                     </div>
                     <a href="index.php?act=thong_tin_tai_khoan" class="dropdown-item">Tài khoản của tôi</a>
                     <a href="index.php?act=lich_su_mua_hang" class="dropdown-item">Lịch sử mua hàng</a>
+                    <?php
+                        // Chỉ hiển thị link này nếu người dùng là admin hoặc nhân viên
+                        if (isset($_SESSION['user_role']) && in_array($_SESSION['user_role'], ['admin', 'staff'])): ?>
+                        <a href="admin.php" class="dropdown-item dropdown-item--admin">Trang quản trị</a>
+                    <?php endif; ?>
                     <a href="index.php?act=dang_xuat" class="dropdown-item dropdown-item--logout">Đăng xuất</a>
                 </div>
             </div>

@@ -81,12 +81,12 @@ class sanpham {
 
     /*xử lý dữ liệu */
     // Cập nhật: Thêm tham số $variants_json
-    public function themsp($name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price = null, $variants_json = null){
-        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `sale_price`, `image_url`, `stock_quantity`, `category_id`, `variants_json`) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public function themsp($name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price = null, $variants_json = null, $highlights = null){
+        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `sale_price`, `image_url`, `stock_quantity`, `category_id`, `variants_json`, `highlights`) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"; // Sửa 'sale' thành 'sale_price'
         $stmt = $this->db->prepare($sql);
         // Cập nhật: Thêm $sale_price và $variants_json vào execute
-        return $stmt->execute([$name, $description, $price, $sale_price, $image_url, $stock_quantity, $category_id, $variants_json]);
+        return $stmt->execute([$name, $description, $price, $sale_price, $image_url, $stock_quantity, $category_id, $variants_json, $highlights]);
     }
 
     /*lấy sản phẩm từ bản product*/
@@ -185,11 +185,11 @@ class sanpham {
 
     /*cap nhat san pham*/
     // Cập nhật: Thêm tham số $variants_json
-    public function capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price = null, $variants_json = null){
-        $sql = "UPDATE products SET name = ?, description = ?, price = ?, sale_price = ?, image_url = ?, stock_quantity = ?, category_id = ?, variants_json = ? WHERE id = ?";
+    public function capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price = null, $variants_json = null, $highlights = null){
+        $sql = "UPDATE products SET name = ?, description = ?, price = ?, sale_price = ?, image_url = ?, stock_quantity = ?, category_id = ?, variants_json = ?, highlights = ? WHERE id = ?"; // Sửa 'sale' thành 'sale_price'
         $stmt = $this->db->prepare($sql);
         // Cập nhật: Thêm $sale_price và $variants_json vào execute
-        $stmt->execute([$name, $description, $price, $sale_price, $image_url, $stock_quantity, $category_id, $variants_json, $id]);
+        $stmt->execute([$name, $description, $price, $sale_price, $image_url, $stock_quantity, $category_id, $variants_json, $highlights, $id]);
     }
 
     /*xoa san pham*/

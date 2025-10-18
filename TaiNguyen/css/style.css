@@ -273,9 +273,13 @@ main.cp-container {
 .cp-user-menu__dropdown .dropdown-item:hover {
     color: var(--red);
 }
+.dropdown-item--admin {
+    color: var(--text); 
+    font-weight: 500;
+}
 .dropdown-item--logout {
     border-top: 1px solid #eee;
-    color: #e74c3c !important; /* Màu đỏ cho đăng xuất */
+    color: #e74c3c !important; 
     margin-top: 5px;
     padding-top: 10px;
 }
@@ -2389,15 +2393,30 @@ main.cp-container {
 
 /* giao diện khối tính năng nổi bật - cải tiến */
 .featured-highlights-card {
-    /* display: flex; - Không cần flex nữa vì chỉ có 1 cột */
-    gap: 25px;
+    display: flex; /* Chuyển sang flex để sắp xếp 2 cột */
+    gap: 30px; /* Tăng khoảng cách giữa ảnh và nội dung */
     /* Thay đổi: Nền gradient tối hơn để làm nổi bật chữ trắng */
-    background-image: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    background-image: linear-gradient(135deg, #fff1f2 0%, #fde6e1 100%);
     border-radius: var(--radius);
-    padding: 25px;
+    padding: 30px; /* Tăng padding để làm cho card to hơn */
     overflow: hidden;
     align-items: center;
-    color: #fff; /* Thêm: Đặt màu chữ mặc định là trắng */
+    color: var(--text); /* Đổi lại màu chữ tối để dễ đọc trên nền sáng */
+}
+
+.featured-highlights-card__image {
+    flex-shrink: 0;
+    width: 180px; /* Tăng chiều rộng của khu vực chứa ảnh */
+    align-self: center; /* Căn ảnh vào giữa theo chiều dọc */
+}
+
+.featured-highlights-card__image img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 15px; /* Thêm bo tròn cho hình ảnh */
+    /* Giảm độ đậm của bóng đổ cho phù hợp với nền sáng */
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
 }
 
 .featured-highlights-card__content .card-title {
@@ -2405,7 +2424,7 @@ main.cp-container {
     font-weight: 700;
     margin-top: 0;
     margin-bottom: 15px;
-    color: #fff; /* Thêm: Đảm bảo tiêu đề cũng có màu trắng */
+    color: var(--text); /* Đảm bảo tiêu đề có màu tối */
 }
 
 .featured-highlights-card__content ul {
@@ -2420,11 +2439,11 @@ main.cp-container {
     gap: 10px;
     margin-bottom: 12px;
     font-size: 15px;
-    color: rgba(255, 255, 255, 0.9); /* Thêm: Chữ hơi mờ để dễ đọc hơn */
+    color: var(--muted); /* Sử dụng màu chữ xám nhẹ */
 }
 
 .featured-highlights-card__content li .fa-check-circle {
-    color: #34d399; /* Thay đổi: Màu xanh lá cây sáng hơn để nổi bật trên nền tối */
+    color: #28a745; /* Đổi lại màu xanh lá cây chuẩn */
     margin-top: 4px;
     flex-shrink: 0; /* Ngăn icon bị co lại */
 }
@@ -2626,8 +2645,15 @@ main.cp-container {
  .write-review-action {
      text-align: center;
      padding: 20px;
-     background-color: #f8f9fa;
+     background-color: #fff9f9; /* Nền hồng rất nhạt */
      border-radius: 8px;
+     border: 1px dashed var(--red); /* Thêm viền đỏ đứt nét */
+     transition: all 0.3s ease; /* Thêm hiệu ứng chuyển động mượt mà */
+     box-shadow: 0 4px 12px rgba(215, 0, 24, 0.15); /* Tăng độ đậm và lớn của bóng */
+ }
+ .write-review-action:hover {
+    transform: translateY(-3px); /* Hiệu ứng nhấc lên khi di chuột */
+    box-shadow: 0 6px 20px rgba(215, 0, 24, 0.2); /* Tăng bóng đổ khi hover */
  }
  .write-review-action p { font-weight: 500; margin-bottom: 10px; }
  

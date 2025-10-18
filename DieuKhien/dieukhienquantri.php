@@ -127,6 +127,7 @@ class DieuKhienQuanTri {
         $description = $_POST['description'] ?? '';
         $stock_quantity = $_POST['stock_quantity'] ?? 0;
         $category_id = $_POST['category_id'] ?? 0;
+        $highlights = $_POST['highlights'] ?? null;
 
         // Kiểm tra dữ liệu cơ bản
         if (empty($name) || empty($price) || empty($category_id)) {
@@ -136,18 +137,39 @@ class DieuKhienQuanTri {
         }
 
         // 2. Lấy dữ liệu JSON của các phiên bản và xác định ảnh đại diện
-        $variants_json = $_POST['variants_json'] ?? '[]';
-        $variants = json_decode($variants_json, true);
+        $variant_colors = $_POST['variant_color'] ?? [];
+        $variant_images = $_FILES['variant_image'] ?? [];
+        $variants_data = [];
+
+        // Xử lý upload ảnh cho từng phiên bản
+        $target_dir = __DIR__ . "/../TaiLen/san_pham/";
+        foreach ($variant_colors as $index => $color) {
+            $image_url = '';
+            // Kiểm tra xem có file được tải lên cho phiên bản này không
+            if (isset($variant_images['name'][$index]) && $variant_images['error'][$index] == 0) {
+                $image_url = time() . '_' . basename($variant_images["name"][$index]);
+                $target_file = $target_dir . $image_url;
+                move_uploaded_file($variant_images["tmp_name"][$index], $target_file);
+            }
+
+            if (!empty($color) && !empty($image_url)) {
+                $variants_data[] = [
+                    'color' => $color,
+                    'image' => $image_url,
+                ];
+            }
+        }
 
         // Tự động lấy ảnh của phiên bản đầu tiên làm ảnh đại diện
         $image_url = '';
-        if (!empty($variants) && isset($variants[0]['image'])) {
-            $image_url = $variants[0]['image'];
+        if (!empty($variants_data)) {
+            $image_url = $variants_data[0]['image'];
         }
+        $variants_json = json_encode($variants_data);
 
         // 3. Tạo đối tượng model và gọi hàm thêm
         $sanpham_model = new sanpham($this->pdo);
-        $sanpham_model->themsp($name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price, !empty($variants) ? $variants_json : null);
+        $sanpham_model->themsp($name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price, !empty($variants) ? $variants_json : null, $highlights);
 
         // 4. Chuyển hướng về trang danh sách sản phẩm của admin
         header('Location: admin.php?act=ds_sanpham&success=added');
@@ -224,18 +246,43 @@ class DieuKhienQuanTri {
             $category_id = $_POST['category_id'] ?? 0;
             $sale_price = $_POST['sale_price'] ?? null; // Lấy giá khuyến mãi
             $existing_image = $_POST['existing_image'] ?? '';
-            $variants_json = $_POST['variants_json'] ?? '[]'; // Lấy dữ liệu JSON của các phiên bản
-            $variants = json_decode($variants_json, true);
+            $highlights = $_POST['highlights'] ?? null;
+
+            // Lấy dữ liệu phiên bản từ form
+            $variant_colors = $_POST['variant_color'] ?? [];
+            $existing_variant_images = $_POST['existing_variant_image'] ?? [];
+            $new_variant_images = $_FILES['variant_image'] ?? [];
+            $variants_data = [];
+
+            $target_dir = __DIR__ . "/../TaiLen/san_pham/";
+            foreach ($variant_colors as $index => $color) {
+                $image_url_for_variant = $existing_variant_images[$index] ?? ''; // Giữ ảnh cũ làm mặc định
+
+                // Nếu có ảnh mới được tải lên cho vị trí này, xử lý nó
+                if (isset($new_variant_images['name'][$index]) && $new_variant_images['error'][$index] == 0) {
+                    $image_url_for_variant = time() . '_' . basename($new_variant_images["name"][$index]);
+                    $target_file = $target_dir . $image_url_for_variant;
+                    move_uploaded_file($new_variant_images["tmp_name"][$index], $target_file);
+                }
+
+                if (!empty($color) && !empty($image_url_for_variant)) {
+                    $variants_data[] = [
+                        'color' => $color,
+                        'image' => $image_url_for_variant,
+                    ];
+                }
+            }
 
             // Tự động lấy ảnh của phiên bản đầu tiên làm ảnh đại diện
             // Nếu không có phiên bản nào, giữ lại ảnh cũ
             $image_url = $existing_image; 
-            if (!empty($variants) && isset($variants[0]['image'])) {
-                $image_url = $variants[0]['image'];
+            if (!empty($variants_data)) {
+                $image_url = $variants_data[0]['image'];
             }
+            $variants_json = json_encode($variants_data);
 
             $sp_model = new sanpham($this->pdo);
-            $sp_model->capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price, !empty($variants) ? $variants_json : null);
+            $sp_model->capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price, !empty($variants_data) ? $variants_json : null, $highlights);
 
             header('Location: admin.php?act=ds_sanpham&success=updated');
             exit;

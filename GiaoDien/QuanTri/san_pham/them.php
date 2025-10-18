@@ -41,6 +41,11 @@
                     <textarea name="description" class="form-control" rows="3"></textarea>
                 </div>
 
+                <div class="form-group-grid">
+                    <label class="form-label">Tính năng nổi bật</label>
+                    <textarea name="highlights" class="form-control" rows="4" placeholder="Nhập mỗi tính năng trên một dòng..."></textarea>
+                </div>
+
                 <!-- Khu vực quản lý phiên bản màu sắc -->
                 <div class="form-group-grid">
                     <label class="form-label">Các phiên bản màu sắc</label>
@@ -49,8 +54,6 @@
                             <!-- Các phiên bản sẽ được thêm vào đây bằng JS -->
                         </div>
                         <button type="button" id="add-variant-btn" class="admin-btn admin-btn-secondary mt-2">Thêm phiên bản</button>
-                        <!-- Trường ẩn để lưu dữ liệu JSON -->
-                        <input type="hidden" name="variants_json" id="variants-json-input">
                     </div>
                 </div>
                 
@@ -67,8 +70,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const variantsContainer = document.getElementById('variants-container');
     const addVariantBtn = document.getElementById('add-variant-btn');
-    const variantsJsonInput = document.getElementById('variants-json-input');
-    const form = variantsContainer.closest('form');
 
     let variantIdCounter = 0;
 
@@ -77,9 +78,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const variantRow = document.createElement('div');
         variantRow.classList.add('variant-item');
         variantRow.innerHTML = `
-            <input type="text" placeholder="Tên màu (VD: Xanh)" class="form-control variant-color" value="${data.color || ''}">
-            <input type="text" placeholder="URL ảnh" class="form-control variant-image" value="${data.image || ''}">
-            <input type="number" placeholder="Giá (để trống nếu bằng giá gốc)" class="form-control variant-price" value="${data.price || ''}">
+            <input type="text" name="variant_color[]" placeholder="Tên màu (VD: Xanh)" class="form-control variant-color" value="">
+            <input type="file" name="variant_image[]" class="form-control variant-image" accept="image/*">
             <button type="button" class="admin-btn admin-btn-danger remove-variant-btn">Xóa</button>
         `;
         variantsContainer.appendChild(variantRow);
@@ -93,24 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.classList.contains('remove-variant-btn')) {
             e.target.closest('.variant-item').remove();
         }
-    });
-
-    form.addEventListener('submit', function(e) {
-        const variants = [];
-        variantsContainer.querySelectorAll('.variant-item').forEach(row => {
-            const color = row.querySelector('.variant-color').value.trim();
-            const image = row.querySelector('.variant-image').value.trim();
-            const price = row.querySelector('.variant-price').value.trim();
-
-            if (color && image) { // Yêu cầu phải có tên màu và ảnh
-                variants.push({
-                    color: color,
-                    image: image,
-                    price: price ? parseFloat(price) : null
-                });
-            }
-        });
-        variantsJsonInput.value = JSON.stringify(variants);
     });
 });
 </script>

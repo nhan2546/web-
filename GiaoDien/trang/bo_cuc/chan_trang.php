@@ -392,6 +392,11 @@
       <h5>Liên hệ</h5>
       <a href="tel:18000000">Hotline: 1800 0000</a>
       <a href="mailto:hello@shoptaongon.vn">hello@shoptaongon.vn</a>
+      <?php
+        // Chỉ hiển thị link này nếu người dùng là admin hoặc nhân viên
+        if (isset($_SESSION['user_role']) && ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'staff')): ?>
+          <a href="admin.php" style="font-weight: bold; color: var(--red);">Vào trang quản trị</a>
+      <?php endif; ?>
     </div>
   </div>
   <div class="cp-footer__copy">© 2025 Shop Táo Ngon</div>
