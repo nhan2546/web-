@@ -49,7 +49,7 @@ class controller {
         $danh_sach_san_pham = $sp_model->getallsanpham($products_per_page, $offset, $sort_by, $filters);
 
         // Lấy dữ liệu cho sidebar filter
-        $available_brands = $dm_model->getAllBrands();
+        $available_brands = $dm_model->getDS_Danhmuc();
 
         include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
     }
@@ -94,7 +94,7 @@ class controller {
         $danh_sach_san_pham = $sp_model->getSanPhamByDanhMuc($category_id, $products_per_page, $offset, $sort_by, $filters);
 
         // Lấy dữ liệu cho sidebar filter
-        $available_brands = $dm_model->getBrandsByCategoryId($category_id);
+        $available_brands = $dm_model->getDS_Danhmuc();
 
         include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
     }
