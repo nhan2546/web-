@@ -45,7 +45,7 @@
                                     }
                                 ?>
                             </td>
-                            <td>
+                            <td class="status-cell">
                                 <?php if ($voucher['is_active']): ?>
                                     <span class="badge badge-success">Hoạt động</span>
                                 <?php else: ?>

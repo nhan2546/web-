@@ -406,6 +406,14 @@ body.admin-body {
     margin-right: 10px;
     text-decoration: none;
 }
+
+/* Sửa lỗi ngắt dòng trong bảng admin */
+.admin-table .action-buttons,
+.admin-table .status-cell {
+    white-space: nowrap; /* Ngăn không cho nội dung bị ngắt xuống dòng */
+    width: 1%; /* Ưu tiên co lại chiều rộng tối thiểu cần thiết */
+    text-align: center; /* Căn giữa nội dung trong cột */
+}
 /* Style cho bảng đơn giản trên dashboard */
 .simple-table td, .simple-table th {
     padding: 8px 12px;

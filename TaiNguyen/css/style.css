@@ -1725,13 +1725,19 @@ main.cp-container {
 
 .cart-item-card {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    /* Cải tiến: Chia layout thành 5 cột rõ ràng */
+    /* Checkbox | Ảnh | Thông tin sản phẩm (chiếm phần lớn) | Bộ chọn số lượng | Nút xóa */
+    grid-template-columns: auto 80px 1fr auto auto;
     gap: 20px;
     align-items: center;
     background-color: #fff;
     padding: 20px;
     border-radius: var(--radius);
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.cart-item-selector {
+    /* Không cần style gì thêm */
 }
 
 .cart-item-image img {
@@ -1744,6 +1750,7 @@ main.cp-container {
 .cart-item-details {
     display: flex;
     flex-direction: column;
+    justify-content: center; /* Căn giữa nội dung theo chiều dọc */
     gap: 5px;
 }
 
@@ -1768,10 +1775,12 @@ main.cp-container {
 }
 
 .cart-item-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 15px;
+    /* Cải tiến: Chỉ chứa nút xóa, các thành phần khác đã được tách ra */
+    justify-self: end; /* Đẩy nút xóa về cuối cột của nó */
+    display: none; /* Ẩn đi vì đã tách ra */
+}
+.cart-item-total-price {
+    display: none; /* Ẩn giá tiền của từng sản phẩm để giao diện gọn hơn */
 }
 
 .quantity-selector {
@@ -1806,6 +1815,7 @@ main.cp-container {
 
 .cart-item-delete {
     color: var(--muted);
+    justify-self: center; /* Căn nút xóa vào giữa cột của nó */
     transition: color 0.2s;
 }
 .cart-item-delete:hover {

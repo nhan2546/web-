@@ -442,7 +442,6 @@ class DieuKhienQuanTri {
         // để hiển thị danh sách khách hàng.
         include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_KH.php';
     }
-    }
 
     public function toggle_trangthai_khachhang() {
         $id = $_GET['id'] ?? 0;
