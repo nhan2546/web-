@@ -81,12 +81,11 @@ class sanpham {
 
     /*xử lý dữ liệu */
     // Cập nhật: Thêm tham số $variants_json
-    public function themsp($name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price = null, $variants_json = null, $highlights = null){
-        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `sale_price`, `image_url`, `stock_quantity`, `category_id`, `variants_json`, `highlights`) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"; // Sửa 'sale' thành 'sale_price'
+    public function themsp($name, $description, $price, $image_url, $quantity, $category_id, $sale_price = null, $variants_json = null){
+        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `sale_price`, `image_url`, `quantity`, `category_id`, `variants_json`) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
-        // Cập nhật: Thêm $sale_price và $variants_json vào execute
-        return $stmt->execute([$name, $description, $price, $sale_price, $image_url, $stock_quantity, $category_id, $variants_json, $highlights]);
+        return $stmt->execute([$name, $description, $price, $sale_price, $image_url, $quantity, $category_id, $variants_json]);
     }
 
     /*lấy sản phẩm từ bản product*/
@@ -159,9 +158,9 @@ class sanpham {
      */
     public function getHotSaleProducts($limit = 5) {
         try {
-            $sql = "SELECT *, sale as sale_price, (100 * (price - sale) / price) as discount_percentage 
+            $sql = "SELECT *, sale_price, (100 * (price - sale_price) / price) as discount_percentage 
                     FROM products 
-                    WHERE sale IS NOT NULL AND sale > 0 AND sale < price 
+                    WHERE sale_price IS NOT NULL AND sale_price > 0 AND sale_price < price 
                     ORDER BY discount_percentage DESC 
                     LIMIT :limit";
             $stmt = $this->db->prepare($sql);
@@ -176,7 +175,7 @@ class sanpham {
     }
 
     /*Lấy sản phẩm theo id*/
-    public function getone_sanoham($id){
+    public function getone_sanpham($id){
         $sql = "SELECT * FROM products WHERE id = ? LIMIT 1";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$id]);
@@ -185,11 +184,10 @@ class sanpham {
 
     /*cap nhat san pham*/
     // Cập nhật: Thêm tham số $variants_json
-    public function capnhatsp($id, $name, $description, $price, $image_url, $stock_quantity, $category_id, $sale_price = null, $variants_json = null, $highlights = null){
-        $sql = "UPDATE products SET name = ?, description = ?, price = ?, sale_price = ?, image_url = ?, stock_quantity = ?, category_id = ?, variants_json = ?, highlights = ? WHERE id = ?"; // Sửa 'sale' thành 'sale_price'
+    public function capnhatsp($id, $name, $description, $price, $image_url, $quantity, $category_id, $sale_price = null, $variants_json = null) {
+        $sql = "UPDATE products SET name = ?, description = ?, price = ?, sale_price = ?, image_url = ?, quantity = ?, category_id = ?, variants_json = ? WHERE id = ?";
         $stmt = $this->db->prepare($sql);
-        // Cập nhật: Thêm $sale_price và $variants_json vào execute
-        $stmt->execute([$name, $description, $price, $sale_price, $image_url, $stock_quantity, $category_id, $variants_json, $highlights, $id]);
+        return $stmt->execute([$name, $description, $price, $sale_price, $image_url, $quantity, $category_id, $variants_json, $id]);
     }
 
     /*xoa san pham*/
@@ -216,7 +214,7 @@ class sanpham {
                     p.name, 
                     p.image_url, 
                     p.price, 
-                    p.stock_quantity,
+                    p.quantity as stock_quantity,
                     COALESCE(SUM(od.quantity), 0) as total_sold
                 FROM products p
                 LEFT JOIN order_details od ON p.id = od.product_id

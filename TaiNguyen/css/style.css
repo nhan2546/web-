@@ -1276,9 +1276,13 @@ main.cp-container {
 }
 
 /* Container cho trang chỉnh sửa thông tin */
-.account-form-container {
-    max-width: 700px;
-    margin: 0 auto;
+/* Lớp này giờ đây chỉ dùng để nhóm các style chung, không giới hạn chiều rộng */
+.account-form-container {}
+
+/* Container hẹp hơn cho các form để dễ đọc hơn */
+.container-narrow {
+    max-width: 900px; /* Giới hạn chiều rộng của nội dung chính */
+    margin: 0 auto;   /* Tự động căn giữa */
 }
 
 .back-to-dashboard-link {
@@ -1291,6 +1295,40 @@ main.cp-container {
 
 .back-to-dashboard-link:hover {
     text-decoration: underline;
+}
+
+/* Bố cục 2 cột cho trang chỉnh sửa thông tin */
+.account-edit-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr; /* Cột trái 300px, cột phải chiếm phần còn lại */
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* Responsive cho màn hình nhỏ hơn */
+@media (max-width: 992px) {
+    .account-edit-layout {
+        grid-template-columns: 1fr; /* Chuyển về 1 cột */
+    }
+}
+
+/* Nút ẩn/hiện mật khẩu */
+.password-wrapper {
+    position: relative;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    padding: 5px;
+    display: flex;
+    align-items: center;
 }
 
 /* Trang Thu Cũ Đổi Mới */
@@ -2909,6 +2947,76 @@ main.cp-container {
     min-height: 120px;
 }
 
+/* CSS cho hàng đánh giá sao trong modal */
+.rating-criterion-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+/* CSS cho nhiều tiêu chí đánh giá trong modal */
+.multi-star-rating-group {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.rating-criterion {
+    text-align: center;
+}
+
+.rating-criterion .form-label {
+    margin-bottom: 8px;
+}
+
+/* Định dạng cho hệ thống đánh giá sao bằng CSS */
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse; /* Đảo ngược thứ tự để có hiệu ứng hover từ phải sang trái */
+    justify-content: center;
+    gap: 5px;
+} 
+
+/* Ẩn các nút radio mặc định */
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+/* Định dạng cho các label (ngôi sao) */
+.star-rating label {
+    font-size: 24px; /* Giảm kích thước sao một chút để vừa vặn */
+    color: #ddd; /* Màu sao mặc định */
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+/* Hiệu ứng khi di chuột qua các sao */
+.star-rating:hover label {
+    color: #ffc107; /* Đổi màu tất cả các sao khi hover vào khu vực */
+}
+
+/* Giữ màu cho các sao bên trái của sao đang được hover */
+.star-rating label:hover ~ label {
+    color: #ddd;
+}
+
+/* Đổi màu cho các sao đã được chọn */
+.star-rating input[type="radio"]:checked ~ label {
+    color: #ffc107;
+}
+
+.char-counter-wrapper {
+    text-align: right;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 5px;
+}
+.char-counter-wrapper.error {
+    color: #dc3545;
+    font-weight: bold;
+}
+
 .form-label-upload {
     display: inline-block;
     padding: 10px 15px;
@@ -2925,6 +3033,44 @@ main.cp-container {
 
 .form-control-upload {
     display: none; /* Ẩn input file mặc định */
+}
+
+/* Khu vực xem trước ảnh trong modal review */
+.image-preview-container {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.image-preview {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    cursor: pointer;
 }
 
 .review-meta {

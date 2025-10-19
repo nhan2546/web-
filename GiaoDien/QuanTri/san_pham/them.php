@@ -33,7 +33,12 @@
 
                 <div class="form-group-grid">
                     <label class="form-label">Số lượng kho</label>
-                    <input type="number" name="stock_quantity" class="form-control" min="0" placeholder="Ví dụ: 100" required>
+                    <input type="number" name="quantity" class="form-control" min="0" placeholder="Ví dụ: 100" required>
+                </div>
+
+                <div class="form-group-grid">
+                    <label class="form-label">Ảnh đại diện chính</label>
+                    <input type="file" name="image_url" class="form-control" accept="image/*">
                 </div>
 
                 <div class="form-group-grid">

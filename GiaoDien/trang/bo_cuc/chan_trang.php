@@ -240,81 +240,6 @@
         }, 500);
     </script>
 
-    <!-- JAVASCRIPT CHO CẬP NHẬT GIỎ HÀNG TỰ ĐỘNG -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const cartPage = document.querySelector('.cart-page-wrapper');
-        // Chỉ chạy script này nếu đang ở trang giỏ hàng
-        if (!cartPage) return;
-
-        const cartBadge = document.getElementById('cart-badge');
-        const subtotalEl = document.getElementById('cart-subtotal');
-        const finalTotalEl = document.getElementById('cart-final-total');
-
-        // Hàm định dạng số
-        const formatCurrency = (number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
-
-        // Hàm gửi yêu cầu cập nhật lên server
-        const updateCart = (productId, quantity) => {
-            const formData = new FormData();
-            formData.append('id', productId);
-            formData.append('quantity', quantity);
-
-            fetch('index.php?act=cap_nhat_gio_hang', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Cập nhật tổng tiền và số lượng trên header
-                    subtotalEl.textContent = formatCurrency(data.new_subtotal);
-                    finalTotalEl.textContent = formatCurrency(data.new_subtotal);
-                    cartBadge.textContent = data.new_total_quantity;
-
-                    // Nếu số lượng sản phẩm về 0, xóa dòng đó khỏi giao diện
-                    if (quantity <= 0) {
-                        const itemCard = document.querySelector(`.cart-item-card[data-id='${productId}']`);
-                        if (itemCard) {
-                            itemCard.remove();
-                        }
-                        // Kiểm tra nếu giỏ hàng rỗng thì reload trang để hiển thị trạng thái "Giỏ hàng trống"
-                        if (data.new_total_quantity === 0) {
-                            window.location.reload();
-                        }
-                    }
-                }
-            })
-            .catch(error => console.error('Lỗi cập nhật giỏ hàng:', error));
-        };
-
-        // Lắng nghe sự kiện click trên các nút +/-
-        cartPage.querySelectorAll('.quantity-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const input = this.parentElement.querySelector('.quantity-input');
-                let currentValue = parseInt(input.value);
-                if (this.classList.contains('plus')) {
-                    currentValue++;
-                } else {
-                    currentValue--;
-                }
-                input.value = currentValue;
-                // Kích hoạt sự kiện 'change' để xử lý cập nhật
-                input.dispatchEvent(new Event('change'));
-            });
-        });
-
-        // Lắng nghe sự kiện thay đổi trên các ô input số lượng
-        cartPage.querySelectorAll('.quantity-input').forEach(input => {
-            input.addEventListener('change', function() {
-                const productId = this.dataset.id;
-                const quantity = parseInt(this.value);
-                updateCart(productId, quantity);
-            });
-        });
-    });
-    </script>
-
     <!-- JAVASCRIPT CHO SLIDER SẢN PHẨM -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
@@ -392,11 +317,6 @@
       <h5>Liên hệ</h5>
       <a href="tel:18000000">Hotline: 1800 0000</a>
       <a href="mailto:hello@shoptaongon.vn">hello@shoptaongon.vn</a>
-      <?php
-        // Chỉ hiển thị link này nếu người dùng là admin hoặc nhân viên
-        if (isset($_SESSION['user_role']) && ($_SESSION['user_role'] === 'admin' || $_SESSION['user_role'] === 'staff')): ?>
-          <a href="admin.php" style="font-weight: bold; color: var(--red);">Vào trang quản trị</a>
-      <?php endif; ?>
     </div>
   </div>
   <div class="cp-footer__copy">© 2025 Shop Táo Ngon</div>

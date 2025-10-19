@@ -7,7 +7,7 @@ $opts=['pending'=>'Chờ xác nhận','confirmed'=>'Xác nhận đơn hàng','sh
 <h1>Quản lý đơn hàng</h1>
 
 <form method="get" class="admin-card" style="padding:15px; display:grid; grid-template-columns: repeat(6,1fr); gap:10px; align-items:end;">
-  <input type="hidden" name="act" value="donhang">
+  <input type="hidden" name="act" value="ds_donhang">
   <div><label>Từ khóa</label><input class="form-control" name="search" value="<?=htmlspecialchars($search_term ?? '')?>" placeholder="Mã đơn / Tên khách hàng"></div>
   <div>
     <label>Trạng thái</label>

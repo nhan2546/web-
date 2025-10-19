@@ -22,7 +22,7 @@
                             <td><?= htmlspecialchars($san_pham['id']) ?></td>
                             <td><?= htmlspecialchars($san_pham['name']) ?></td>
                             <td><?= number_format($san_pham['price']) ?> VNĐ</td>
-                            <td><?= htmlspecialchars($san_pham['stock_quantity']) ?></td>
+                            <td><?= htmlspecialchars($san_pham['quantity'] ?? 0) ?></td>
                             <td><?= htmlspecialchars($san_pham['category_name'] ?? 'N/A') ?></td>
                             <td class="action-buttons">
                                 <a href="admin.php?act=sua_sp&id=<?= $san_pham['id'] ?>" class="admin-btn">Sửa</a>

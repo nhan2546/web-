@@ -80,7 +80,7 @@ class controller {
     public function chi_tiet_san_pham($return_data = false) {
         $id = $_GET['id'] ?? 0;
         $sp_model = new sanpham($this->pdo);
-        $san_pham = $sp_model->getone_sanoham($id); // Sửa lại tên hàm cho đúng
+        $san_pham = $sp_model->getone_sanpham($id); // Sửa lại tên hàm cho đúng
         if ($return_data) {
             return $san_pham;
         }
@@ -266,7 +266,7 @@ class controller {
                 }
             }
         }
-        header('Location: index.php?act=thanh_toan');
+        header('Location: index.php?act=gio_hang');
         exit();
     }
 
@@ -487,8 +487,8 @@ class controller {
         // 4. KIỂM TRA SỐ LƯỢNG TỒN KHO (trên các sản phẩm đã mua)
         $sp_model = new sanpham($this->pdo);
         foreach ($purchased_cart as $item) {
-            $product = $sp_model->getone_sanoham($item['id']);
-            if (!$product || $product['stock_quantity'] < $item['quantity']) {
+            $product = $sp_model->getone_sanpham($item['id']);
+            if (!$product || $product['quantity'] < $item['quantity']) {
                 $_SESSION['cart_error'] = "Sản phẩm '{$item['name']}' không đủ số lượng tồn kho. Vui lòng cập nhật giỏ hàng của bạn.";
                 header('Location: index.php?act=gio_hang');
                 exit();

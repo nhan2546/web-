@@ -9,7 +9,7 @@ $is_on_sale = isset($san_pham['sale_price']) && $san_pham['sale_price'] > 0 && $
 $display_price = $is_on_sale ? $san_pham['sale_price'] : $san_pham['price'];
 $original_price = $is_on_sale ? $san_pham['price'] : null;
 $saving_percentage = $is_on_sale ? round((($san_pham['price'] - $san_pham['sale_price']) / $san_pham['price']) * 100) : 0;
-$is_in_stock = $san_pham['stock_quantity'] > 0;
+$is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
 ?>
 
 <div class="cp-container product-detail-page">
@@ -165,11 +165,11 @@ $is_in_stock = $san_pham['stock_quantity'] > 0;
                 <input type="hidden" name="quantity" value="1">
                 
                 <div class="purchase-buttons-group">
-                    <button type="submit" name="buy_now" class="btn-buy-now" <?= !$is_in_stock ? 'disabled' : '' ?>>
+                    <button type="submit" name="buy_now" class="btn-buy-now" <?php if (!$is_in_stock) echo 'disabled'; ?>>
                         <strong>MUA NGAY</strong>
                         <span>Giao hàng tận nơi hoặc nhận tại cửa hàng</span>
                     </button>
-                    <button type="submit" name="add_to_cart" class="btn-add-to-cart" <?= !$is_in_stock ? 'disabled' : '' ?>>
+                    <button type="submit" name="add_to_cart" class="btn-add-to-cart" <?php if (!$is_in_stock) echo 'disabled'; ?>>
                         <i class="fas fa-cart-plus"></i> Thêm vào giỏ
                     </button>
                 </div>

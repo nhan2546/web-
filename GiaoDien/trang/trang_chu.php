@@ -11,11 +11,11 @@
         <div class="swiper-slide"><img src="TaiNguyen/hinh_anh/banner/banner3.png" alt="Banner 3"></div>
       </div>
       <!-- If we need pagination -->
-      <div class="swiper-pagination"></div>
-
-      <!-- If we need navigation buttons -->
-      <div class="swiper-button-prev"></div>
-      <div class="swiper-button-next"></div>
+      <div class="swiper-pagination"></div> 
+ 
+      <!-- Navigation buttons should be inside the main slider container -->
+      <div class="swiper-button-prev"></div> 
+      <div class="swiper-button-next"></div> 
     </div>
   </div>
 </section>
@@ -87,9 +87,18 @@
                         <span class="now"><?= number_format($sp['price'],0,',','.') ?>₫</span>
                     </div>
                 </a>
-                <form action="index.php?act=them_vao_gio" method="POST" class="mt-auto">
-                    <input type="hidden" name="id" value="<?= (int)$sp['id'] ?>"><input type="hidden" name="name" value="<?= htmlspecialchars($sp['name']) ?>"><input type="hidden" name="image_url" value="<?= htmlspecialchars($sp['image_url']) ?>"><input type="hidden" name="price" value="<?= htmlspecialchars($sp['price']) ?>"><button type="submit" class="cp-btn">Thêm vào giỏ</button>
-                </form>
+                <?php if (($sp['quantity'] ?? 0) > 0): ?>
+                    <!-- Form được tách ra khỏi thẻ <a> để đảm bảo HTML hợp lệ -->
+                    <form action="index.php?act=them_vao_gio" method="POST" class="mt-auto">
+                        <input type="hidden" name="id" value="<?= (int)$sp['id'] ?>">
+                        <input type="hidden" name="name" value="<?= htmlspecialchars($sp['name']) ?>">
+                        <input type="hidden" name="image_url" value="<?= htmlspecialchars($sp['image_url']) ?>">
+                        <input type="hidden" name="price" value="<?= htmlspecialchars($sp['price']) ?>">
+                        <button type="submit" class="cp-btn">Thêm vào giỏ</button>
+                    </form>
+                <?php else: ?>
+                    <button type="button" class="cp-btn" disabled>Hết hàng</button>
+                <?php endif; ?>
             </div>
         </article>
       <?php endforeach; ?>

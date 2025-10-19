@@ -47,7 +47,7 @@ if (!isset($san_pham) || !isset($danh_sach_danh_muc)) {
 
                 <div class="form-group-grid">
                     <label class="form-label">Số lượng kho</label>
-                    <input type="number" name="stock_quantity" class="form-control" min="0" value="<?= htmlspecialchars($san_pham['stock_quantity']) ?>" required>
+                    <input type="number" name="quantity" class="form-control" min="0" value="<?= htmlspecialchars($san_pham['quantity'] ?? 0) ?>" required>
                 </div>
 
                 <div class="form-group-grid">
