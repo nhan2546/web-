@@ -195,6 +195,11 @@ body.admin-body {
     color: #2c3e50;
 }
 
+/* Thêm khoảng cách trên cho các khối nội dung chính trên dashboard */
+.admin-page-content > .dashboard-cards + .dashboard-cards,
+.admin-page-content > .admin-card {
+    margin-top: 30px;
+}
 /* Định dạng cho các nhãn trạng thái (status badge) */
 .badge { 
     padding: 5px 10px; 
@@ -396,6 +401,35 @@ body.admin-body {
     margin-right: 10px;
     text-decoration: none;
 }
+/* Style cho bảng đơn giản trên dashboard */
+.simple-table td, .simple-table th {
+    padding: 8px 12px;
+}
+
+.simple-table .product-info-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.simple-table .product-info-cell img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.simple-table .text-center {
+    text-align: center;
+}
+
+/* Container cho biểu đồ để giới hạn kích thước */
+.chart-container {
+    position: relative;
+    max-width: 450px; /* Giới hạn chiều rộng tối đa của biểu đồ */
+    margin: 0 auto;   /* Tự động căn giữa */
+}
+
 
 /* Định dạng riêng cho cột số điện thoại trong bảng */
 .admin-table .phone-number {

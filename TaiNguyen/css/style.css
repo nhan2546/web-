@@ -2597,14 +2597,14 @@ main.cp-container {
 .specs-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 15px;
+    font-size: 14px; /* Giảm kích thước chữ */
 }
 .specs-table td {
-    padding: 12px 15px;
+    padding: 10px 12px; /* Giảm padding cho các ô */
     border-bottom: 1px solid #f0f0f0;
 }
 .specs-table tr td:first-child {
-    width: 40%;
+    width: 35%; /* Giảm chiều rộng cột tiêu đề một chút để cân đối hơn */
     color: var(--muted);
 }
 .specs-table tr:nth-child(odd) {

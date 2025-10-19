@@ -5,6 +5,8 @@ require_once __DIR__ . '/../MoHinh/DanhMuc.php';
 require_once __DIR__ . '/../MoHinh/DonHang.php';
 require_once __DIR__ . '/../MoHinh/NguoiDung.php';
 require_once __DIR__ . '/../MoHinh/Voucher.php';
+require_once __DIR__ . '/../MoHinh/ThongKe.php'; // Thêm model thống kê
+require_once __DIR__ . '/../MoHinh/BaoHanh.php'; // Thêm model bảo hành
 
 class DieuKhienQuanTri {
     private $pdo; // Thuộc tính để lưu trữ kết nối CSDL
@@ -80,12 +82,18 @@ class DieuKhienQuanTri {
         $dh_model = new donhang($this->pdo);
         $sp_model = new sanpham($this->pdo);
         $user_model = new NguoiDung($this->pdo);
+        $stats_model = new ThongKe($this->pdo); // Khởi tạo model thống kê
 
         // Lấy các số liệu thống kê
         $stats['total_revenue'] = $dh_model->getTotalRevenue() ?? 0;
         $stats['new_orders_count'] = $dh_model->countNewOrders() ?? 0;
         $stats['customer_count'] = $user_model->countCustomers() ?? 0;
         $stats['product_count'] = $sp_model->countAllSanPham() ?? 0;
+        $stats['total_visits'] = $stats_model->getStat('total_visits'); // Lấy lượt truy cập
+
+        // Lấy top 5 sản phẩm bán chạy và bán ế
+        $stats['best_selling_products'] = $sp_model->getProductsBySaleVolume('DESC', 5);
+        $stats['worst_selling_products'] = $sp_model->getProductsBySaleVolume('ASC', 5);
 
         include __DIR__ . '/../GiaoDien/QuanTri/bang_dieu_khien.php';
     }
@@ -127,7 +135,7 @@ class DieuKhienQuanTri {
         $description = $_POST['description'] ?? '';
         $quantity = $_POST['quantity'] ?? 0;
         $category_id = $_POST['category_id'] ?? 0;
-        // $highlights = $_POST['highlights'] ?? null; // Tạm thời vô hiệu hóa vì chưa có cột trong DB
+        $highlights = $_POST['highlights'] ?? null;
 
         // Kiểm tra dữ liệu cơ bản
         if (empty($name) || empty($price) || empty($category_id)) {
@@ -175,8 +183,7 @@ class DieuKhienQuanTri {
 
         // 3. Tạo đối tượng model và gọi hàm thêm
         $sanpham_model = new sanpham($this->pdo);
-        // Tạm thời bỏ highlights
-        $sanpham_model->themsp($name, $description, $price, $image_url, $quantity, $category_id, $sale_price, !empty($variants_data) ? $variants_json : null);
+        $sanpham_model->themsp($name, $description, $price, $image_url, $quantity, $category_id, $sale_price, !empty($variants_data) ? $variants_json : null, $highlights);
 
         // 4. Chuyển hướng về trang danh sách sản phẩm của admin
         header('Location: admin.php?act=ds_sanpham&success=added');
@@ -213,7 +220,7 @@ class DieuKhienQuanTri {
             $category_id = $_POST['category_id'] ?? 0;
             $sale_price = $_POST['sale_price'] ?? null; // Lấy giá khuyến mãi
             $existing_image_url = $_POST['existing_image_url'] ?? '';
-            // $highlights = $_POST['highlights'] ?? null;
+            $highlights = $_POST['highlights'] ?? null;
 
             // Lấy dữ liệu phiên bản từ form
             $variant_colors = $_POST['variant_color'] ?? [];
@@ -256,8 +263,7 @@ class DieuKhienQuanTri {
             $variants_json = json_encode($variants_data);
 
             $sp_model = new sanpham($this->pdo);
-            // Tạm thời bỏ highlights
-            $sp_model->capnhatsp($id, $name, $description, $price, $image_url, $quantity, $category_id, $sale_price, !empty($variants_data) ? $variants_json : null);
+            $sp_model->capnhatsp($id, $name, $description, $price, $image_url, $quantity, $category_id, $sale_price, !empty($variants_data) ? $variants_json : null, $highlights);
 
             header('Location: admin.php?act=ds_sanpham&success=updated');
             exit;
@@ -592,6 +598,13 @@ class DieuKhienQuanTri {
         }
 
         include __DIR__ . '/../GiaoDien/QuanTri/bao_cao/doanh_thu.php';
+    }
+
+    // --- QUẢN LÝ BẢO HÀNH ---
+    public function ds_baohanh() {
+        $bh_model = new BaoHanh($this->pdo);
+        $danh_sach_bao_hanh = $bh_model->getAllClaims();
+        include __DIR__ . '/../GiaoDien/QuanTri/bao_hanh/danh_sach.php';
     }
 }
 ?>

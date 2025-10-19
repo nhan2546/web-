@@ -124,6 +124,9 @@ switch ($act) {
 
     case 'bao_cao_doanh_thu': $adminController->bao_cao_doanh_thu(); break;
 
+    // Quản lý Bảo hành
+    case 'ds_baohanh': $adminController->ds_baohanh(); break;
+
     // Mặc định: hiển thị Bảng điều khiển
     default: $adminController->dashboard(); break;
 }

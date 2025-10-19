@@ -6,9 +6,15 @@
       <!-- Additional required wrapper -->
       <div class="swiper-wrapper">
         <!-- Slides -->
-        <div class="swiper-slide"><img src="TaiNguyen/hinh_anh/banner/banner1.png" alt="Banner 1"></div>
-        <div class="swiper-slide"><img src="TaiNguyen/hinh_anh/banner/banner2.png" alt="Banner 2"></div>
-        <div class="swiper-slide"><img src="TaiNguyen/hinh_anh/banner/banner3.png" alt="Banner 3"></div>
+        <div class="swiper-slide">
+          <a href="index.php?act=hienthi_sp"><img src="TaiNguyen/hinh_anh/banner/banner1.png" alt="Banner 1"></a>
+        </div>
+        <div class="swiper-slide">
+          <a href="index.php?act=hienthi_sp"><img src="TaiNguyen/hinh_anh/banner/banner2.png" alt="Banner 2"></a>
+        </div>
+        <div class="swiper-slide">
+          <a href="index.php?act=hienthi_sp"><img src="TaiNguyen/hinh_anh/banner/banner3.png" alt="Banner 3"></a>
+        </div>
       </div>
       <!-- If we need pagination -->
       <div class="swiper-pagination"></div> 
