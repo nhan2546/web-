@@ -16,7 +16,7 @@ if (!isset($san_pham) || !isset($danh_sach_danh_muc)) {
                 <!-- Trường ẩn để lưu ID sản phẩm -->
                 <input type="hidden" name="id" value="<?= htmlspecialchars($san_pham['id']) ?>">
                 <!-- Trường ẩn để lưu tên ảnh hiện tại -->
-                <input type="hidden" name="existing_image" value="<?= htmlspecialchars($san_pham['image_url']) ?>">
+                <input type="hidden" name="existing_image_url" value="<?= htmlspecialchars($san_pham['image_url']) ?>">
 
                 <div class="form-group-grid">
                     <label class="form-label">Tên sản phẩm</label>

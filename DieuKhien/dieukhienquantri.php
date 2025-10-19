@@ -182,46 +182,6 @@ class DieuKhienQuanTri {
         header('Location: admin.php?act=ds_sanpham&success=added');
         exit;
     }
-
-    // Chức năng: Xử lý thêm sản phẩm mới - ĐÃ ĐƯỢC HỢP NHẤT VÀO them_sp(), CÓ THỂ XÓA
-    /*
-    public function xl_themsp() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // 1. Lấy dữ liệu từ form
-            $name = $_POST['name'] ?? '';
-            // Thêm các trường khác như price, description...
-            // $price = $_POST['price'] ?? 0;
-            $price = $_POST['price'] ?? 0;
-            $description = $_POST['description'] ?? '';
-            $stock_quantity = $_POST['stock_quantity'] ?? 0;
-            $category_id = $_POST['category_id'] ?? 0;
-            // $sale_price = $_POST['sale_price'] ?? 0; // Tạm thời vô hiệu hóa
-
-            // 2. Xử lý upload hình ảnh
-            $image_url = ''; // Mặc định không có ảnh
-            if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-                $target_dir = __DIR__ . "/../TaiLen/san_pham/"; // Sửa lại đường dẫn
-                // Đảm bảo thư mục tồn tại
-                if (!is_dir($target_dir)) {
-                    mkdir($target_dir, 0777, true);
-                }
-                // Tạo tên file duy nhất để tránh ghi đè
-                $image_url = time() . '_' . basename($_FILES["image"]["name"]);
-                $target_file = $target_dir . $image_url;
-                move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
-            }
-
-            // 3. Tạo đối tượng model và gọi hàm thêm
-            $sanpham_model = new sanpham($this->pdo);
-            // Gọi hàm themsp với đúng thứ tự tham số
-            $sanpham_model->themsp($name, $description, $price, $image_url, $stock_quantity, $category_id);
-
-            // 4. Chuyển hướng về trang danh sách sản phẩm của admin
-            header('Location: admin.php?act=ds_sanpham&success=added');
-            exit;
-        }
-    }*/
-
     // Chức năng: Hiển thị form sửa sản phẩm
     public function sua_sp() {
         $id = $_GET['id'] ?? 0;
@@ -329,13 +289,7 @@ class DieuKhienQuanTri {
     public function xl_them_danhmuc() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'] ?? '';
-            if (!empty($name)) {
-                $dm_model = new danhmuc($this->pdo);
-                $dm_model->addCategory($name);
-            }
-            header('Location: admin.php?act=ds_danhmuc&success=added');
-            exit;
-        }
+            if (!empty($name)) {}
     }
 
     public function sua_danhmuc() {

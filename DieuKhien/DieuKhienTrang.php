@@ -193,7 +193,7 @@ class controller {
             $variant_color = $_POST['variant_color'] ?? null; // Lấy thông tin màu sắc
 
             // Tạo một ID duy nhất cho sản phẩm trong giỏ hàng, kết hợp ID sản phẩm và màu sắc
-            $cart_item_id = $variant_color ? $id . '_' . str_replace(' ', '_', $variant_color) : $id;
+            $cart_item_id = ($variant_color) ? $id . '_' . str_replace(' ', '_', $variant_color) : (string)$id;
 
             // Kiểm tra sản phẩm (với màu cụ thể) đã có trong giỏ hàng chưa
             if (isset($_SESSION['cart'][$cart_item_id])) {
@@ -206,7 +206,8 @@ class controller {
                     'name' => $name,
                     'image_url' => $image_url,
                     'price' => $price,
-                    'quantity' => $quantity
+                    'quantity' => $quantity,
+                    'variant_color' => $variant_color // Lưu lại màu để hiển thị nếu cần
                 ];
             }
         }

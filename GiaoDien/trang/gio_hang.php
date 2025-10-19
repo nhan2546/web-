@@ -28,7 +28,6 @@
                             Chọn tất cả (<?= count($cart) ?> sản phẩm) 
                         </label> 
                     </div>
- 
                     <div class="cart-items-list">
                         <?php foreach ($cart as $item): ?>
                             <div class="cart-item-card" data-id="<?= $item['id'] ?>">
@@ -176,11 +175,14 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Cập nhật lại tổng tiền và số lượng trên header từ server
-                    cartBadge.textContent = data.new_total_quantity;
-                    // Nếu số lượng <= 0, sản phẩm đã bị xóa, reload để hiển thị đúng trạng thái
                     if (quantity <= 0) {
-                        window.location.reload();
+                        // Nếu số lượng là 0, xóa phần tử khỏi DOM
+                        itemCard.remove();
+                        updateSummary(); // Cập nhật lại tổng tiền sau khi xóa
+                    }
+                    // Cập nhật lại số lượng trên huy hiệu giỏ hàng
+                    if (cartBadge) {
+                        cartBadge.textContent = data.new_total_quantity;
                     }
                 }
             })

@@ -35,7 +35,6 @@ if (isset($_GET['error'])) {
 }
 ?>
 
-<div class="account-page-wrapper">
     <div class="text-start mb-4">
         <a href="index.php?act=thong_tin_tai_khoan" class="back-to-dashboard-link">&larr; Quay lại trang tài khoản</a>
     </div>
@@ -132,12 +131,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const passwordInput = document.getElementById(inputId);
         if (!toggleButton || !passwordInput) return;
 
+        const eyeIcon = '<i class="fas fa-eye"></i>';
+        const eyeSlashIcon = '<i class="fas fa-eye-slash"></i>';
+
         toggleButton.addEventListener('click', function() {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
-            this.querySelector('i').classList.toggle('fa-eye');
-            this.querySelector('i').classList.toggle('fa-eye-slash');
+            
+            // Thay đổi icon
+            if (type === 'password') {
+                this.innerHTML = eyeIcon;
+            } else {
+                this.innerHTML = eyeSlashIcon;
+            }
         });
+        // Đặt icon ban đầu
+        toggleButton.innerHTML = eyeIcon;
     }
 
     setupPasswordToggle('toggleCurrentPassword', 'current_password');

@@ -55,7 +55,9 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
             <!-- {{product_highlights}} -->
             <div class="featured-highlights-card mb-4">
                 <div class="featured-highlights-card__image">
+
                     <img src="TaiLen/san_pham/<?= htmlspecialchars($san_pham['image_url']) ?>" alt="Tính năng nổi bật của <?= htmlspecialchars($san_pham['name']) ?>" class="product-main-image">
+
                 </div>
                 <div class="featured-highlights-card__content">
                     <h5 class="card-title">Tính năng nổi bật</h5>
@@ -171,8 +173,8 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
                             <span>Giao hàng tận nơi hoặc nhận tại cửa hàng</span>
                         </button>
                         <button type="submit" name="add_to_cart" class="btn-add-to-cart">
-                            <i class="fas fa-cart-plus"></i> Thêm vào giỏ
-                        </button>
+                        <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+                    </button>
                     <?php else: ?>
                         <button type="button" class="btn-add-to-cart" disabled>Hết hàng</button>
                     <?php endif; ?>
@@ -468,7 +470,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 // Nếu là nút "Mua ngay", chuyển hướng đến trang thanh toán
                 if (event.submitter && event.submitter.name === 'buy_now') {
-                    window.location.href = 'index.php?act=gio_hang';
+                    // Tạo một form ẩn để POST trực tiếp đến trang thanh toán
+                    const checkoutForm = document.createElement('form');
+                    checkoutForm.method = 'POST';
+                    checkoutForm.action = 'index.php?act=thanh_toan';
+                    checkoutForm.innerHTML = `<input type="hidden" name="selected_items[]" value="${formData.get('id')}">`;
+                    document.body.appendChild(checkoutForm);
+                    checkoutForm.submit();
                 } else {
                     // (Tùy chọn) Hiển thị thông báo "Đã thêm vào giỏ"
                     alert('Đã thêm sản phẩm vào giỏ hàng!');
@@ -481,15 +489,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- JS cho các nút chọn phiên bản (màu sắc, dung lượng) ---
     const finalPriceEl = document.querySelector('.price-box .final-price');
     const stickyPriceEl = document.querySelector('.sticky-price');
-    const formPriceInput = document.querySelector('#product-purchase-form input[name="price"]');
-    const mainImageEl = document.querySelector('.product-main-image'); // Select the single main image
+    const formPriceInput = document.querySelector('#product-purchase-form input[name="price"]')
+    const mainImageEl = document.querySelector('.featured-highlights-card__image img');
     const stickyImageEl = document.querySelector('.sticky-product-info img');
 
     // --- DỮ LIỆU GIÁ CHO CÁC PHIÊN BẢN ---
     // Trong thực tế, bạn nên lấy dữ liệu này từ CSDL và in ra bằng PHP
     const basePrice = <?= $display_price ?>;
     <?php
-        // Tạo đối tượng giá từ PHP để JS sử dụng (giả định)
+        // Tạo đối tượng giá từ PHP để JS sử dụng
         $js_variant_prices = [
             "128GB" => [], "256GB" => [], "512GB" => []
         ];

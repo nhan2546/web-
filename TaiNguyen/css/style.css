@@ -1274,11 +1274,6 @@ main.cp-container {
     font-size: 14px;
     color: var(--muted);
 }
-
-/* Container cho trang chỉnh sửa thông tin */
-/* Lớp này giờ đây chỉ dùng để nhóm các style chung, không giới hạn chiều rộng */
-.account-form-container {}
-
 /* Container hẹp hơn cho các form để dễ đọc hơn */
 .container-narrow {
     max-width: 900px; /* Giới hạn chiều rộng của nội dung chính */
@@ -1614,8 +1609,9 @@ main.cp-container {
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
     height: 30px;
-    -moz-appearance: textfield;
-}.quantity-selector input::-webkit-inner-spin-button,
+    -moz-appearance: textfield; /* Firefox */
+}
+.quantity-selector input::-webkit-inner-spin-button,
 .quantity-selector input::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;

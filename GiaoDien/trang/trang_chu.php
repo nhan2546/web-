@@ -109,3 +109,64 @@
       <p>Chưa có sản phẩm nào.</p>
     <?php endif; ?>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // --- JAVASCRIPT CHO GIỎ HÀNG AJAX ---
+    const cartBadge = document.getElementById('cart-badge');
+
+    const updateBadgeVisibility = () => {
+        if (cartBadge) {
+            const count = parseInt(cartBadge.textContent, 10);
+            cartBadge.style.transform = (count > 0) ? 'scale(1)' : 'scale(0)';
+        }
+    };
+
+    document.querySelectorAll('form[action="index.php?act=them_vao_gio"]').forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const actionUrl = this.getAttribute('action');
+
+            fetch(actionUrl, { method: 'POST', body: formData })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && cartBadge) {
+                    cartBadge.textContent = data.new_total_quantity;
+                    updateBadgeVisibility();
+                    cartBadge.style.transform = 'scale(1.3)';
+                    setTimeout(() => { cartBadge.style.transform = 'scale(1)'; }, 200);
+                }
+            })
+            .catch(error => console.error('Lỗi khi thêm vào giỏ hàng:', error));
+        });
+    });
+
+    updateBadgeVisibility();
+
+    // --- JAVASCRIPT CHO SLIDER ---
+    const heroSlider = document.querySelector(".hero-slider");
+    if (heroSlider) {
+        new Swiper(heroSlider, {
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".hero-slider .swiper-button-next",
+                prevEl: ".hero-slider .swiper-button-prev",
+            },
+        });
+    }
+
+    // --- JAVASCRIPT CHO COUNTDOWN ---
+    const countdownEl = document.querySelector('.cp-countdown');
+    // ... (Thêm logic countdown nếu cần)
+
+});
+</script>
