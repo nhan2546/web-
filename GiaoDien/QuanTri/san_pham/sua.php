@@ -37,12 +37,12 @@ if (!isset($san_pham) || !isset($danh_sach_danh_muc)) {
     
                 <div class="form-group-grid">
                     <label class="form-label">Giá (VNĐ)</label>
-                    <input type="number" name="price" class="form-control" min="0" value="<?= htmlspecialchars($san_pham['price']) ?>" required>
+                    <input type="number" name="price" class="form-control" min="0" step="any" value="<?= htmlspecialchars($san_pham['price']) ?>" required>
                 </div>
 
                 <div class="form-group-grid">
                     <label class="form-label">Giá khuyến mãi (VNĐ)</label>
-                    <input type="number" name="sale_price" class="form-control" min="0" value="<?= htmlspecialchars($san_pham['sale_price'] ?? '') ?>" placeholder="Để trống hoặc nhập 0 nếu không giảm giá">
+                    <input type="number" name="sale_price" class="form-control" min="0" step="any" value="<?= htmlspecialchars($san_pham['sale_price'] ?? '') ?>" placeholder="Để trống hoặc nhập 0 nếu không giảm giá">
                 </div>
 
                 <div class="form-group-grid">
@@ -52,19 +52,7 @@ if (!isset($san_pham) || !isset($danh_sach_danh_muc)) {
 
                 <div class="form-group-grid">
                     <label class="form-label">Thông số sản phẩm</label>
-                    <?php
-                        // Dữ liệu mẫu cho thông số kỹ thuật
-                        $sample_specs = "Màn hình: 6.1 inch, Super Retina XDR, 120Hz\n"
-                                      . "Hệ điều hành: iOS 17\n"
-                                      . "Camera sau: Chính 48 MP & Phụ 12 MP, 12 MP\n"
-                                      . "Camera trước: 12 MP\n"
-                                      . "Chip: Apple A17 Pro\n"
-                                      . "RAM: 8 GB\n"
-                                      . "Dung lượng lưu trữ: 128 GB\n"
-                                      . "SIM: 1 Nano SIM & 1 eSIM\n"
-                                      . "Pin, Sạc: 20 W";
-                    ?>
-                    <textarea name="description" class="form-control" rows="5"><?= htmlspecialchars(empty(trim($san_pham['description'])) ? $sample_specs : $san_pham['description']) ?></textarea>
+                    <textarea name="description" class="form-control" rows="5" placeholder="Nhập mỗi thông số trên một dòng, ví dụ: RAM: 8 GB"><?= htmlspecialchars($san_pham['description'] ?? '') ?></textarea>
                 </div>
 
                 <div class="form-group-grid">

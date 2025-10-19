@@ -369,7 +369,7 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
                     <div class="cp-card">
                         <a href="index.php?act=chi_tiet_san_pham&id=<?= $product['id'] ?>">
                             <div class="cp-card__image-container">
-                                <img src="TaiLen/san_pham/<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+                                <img src="TaiLen/san_pham/<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['name']) ?>" loading="lazy" decoding="async">
                             </div>
                             <div class="cp-card__content">
                                 <h4><?= htmlspecialchars($product['name']) ?></h4>

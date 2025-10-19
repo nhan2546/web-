@@ -123,7 +123,19 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
                 </div>
             </div>
             <div class="variant-group mb-4">
-                <label class="variant-label">Màu sắc</label>
+                <?php
+                    // Mặc định nhãn là "Màu sắc"
+                    $color_variant_label = 'Màu sắc';
+
+                    // Lấy tên danh mục từ breadcrumbs (phần tử thứ 2 từ cuối lên)
+                    $category_name_from_breadcrumb = $breadcrumbs[count($breadcrumbs) - 2]['title'] ?? '';
+
+                    // Nếu sản phẩm thuộc danh mục "Tai nghe", đổi nhãn
+                    if (mb_strtolower($category_name_from_breadcrumb, 'UTF-8') === 'tai nghe') {
+                        $color_variant_label = 'Phiên bản màu sắc';
+                    }
+                ?>
+                <label class="variant-label"><?= htmlspecialchars($color_variant_label) ?></label>
                 <div class="variant-options" data-group="color">
                     <?php
                         // Giải mã chuỗi JSON từ CSDL để lấy danh sách các phiên bản màu
@@ -445,6 +457,44 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // --- HÀM TẠO HIỆU ỨNG "FLY TO CART" ---
+    function flyToCart(sourceElement) {
+        const cartIcon = document.querySelector('.cp-cart-link');
+        if (!sourceElement || !cartIcon) return;
+
+        // 1. Tạo một bản sao của ảnh để "bay"
+        const flyingElement = sourceElement.cloneNode(true);
+        flyingElement.classList.add('fly-to-cart-element');
+        document.body.appendChild(flyingElement);
+
+        // 2. Lấy vị trí bắt đầu (từ ảnh sản phẩm)
+        const startRect = sourceElement.getBoundingClientRect();
+        const cartRect = cartIcon.getBoundingClientRect();
+
+        // 3. Thiết lập style ban đầu cho phần tử bay
+        flyingElement.style.left = `${startRect.left}px`;
+        flyingElement.style.top = `${startRect.top}px`;
+        flyingElement.style.width = `${startRect.width}px`;
+        flyingElement.style.height = `${startRect.height}px`;
+
+        // 4. Bắt đầu animation sau một khoảng trễ nhỏ để trình duyệt kịp render
+        requestAnimationFrame(() => {
+            // Vị trí kết thúc (tại giỏ hàng)
+            const endLeft = cartRect.left + (cartRect.width / 2);
+            const endTop = cartRect.top + (cartRect.height / 2);
+
+            flyingElement.style.left = `${endLeft}px`;
+            flyingElement.style.top = `${endTop}px`;
+            flyingElement.style.width = '30px'; // Thu nhỏ lại
+            flyingElement.style.height = '30px';
+            flyingElement.style.opacity = '0.5';
+            flyingElement.style.transform = 'scale(0.2)';
+        });
+
+        // 5. Xóa phần tử bay sau khi animation kết thúc (1 giây)
+        setTimeout(() => flyingElement.remove(), 1000);
+    }
+
     // --- JS cho form thêm vào giỏ hàng ---
     // Đảm bảo form "Mua ngay" và "Thêm vào giỏ" hoạt động với AJAX
     const purchaseForm = document.getElementById('product-purchase-form');
@@ -456,6 +506,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData(this);
             const actionUrl = this.getAttribute('action');
             const cartBadge = document.getElementById('cart-badge');
+
+            // Chỉ chạy hiệu ứng khi nhấn nút "Thêm vào giỏ"
+            if (event.submitter && event.submitter.name === 'add_to_cart') {
+                const productImage = document.querySelector('.product-main-image');
+                flyToCart(productImage);
+            }
 
             fetch(actionUrl, {
                 method: 'POST',

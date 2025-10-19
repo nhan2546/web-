@@ -19,13 +19,23 @@ class Voucher {
              WHERE code = ?
              AND is_active = 1
              AND (usage_limit IS NULL OR usage_count < usage_limit)
-             AND (expires_at IS NULL OR expires_at > NOW())
+             AND (expiry_date IS NULL OR expiry_date > NOW())
              LIMIT 1"
         );
         $stmt->execute([$code]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Tìm voucher chỉ bằng mã code (dùng cho admin kiểm tra trùng lặp).
+     * @param string $code Mã voucher.
+     * @return mixed Mảng thông tin voucher nếu tìm thấy, ngược lại trả về false.
+     */
+    public function findVoucherByCodeForAdmin($code) {
+        $stmt = $this->pdo->prepare("SELECT * FROM vouchers WHERE code = ?");
+        $stmt->execute([$code]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     // --- CÁC HÀM CHO ADMIN ---
 
     /**
@@ -49,10 +59,10 @@ class Voucher {
      * Thêm một voucher mới.
      */
     public function addVoucher($code, $description, $discount_type, $discount_value, $min_order_amount, $usage_limit, $expires_at, $is_active) {
-        $sql = "INSERT INTO vouchers (code, description, discount_type, discount_value, min_order_amount, usage_limit, expires_at, is_active) 
+        $sql = "INSERT INTO vouchers (code, description, discount_type, discount_value, min_order_amount, usage_limit, expiry_date, is_active) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
-        // Nếu expires_at rỗng thì chèn NULL
+        // Nếu usage_limit hoặc expires_at rỗng, chèn NULL vào CSDL
         $expires_at = empty($expires_at) ? null : $expires_at;
         $usage_limit = empty($usage_limit) ? null : (int)$usage_limit;
         return $stmt->execute([$code, $description, $discount_type, $discount_value, $min_order_amount, $usage_limit, $expires_at, $is_active]);
@@ -62,9 +72,10 @@ class Voucher {
      * Cập nhật thông tin một voucher.
      */
     public function updateVoucher($id, $code, $description, $discount_type, $discount_value, $min_order_amount, $usage_limit, $expires_at, $is_active) {
-        $sql = "UPDATE vouchers SET code = ?, description = ?, discount_type = ?, discount_value = ?, min_order_amount = ?, usage_limit = ?, expires_at = ?, is_active = ? 
+        $sql = "UPDATE vouchers SET code = ?, description = ?, discount_type = ?, discount_value = ?, min_order_amount = ?, usage_limit = ?, expiry_date = ?, is_active = ? 
                 WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
+        // Nếu usage_limit hoặc expires_at rỗng, chèn NULL vào CSDL
         $expires_at = empty($expires_at) ? null : $expires_at;
         $usage_limit = empty($usage_limit) ? null : (int)$usage_limit;
         return $stmt->execute([$code, $description, $discount_type, $discount_value, $min_order_amount, $usage_limit, $expires_at, $is_active, $id]);

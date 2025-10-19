@@ -50,6 +50,9 @@ $current_act = $_GET['act'] ?? 'dashboard';
                 <li class="sidebar-nav-item <?php echo ($current_act == 'ds_khachhang') ? 'active' : ''; ?>">
                     <a href="admin.php?act=ds_khachhang"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16"><path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm-2 3a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4z"/></svg>Quản lý Khách Hàng</a>
                 </li>
+                <li class="sidebar-nav-item <?php echo (in_array($current_act, ['ds_voucher', 'them_voucher', 'sua_voucher'])) ? 'active' : ''; ?>">
+                    <a href="admin.php?act=ds_voucher"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-ticket-detailed-fill" viewBox="0 0 16 16"><path d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5V6a.5.5 0 0 1-.5.5 1.5 1.5 0 0 0 0 3 .5.5 0 0 1 .5.5v1.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.5V10a.5.5 0 0 1 .5-.5 1.5 1.5 0 1 0 0-3A.5.5 0 0 1 0 6zM4 5.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5m0 2a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5m0 2a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4a.5.5 0 0 0-.5.5"/></svg>Quản lý Voucher</a>
+                </li>
                 <!-- Thêm mục Xem trang người dùng -->
                 <li class="sidebar-nav-item" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
                     <a href="index.php" target="_blank">

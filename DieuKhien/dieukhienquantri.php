@@ -4,7 +4,7 @@ require_once __DIR__ . '/../MoHinh/SanPham.php';
 require_once __DIR__ . '/../MoHinh/DanhMuc.php';
 require_once __DIR__ . '/../MoHinh/DonHang.php';
 require_once __DIR__ . '/../MoHinh/NguoiDung.php';
-require_once __DIR__ . '/../MoHinh/Voucher.php';
+require_once __DIR__ . '/../MoHinh/Voucher.php'; // Thêm model Voucher
 require_once __DIR__ . '/../MoHinh/ThongKe.php'; // Thêm model thống kê
 require_once __DIR__ . '/../MoHinh/BaoHanh.php'; // Thêm model bảo hành
 
@@ -345,11 +345,11 @@ class DieuKhienQuanTri {
     public function ds_voucher() {
         $voucher_model = new Voucher($this->pdo);
         $danh_sach_voucher = $voucher_model->getAllVouchers();
-        include __DIR__ . '/../GiaoDien/QuanTri/voucher/danh_sach.php';
+        include __DIR__ . '/../GiaoDien/trang/danh_sach.php';
     }
 
     public function them_voucher() {
-        include __DIR__ . '/../GiaoDien/QuanTri/voucher/them.php';
+        include __DIR__ . '/../GiaoDien/trang/them.php';
     }
 
     public function xl_them_voucher() {
@@ -366,7 +366,7 @@ class DieuKhienQuanTri {
             $voucher_model = new Voucher($this->pdo);
 
             // KIỂM TRA XEM MÃ VOUCHER ĐÃ TỒN TẠI CHƯA
-            if ($voucher_model->findVoucherByCode($code)) {
+            if ($voucher_model->findVoucherByCodeForAdmin($code)) {
                 // Nếu đã tồn tại, chuyển hướng lại với thông báo lỗi
                 header('Location: admin.php?act=them_voucher&error=code_exists');
                 exit;
@@ -384,7 +384,7 @@ class DieuKhienQuanTri {
         $voucher_model = new Voucher($this->pdo);
         $voucher = $voucher_model->getVoucherById($id);
         if ($voucher) {
-            include __DIR__ . '/../GiaoDien/QuanTri/voucher/sua.php';
+            include __DIR__ . '/../GiaoDien/trang/sua.php';
         } else {
             header('Location: admin.php?act=ds_voucher');
         }
@@ -441,6 +441,7 @@ class DieuKhienQuanTri {
         // Thay vì include file cũ, chúng ta sẽ dùng file mới đã được cập nhật
         // để hiển thị danh sách khách hàng.
         include __DIR__ . '/../GiaoDien/QuanTri/nguoi_dung/quan_ly_KH.php';
+    }
     }
 
     public function toggle_trangthai_khachhang() {

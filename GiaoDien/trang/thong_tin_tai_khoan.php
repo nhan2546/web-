@@ -1,72 +1,95 @@
-<?php
-// Lấy chữ cái đầu của tên để làm avatar mặc định
-$first_letter = mb_substr($user_info['fullname'], 0, 1, 'UTF-8');
-?>
-
 <div class="account-page-wrapper">
-    <div class="account-dashboard-header">
-        <div class="account-dashboard-avatar">
-            <?php if (!empty($user_info['avatar_url'])): ?>
-                <img src="TaiLen/avatars/<?= htmlspecialchars($user_info['avatar_url']) ?>" alt="Avatar">
-            <?php else: ?>
-                <span><?= htmlspecialchars(strtoupper($first_letter)) ?></span>
-            <?php endif; ?>
-        </div>
-        <div class="account-dashboard-greeting">
-            <p>Xin chào,</p>
-            <div class="greeting-name-rank">
-                <h3><?= htmlspecialchars($user_info['fullname']) ?></h3>
-                <span class="customer-rank-badge <?= $rank_info['class'] ?>"><?= $rank_info['rank'] ?></span>
-            </div>
-        </div>
-    </div>
+    <h1 class="text-center mb-5">Tài khoản của tôi</h1>
 
-    <!-- Khu vực tiến trình nâng hạng -->
-    <div class="rank-progress-container">
-        <div class="rank-progress-bar">
-            <div class="rank-progress-bar-fill" style="width: <?= $rank_info['progress_percentage'] ?>%;"></div>
-        </div>
-        <div class="rank-progress-info">
-            <?php if ($rank_info['next_rank']): ?>
-                <p>Chi tiêu thêm <strong><?= number_format($rank_info['needed_for_next'], 0, ',', '.') ?>₫</strong> để lên hạng <strong><?= $rank_info['next_rank'] ?></strong></p>
-            <?php else: ?>
-                <p>🎉 Chúc mừng! Bạn đã đạt hạng cao nhất.</p>
-            <?php endif; ?>
-        </div>
-    </div>
+    <!-- Hiển thị thông báo thành công/lỗi -->
+    <?php
+    $success_msg = '';
+    $error_msg = '';
+    if (isset($_GET['success'])) {
+        switch ($_GET['success']) {
+            case '1': $success_msg = 'Cập nhật thông tin tài khoản thành công!'; break;
+            case 'password_changed': $success_msg = 'Đổi mật khẩu thành công!'; break;
+            case 'avatar_updated': $success_msg = 'Cập nhật ảnh đại diện thành công!'; break;
+        }
+    }
+    if (isset($_GET['error'])) {
+        switch ($_GET['error']) {
+            case 'password_mismatch': $error_msg = 'Mật khẩu mới không khớp.'; break;
+            case 'wrong_password': $error_msg = 'Mật khẩu hiện tại không đúng.'; break;
+            case 'avatar_upload_failed': $error_msg = 'Tải ảnh đại diện lên thất bại.'; break;
+        }
+    }
+    ?>
+    <?php if ($success_msg): ?>
+        <div class="alert alert-success mb-4"><?= $success_msg ?></div>
+    <?php endif; ?>
+    <?php if ($error_msg): ?>
+        <div class="alert alert-danger mb-4"><?= $error_msg ?></div>
+    <?php endif; ?>
 
-    <div class="account-dashboard-grid">
-        <!-- Card: Thông tin tài khoản -->
-        <a href="index.php?act=chinh_sua_thong_tin" class="account-dashboard-card">
-            <div class="card-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    <div class="account-layout">
+        <!-- Cột trái: Menu điều hướng -->
+        <aside class="account-sidebar">
+            <div class="account-user-info">
+                <div class="account-avatar">
+                    <?php if (!empty($user_info['avatar_url'])): ?>
+                        <img src="TaiLen/avatars/<?= htmlspecialchars($user_info['avatar_url']) ?>" alt="Avatar">
+                    <?php else: ?>
+                        <span><?= htmlspecialchars(strtoupper(mb_substr($user_info['fullname'], 0, 1, 'UTF-8'))) ?></span>
+                    <?php endif; ?>
+                </div>
+                <div class="user-details">
+                    <p>Tài khoản của</p>
+                    <strong><?= htmlspecialchars($user_info['fullname']) ?></strong>
+                </div>
             </div>
-            <div class="card-info">
-                <h4>Thông tin tài khoản</h4>
-                <p>Chỉnh sửa thông tin cá nhân, email, số điện thoại của bạn.</p>
-            </div>
-        </a>
+            <nav class="account-nav">
+                <a href="index.php?act=thong_tin_tai_khoan" class="account-nav-item active"><i class="fas fa-user"></i><span>Thông tin chung</span></a>
+                <a href="index.php?act=lich_su_mua_hang" class="account-nav-item"><i class="fas fa-receipt"></i><span>Lịch sử mua hàng</span></a>
+                <a href="index.php?act=chinh_sua_thong_tin" class="account-nav-item"><i class="fas fa-edit"></i><span>Chỉnh sửa thông tin</span></a>
+                <a href="index.php?act=dang_xuat" class="account-nav-item logout"><i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span></a>
+            </nav>
+        </aside>
 
-        <!-- Card: Lịch sử mua hàng -->
-        <a href="index.php?act=lich_su_mua_hang" class="account-dashboard-card">
-            <div class="card-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        <!-- Cột phải: Nội dung chính -->
+        <main class="account-content">
+            <!-- Thanh tiến trình hạng thành viên -->
+            <div class="rank-progress-container">
+                <div class="rank-header">
+                    <div class="greeting-name-rank">
+                        <span class="customer-rank-badge <?= htmlspecialchars($rank_info['class']) ?>"><?= htmlspecialchars($rank_info['rank']) ?></span>
+                    </div>
+                    <div class="total-spending">Tổng chi tiêu: <strong><?= number_format($total_spending, 0, ',', '.') ?>₫</strong></div>
+                </div>
+                <div class="rank-progress-bar">
+                    <div class="rank-progress-bar-fill" style="width: <?= $rank_info['progress_percentage'] ?>%;"></div>
+                </div>
+                <div class="rank-progress-info">
+                    <?php if ($rank_info['next_rank']): ?>
+                        <p>Bạn cần chi tiêu thêm <strong><?= number_format($rank_info['needed_for_next'], 0, ',', '.') ?>₫</strong> để đạt hạng <strong><?= $rank_info['next_rank'] ?></strong>.</p>
+                    <?php else: ?>
+                        <p>Chúc mừng! Bạn đã đạt hạng cao nhất.</p>
+                    <?php endif; ?>
+                </div>
             </div>
-            <div class="card-info">
-                <h4>Lịch sử mua hàng</h4>
-                <p>Theo dõi và quản lý các đơn hàng đã đặt.</p>
-            </div>
-        </a>
 
-        <!-- Card: Đăng xuất -->
-        <a href="index.php?act=dang_xuat" class="account-dashboard-card">
-            <div class="card-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            <!-- Lưới các thẻ chức năng -->
+            <div class="account-dashboard-grid">
+                <a href="index.php?act=chinh_sua_thong_tin" class="account-dashboard-card">
+                    <div class="card-icon"><i class="fas fa-edit"></i></div>
+                    <div class="card-info">
+                        <h4>Thông tin cá nhân</h4>
+                        <p>Xem và chỉnh sửa thông tin cá nhân, địa chỉ.</p>
+                    </div>
+                </a>
+                <a href="index.php?act=lich_su_mua_hang" class="account-dashboard-card">
+                    <div class="card-icon"><i class="fas fa-receipt"></i></div>
+                    <div class="card-info">
+                        <h4>Lịch sử mua hàng</h4>
+                        <p>Theo dõi trạng thái và chi tiết các đơn hàng đã đặt.</p>
+                    </div>
+                </a>
             </div>
-            <div class="card-info">
-                <h4>Đăng xuất</h4>
-                <p>Kết thúc phiên đăng nhập của bạn.</p>
-            </div>
-        </a>
+        </main>
     </div>
 </div>

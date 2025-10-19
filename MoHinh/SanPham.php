@@ -185,9 +185,21 @@ class sanpham {
     /*cap nhat san pham*/
     // Cập nhật: Thêm tham số $variants_json
     public function capnhatsp($id, $name, $description, $price, $image_url, $quantity, $category_id, $sale_price = null, $variants_json = null) {
-        $sql = "UPDATE products SET name = ?, description = ?, price = ?, sale_price = ?, image_url = ?, quantity = ?, category_id = ?, variants_json = ? WHERE id = ?";
+        // Sửa lại câu SQL để bao gồm cả trường 'highlights'
+        $sql = "UPDATE products SET 
+                    name = ?, 
+                    description = ?, 
+                    price = ?, 
+                    sale_price = ?, 
+                    image_url = ?, 
+                    quantity = ?, 
+                    category_id = ?, 
+                    variants_json = ?, 
+                    highlights = ? 
+                WHERE id = ?";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$name, $description, $price, $sale_price, $image_url, $quantity, $category_id, $variants_json, $id]);
+        // Sửa lại thứ tự các biến trong mảng execute cho khớp với câu SQL
+        return $stmt->execute([$name, $description, $price, $sale_price, $image_url, $quantity, $category_id, $variants_json, $highlights, $id]);
     }
 
     /*xoa san pham*/

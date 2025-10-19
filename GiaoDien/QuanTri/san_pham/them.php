@@ -43,7 +43,19 @@
 
                 <div class="form-group-grid">
                     <label class="form-label">Thông số sản phẩm</label>
-                    <textarea name="description" class="form-control" rows="3"></textarea>
+                    <?php
+                        // Dữ liệu mẫu cho thông số kỹ thuật để người dùng dễ hình dung
+                        $sample_specs = "Màn hình: 6.1 inch, Super Retina XDR, 120Hz\n"
+                                      . "Hệ điều hành: iOS 17\n"
+                                      . "Camera sau: Chính 48 MP & Phụ 12 MP, 12 MP\n"
+                                      . "Camera trước: 12 MP\n"
+                                      . "Chip: Apple A17 Pro\n"
+                                      . "RAM: 8 GB\n"
+                                      . "Dung lượng lưu trữ: 128 GB\n"
+                                      . "SIM: 1 Nano SIM & 1 eSIM\n"
+                                      . "Pin, Sạc: 20 W";
+                    ?>
+                    <textarea name="description" class="form-control" rows="5" placeholder="Nhập mỗi thông số trên một dòng, ví dụ: RAM: 8 GB"><?= htmlspecialchars($sample_specs) ?></textarea>
                 </div>
 
                 <div class="form-group-grid">

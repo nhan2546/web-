@@ -217,6 +217,11 @@ body.admin-body {
 .badge-cancelled { background-color: #dc3545; }
 .badge-confirmed { background-color: #007bff; } /* Thêm màu cho trạng thái đã xác nhận */
 
+/* Thêm màu cho các trạng thái trong trang lịch sử đơn hàng của người dùng */
+.badge-pending { background-color: #ffc107; color: #333; }
+.badge-shipping { background-color: #17a2b8; }
+.badge-success { background-color: #28a745; }
+
 .badge-secondary {
     background-color: #e9ecef; 
     color: #212529; 

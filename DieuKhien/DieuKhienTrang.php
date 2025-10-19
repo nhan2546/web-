@@ -29,16 +29,27 @@ class controller {
 
     public function hienthi_sp() {
         $sp_model = new sanpham($this->pdo);
+        $dm_model = new danhmuc($this->pdo);
+
+        // Lấy các tham số lọc và sắp xếp từ URL
+        $filters = [
+            'brands' => $_GET['brands'] ?? [],
+            'price_range' => $_GET['price'] ?? '',
+        ];
+        $sort_by = $_GET['sort'] ?? 'newest';
 
         // Logic phân trang
-        $products_per_page = 8; // Số sản phẩm trên mỗi trang
+        $products_per_page = 8;
         $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $offset = ($current_page - 1) * $products_per_page;
 
-        $total_products = $sp_model->countAllSanPham();
+        // Lấy tổng số sản phẩm và danh sách sản phẩm đã lọc
+        $total_products = $sp_model->countAllSanPham($filters);
         $total_pages = ceil($total_products / $products_per_page);
+        $danh_sach_san_pham = $sp_model->getallsanpham($products_per_page, $offset, $sort_by, $filters);
 
-        $danh_sach_san_pham = $sp_model->getallsanpham($products_per_page, $offset);
+        // Lấy dữ liệu cho sidebar filter
+        $available_brands = $dm_model->getAllBrands();
 
         include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
     }
@@ -52,6 +63,13 @@ class controller {
 
         $sp_model = new sanpham($this->pdo);
         $dm_model = new danhmuc($this->pdo);
+
+        // Lấy các tham số lọc và sắp xếp từ URL
+        $filters = [
+            'brands' => $_GET['brands'] ?? [],
+            'price_range' => $_GET['price'] ?? '',
+        ];
+        $sort_by = $_GET['sort'] ?? 'newest';
 
         // Lấy thông tin danh mục để hiển thị tiêu đề
         $category_info = $dm_model->getDanhMucById($category_id);
@@ -70,10 +88,14 @@ class controller {
         $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $offset = ($current_page - 1) * $products_per_page;
 
-        $total_products = $sp_model->countSanPhamByDanhMuc($category_id);
+        $total_products = $sp_model->countSanPhamByDanhMuc($category_id, $filters);
         $total_pages = ceil($total_products / $products_per_page);
 
-        $danh_sach_san_pham = $sp_model->getSanPhamByDanhMuc($category_id, $products_per_page, $offset);
+        $danh_sach_san_pham = $sp_model->getSanPhamByDanhMuc($category_id, $products_per_page, $offset, $sort_by, $filters);
+
+        // Lấy dữ liệu cho sidebar filter
+        $available_brands = $dm_model->getBrandsByCategoryId($category_id);
+
         include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
     }
 
@@ -236,8 +258,9 @@ class controller {
             } else {
                 $voucherModel = new Voucher($this->pdo);
                 $voucher = $voucherModel->findVoucherByCode($code);
-
-                if ($voucher) {
+                
+                // Sửa đổi: findVoucherByCode đã kiểm tra các điều kiện (active, usage, expiry)
+                if ($voucher) { 
                     // 1. Tính tổng tiền hàng (subtotal)
                     $subtotal = 0;
                     foreach ($cart as $item) {
@@ -266,8 +289,8 @@ class controller {
                         $_SESSION['voucher_error'] = "Voucher này chỉ áp dụng cho đơn hàng từ {$min_amount_formatted}₫.";
                     }
                 } else {
-                    // Báo lỗi nếu voucher không tồn tại hoặc hết hạn
-                    $_SESSION['voucher_error'] = "Mã voucher không hợp lệ hoặc đã hết hạn.";
+                    // Báo lỗi nếu voucher không tồn tại hoặc không hợp lệ
+                    $_SESSION['voucher_error'] = "Mã voucher không hợp lệ, đã hết hạn hoặc đã hết lượt sử dụng.";
                 }
             }
         }
@@ -295,7 +318,7 @@ class controller {
         unset($_SESSION['voucher_success']);
 
         // Chuyển hướng về trang giỏ hàng
-        header('Location: index.php?act=thanh_toan');
+        header('Location: index.php?act=gio_hang');
         exit();
     }
 
@@ -633,20 +656,24 @@ class controller {
             exit();
         }
 
+        // Lấy thông tin người dùng để hiển thị trên sidebar
+        $userModel = new NguoiDung($this->pdo);
+        $user_info = $userModel->findUserById($_SESSION['user_id']);
+
         // 2. Lấy trạng thái lọc từ URL
         $status_filter = $_GET['status'] ?? '';
 
         // 3. Lấy đơn hàng từ CSDL dựa trên bộ lọc
         require_once __DIR__ . '/../MoHinh/DonHang.php';
         $donHangModel = new donhang($this->pdo);
-        $danh_sach_don_hang = $donHangModel->getOrdersByUserId($_SESSION['user_id'], $status_filter);
+        $danh_sach_don_hang = $donHangModel->getOrdersByUserId($user_info['id'], $status_filter);
 
         // 4. Định nghĩa các trạng thái để hiển thị trên view
         $order_statuses = [
             'pending' => 'Chờ xác nhận',
-            'processing' => 'Đang xử lý',
-            'shipped' => 'Đang giao hàng',
-            'delivered' => 'Đã giao',
+            'confirmed' => 'Đã xác nhận',
+            'shipping' => 'Đang giao',
+            'success' => 'Thành công',
             'cancelled' => 'Đã hủy'
         ];
 

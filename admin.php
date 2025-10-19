@@ -83,6 +83,17 @@ switch ($act) {
         $adminController->xoa_voucher();
         break;
 
+    // Xử lý logic cho voucher
+    case 'xl_them_voucher':
+        $adminController->xl_them_voucher();
+        break;
+    case 'xl_sua_voucher':
+        $adminController->xl_sua_voucher();
+        break;
+    case 'xoa_voucher':
+        $adminController->xoa_voucher();
+        break;
+
     // Xử lý AJAX
     case 'ajax_get_chart_data':
         $adminController->ajax_get_chart_data();

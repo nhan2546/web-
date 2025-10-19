@@ -48,59 +48,63 @@ if (isset($_GET['error'])) {
         <div class="alert alert-danger mb-4"><?= $error_msg ?></div>
     <?php endif; ?>
 
-    <div class="account-edit-layout container-narrow">
-        <!-- Cột trái: Avatar và các nút -->
-        <div class="card profile-summary-card text-center">
-            <form action="index.php?act=cap_nhat_avatar" method="POST" enctype="multipart/form-data" id="avatar-form">
-                <div class="profile-avatar-wrapper mx-auto">
-                    <label for="avatar-upload-input" class="profile-avatar" style="cursor: pointer;">
-                        <?php if (!empty($user_info['avatar_url'])): ?>
-                            <img id="avatar-preview" src="TaiLen/avatars/<?= htmlspecialchars($user_info['avatar_url']) ?>" alt="Avatar">
-                        <?php else: ?>
-                            <img id="avatar-preview" src="TaiNguyen/hinh_anh/avatar-default.jpg" alt="Avatar mặc định">
-                        <?php endif; ?>
-                    </label>
-                    <label for="avatar-upload-input" class="avatar-upload-overlay">
-                        <i class="fas fa-camera"></i>
-                    </label>
-                    <input type="file" name="avatar" id="avatar-upload-input" class="d-none" accept="image/*">
+    <div class="account-layout">
+        <!-- Cột trái: Menu điều hướng -->
+        <aside class="account-sidebar">
+            <div class="account-user-info">
+                <div class="account-avatar">
+                    <?php if (!empty($user_info['avatar_url'])): ?>
+                        <img src="TaiLen/avatars/<?= htmlspecialchars($user_info['avatar_url']) ?>" alt="Avatar">
+                    <?php else: ?>
+                        <span><?= htmlspecialchars(strtoupper(mb_substr($user_info['fullname'], 0, 1, 'UTF-8'))) ?></span>
+                    <?php endif; ?>
                 </div>
-            </form>
-            <h5 class="profile-name mt-3"><?= htmlspecialchars($user_info['fullname']) ?></h5>
-            <p class="profile-email mb-4"><?= htmlspecialchars($user_info['email']) ?></p>
-            <div class="d-grid gap-2">
-                <button type="submit" form="info-form" class="btn btn-primary">Lưu thông tin</button>
-                <button type="submit" form="password-form" class="btn btn-outline-primary">Đổi mật khẩu</button>
+                <div class="user-details">
+                    <p>Tài khoản của</p>
+                    <strong><?= htmlspecialchars($user_info['fullname']) ?></strong>
+                </div>
             </div>
-        </div>
+            <nav class="account-nav">
+                <a href="index.php?act=thong_tin_tai_khoan" class="account-nav-item"><i class="fas fa-user"></i><span>Thông tin chung</span></a>
+                <a href="index.php?act=lich_su_mua_hang" class="account-nav-item"><i class="fas fa-receipt"></i><span>Lịch sử mua hàng</span></a>
+                <a href="index.php?act=chinh_sua_thong_tin" class="account-nav-item active"><i class="fas fa-edit"></i><span>Chỉnh sửa thông tin</span></a>
+                <a href="index.php?act=dang_xuat" class="account-nav-item logout"><i class="fas fa-sign-out-alt"></i><span>Đăng xuất</span></a>
+            </nav>
+        </aside>
 
-        <!-- Cột phải: Các form -->
-        <div>
+        <!-- Cột phải: Nội dung chính -->
+        <main class="account-content">
             <!-- Form cập nhật thông tin cá nhân -->
             <div class="card mb-4">
-                <div class="card-header"><h3>Thông tin cá nhân</h3></div>
+                <div class="card-header">
+                    <h3>Thông tin cá nhân</h3>
+                </div>
                 <div class="card-body">
                     <form action="index.php?act=cap_nhat_tai_khoan" method="POST" id="info-form">
                         <div class="mb-3"><label for="email" class="form-label">Địa chỉ Email</label><input type="email" id="email" class="form-control" value="<?= htmlspecialchars($user_info['email']) ?>" readonly></div>
                         <div class="mb-3"><label for="fullname" class="form-label">Họ và tên</label><input type="text" id="fullname" name="fullname" class="form-control" value="<?= htmlspecialchars($user_info['fullname']) ?>"></div>
                         <div class="mb-3"><label for="phone_number" class="form-label">Số điện thoại</label><input type="text" id="phone_number" name="phone_number" class="form-control" value="<?= htmlspecialchars($user_info['phone_number'] ?? '') ?>"></div>
                         <div class="mb-3"><label for="address" class="form-label">Địa chỉ</label><input type="text" id="address" name="address" class="form-control" value="<?= htmlspecialchars($user_info['address'] ?? '') ?>"></div>
+                        <div class="text-end"><button type="submit" form="info-form" class="btn btn-primary">Lưu thay đổi</button></div>
                     </form>
                 </div>
             </div>
 
             <!-- Form đổi mật khẩu -->
             <div class="card">
-                <div class="card-header"><h3>Đổi mật khẩu</h3></div>
+                <div class="card-header">
+                    <h3>Đổi mật khẩu</h3>
+                </div>
                 <div class="card-body">
                     <form action="index.php?act=doi_mat_khau" method="POST" id="password-form">
                         <div class="mb-3 password-wrapper"><label for="current_password" class="form-label">Mật khẩu hiện tại</label><input type="password" id="current_password" name="current_password" class="form-control" required><button type="button" class="password-toggle-btn" id="toggleCurrentPassword"><i class="fas fa-eye"></i></button></div>
                         <div class="mb-3 password-wrapper"><label for="new_password" class="form-label">Mật khẩu mới</label><input type="password" id="new_password" name="new_password" class="form-control" required><button type="button" class="password-toggle-btn" id="toggleNewPassword"><i class="fas fa-eye"></i></button></div>
                         <div class="mb-3 password-wrapper"><label for="confirm_new_password" class="form-label">Xác nhận mật khẩu mới</label><input type="password" id="confirm_new_password" name="confirm_new_password" class="form-control" required><button type="button" class="password-toggle-btn" id="toggleConfirmPassword"><i class="fas fa-eye"></i></button></div>
+                        <div class="text-end"><button type="submit" form="password-form" class="btn btn-primary">Đổi mật khẩu</button></div>
                     </form>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 </div>
 
