@@ -38,8 +38,8 @@
                             <td><?php echo number_format($voucher['min_order_amount'], 0, ',', '.'); ?>đ</td>
                             <td>
                                 <?php 
-                                    if ($voucher['expires_at']) {
-                                        echo date('d/m/Y', strtotime($voucher['expires_at']));
+                                    if ($voucher['expiry_date']) {
+                                        echo date('d/m/Y', strtotime($voucher['expiry_date']));
                                     } else {
                                         echo 'Không giới hạn';
                                     }

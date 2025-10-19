@@ -127,12 +127,14 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
                     // Mặc định nhãn là "Màu sắc"
                     $color_variant_label = 'Màu sắc';
 
-                    // Lấy tên danh mục từ breadcrumbs (phần tử thứ 2 từ cuối lên)
-                    $category_name_from_breadcrumb = $breadcrumbs[count($breadcrumbs) - 2]['title'] ?? '';
+                    // Lấy tên danh mục từ breadcrumbs (phần tử thứ 2 từ cuối lên) một cách an toàn
+                    if (isset($breadcrumbs) && count($breadcrumbs) > 2) {
+                        $category_name_from_breadcrumb = $breadcrumbs[count($breadcrumbs) - 2]['title'] ?? '';
 
-                    // Nếu sản phẩm thuộc danh mục "Tai nghe", đổi nhãn
-                    if (mb_strtolower($category_name_from_breadcrumb, 'UTF-8') === 'tai nghe') {
-                        $color_variant_label = 'Phiên bản màu sắc';
+                        // Nếu sản phẩm thuộc danh mục "Tai nghe", đổi nhãn
+                        if (mb_strtolower($category_name_from_breadcrumb, 'UTF-8') === 'tai nghe') {
+                            $color_variant_label = 'Phiên bản màu sắc';
+                        }
                     }
                 ?>
                 <label class="variant-label"><?= htmlspecialchars($color_variant_label) ?></label>
@@ -526,16 +528,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 // Nếu là nút "Mua ngay", chuyển hướng đến trang thanh toán
                 if (event.submitter && event.submitter.name === 'buy_now') {
-                    // Tạo một form ẩn để POST trực tiếp đến trang thanh toán
-                    const checkoutForm = document.createElement('form');
-                    checkoutForm.method = 'POST';
-                    checkoutForm.action = 'index.php?act=thanh_toan';
-                    checkoutForm.innerHTML = `<input type="hidden" name="selected_items[]" value="${formData.get('id')}">`;
-                    document.body.appendChild(checkoutForm);
-                    checkoutForm.submit();
+                    // Sau khi thêm sản phẩm, chuyển thẳng đến trang giỏ hàng
+                    window.location.href = 'index.php?act=gio_hang';
                 } else {
-                    // (Tùy chọn) Hiển thị thông báo "Đã thêm vào giỏ"
-                    alert('Đã thêm sản phẩm vào giỏ hàng!');
+                    // Không cần alert vì đã có hiệu ứng fly-to-cart
                 }
             })
             .catch(error => console.error('Lỗi khi thêm vào giỏ hàng:', error));

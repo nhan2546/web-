@@ -1736,10 +1736,6 @@ main.cp-container {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.cart-item-selector {
-    /* Không cần style gì thêm */
-}
-
 .cart-item-image img {
     width: 80px;
     height: 80px;
@@ -2367,12 +2363,6 @@ main.cp-container {
     padding: 0 8px;
     color: var(--muted);
 }
-
-/* giao diện trang chi tiết sản phẩm - cải tiến */
-.product-detail-page {
-    /* Bỏ padding ngang để nó kế thừa từ .cp-container, đảm bảo thẳng hàng */
-}
-
 .product-title-main {
     font-size: 28px;
     font-weight: 700;
@@ -3614,5 +3604,4 @@ main.cp-container {
 .account-content .card {
     border: 1px solid #e5e5e5;
     box-shadow: var(--shadow);
-}
 }

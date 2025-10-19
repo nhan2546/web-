@@ -42,7 +42,7 @@
 
                 <div class="form-group-grid">
                     <label class="form-label">Ngày hết hạn</label>
-                    <input type="datetime-local" name="expires_at" class="form-control" value="<?= !empty($voucher['expires_at']) ? date('Y-m-d\TH:i', strtotime($voucher['expires_at'])) : '' ?>">
+                    <input type="datetime-local" name="expires_at" class="form-control" value="<?= !empty($voucher['expiry_date']) ? date('Y-m-d\TH:i', strtotime($voucher['expiry_date'])) : '' ?>">
                 </div>
 
                 <div class="form-group-grid">
