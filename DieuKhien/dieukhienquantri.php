@@ -289,7 +289,16 @@ class DieuKhienQuanTri {
     public function xl_them_danhmuc() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'] ?? '';
-            if (!empty($name)) {}
+            if (!empty($name)) {
+                $dm_model = new danhmuc($this->pdo);
+                $dm_model->addCategory($name); // Giả sử bạn có hàm này trong model
+                header('Location: admin.php?act=ds_danhmuc&success=added');
+                exit;
+            }
+            // Nếu tên rỗng, quay lại form thêm với lỗi
+            header('Location: admin.php?act=them_danhmuc&error=empty');
+            exit;
+        }
     }
 
     public function sua_danhmuc() {

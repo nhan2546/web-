@@ -9,6 +9,7 @@
     --text-light: #ecf0f1;
     --text-muted: #95a5a6;
     --primary-color: #D70018; /* Thay đổi: Màu chính là đỏ */
+    --primary-color-dark: #b10014; /* Thêm biến cho màu đỏ sẫm hơn */
     --border-color: #e5e9f2;
 }
 
@@ -30,7 +31,7 @@ body.admin-body {
 .admin-sidebar {
     width: var(--sidebar-width);
     background-color: var(--sidebar-bg); /* Thay đổi: Màu nền đỏ */
-    background-image: linear-gradient(180deg, #D70018, #b10014); /* Thay đổi: Gradient đỏ */
+    background-image: linear-gradient(180deg, var(--primary-color), var(--primary-color-dark)); /* Sử dụng biến */
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -235,8 +236,7 @@ body.admin-body {
     text-decoration: none;
     font-weight: bold;
     transition: background-color 0.2s;
-    font-size: 14px;
-    color: #fff; /* Màu chữ mặc định cho các nút */
+    font-size: 14px; /* Bỏ màu chữ mặc định để từng nút tự định nghĩa */
 }
 
 /* Nút nguy hiểm (màu đỏ, dùng cho hành động xóa) */
@@ -254,12 +254,13 @@ body.admin-body {
 }
 
 .admin-btn-primary:hover {
-    background-color: #b10014; /* Thay đổi: Đỏ đậm hơn khi hover */
+    background-color: var(--primary-color-dark); /* Sử dụng biến */
 }
 
 /* Nút phụ (màu xám, dùng cho hành động Hủy, Quay lại) */
 .admin-btn-secondary {
     background-color: #6c757d;
+    color: #fff;
 }
 .admin-btn-secondary:hover {
     background-color: #5a6268;
@@ -293,8 +294,8 @@ body.admin-body {
 
 .admin-card .form-control:focus,
 .admin-card .form-select:focus { 
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(215, 0, 24, 0.15); /* Thay đổi: Hiệu ứng focus màu đỏ */
+    border-color: var(--primary-color); /* Sử dụng biến cho màu border */
+    box-shadow: 0 0 0 0.2rem rgba(215, 0, 24, 0.25); /* Hiệu ứng focus màu đỏ, tăng nhẹ độ mờ */
 }
 
 /* Khoảng cách giữa các nhóm form */
@@ -383,6 +384,11 @@ body.admin-body {
 
 .admin-table tbody tr:hover {
     background-color: #f8f9fa;
+}
+
+/* Bỏ border dưới của dòng cuối cùng trong tbody để giao diện sạch hơn */
+.admin-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
 /* Các nút hành động (Sửa, Xóa) trong bảng */
