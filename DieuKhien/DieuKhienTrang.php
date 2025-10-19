@@ -190,14 +190,18 @@ class controller {
             $image_url = $_POST['image_url'];
             $price = $_POST['price'];
             $quantity = $_POST['quantity'] ?? 1;
+            $variant_color = $_POST['variant_color'] ?? null; // Lấy thông tin màu sắc
 
-            // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
-            if (isset($_SESSION['cart'][$id])) {
+            // Tạo một ID duy nhất cho sản phẩm trong giỏ hàng, kết hợp ID sản phẩm và màu sắc
+            $cart_item_id = $variant_color ? $id . '_' . str_replace(' ', '_', $variant_color) : $id;
+
+            // Kiểm tra sản phẩm (với màu cụ thể) đã có trong giỏ hàng chưa
+            if (isset($_SESSION['cart'][$cart_item_id])) {
                 // Nếu có, tăng số lượng
-                $_SESSION['cart'][$id]['quantity'] += $quantity;
+                $_SESSION['cart'][$cart_item_id]['quantity'] += $quantity;
             } else {
                 // Nếu chưa, thêm mới
-                $_SESSION['cart'][$id] = [
+                $_SESSION['cart'][$cart_item_id] = [
                     'id' => $id,
                     'name' => $name,
                     'image_url' => $image_url,

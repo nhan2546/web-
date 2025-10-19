@@ -94,6 +94,9 @@
                         <input type="hidden" name="name" value="<?= htmlspecialchars($sp['name']) ?>">
                         <input type="hidden" name="image_url" value="<?= htmlspecialchars($sp['image_url']) ?>">
                         <input type="hidden" name="price" value="<?= htmlspecialchars($sp['price']) ?>">
+                        <?php if (isset($sp['variant_color'])): ?>
+                            <input type="hidden" name="variant_color" value="<?= $sp['variant_color'] ?>">
+                        <?php endif; ?>
                         <button type="submit" class="cp-btn">Thêm vào giỏ</button>
                     </form>
                 <?php else: ?>
