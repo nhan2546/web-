@@ -58,11 +58,6 @@
                     <textarea name="description" class="form-control" rows="5" placeholder="Nhập mỗi thông số trên một dòng, ví dụ: RAM: 8 GB"><?= htmlspecialchars($sample_specs) ?></textarea>
                 </div>
 
-                <div class="form-group-grid">
-                    <label class="form-label">Tính năng nổi bật</label>
-                    <textarea name="highlights" class="form-control" rows="4" placeholder="Nhập mỗi tính năng trên một dòng..."></textarea>
-                </div>
-
                 <!-- Khu vực quản lý phiên bản màu sắc -->
                 <div class="form-group-grid">
                     <label class="form-label">Các phiên bản màu sắc</label>

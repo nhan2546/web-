@@ -52,25 +52,23 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
     <div class="product-detail-layout">
         <!-- Cột trái: Hình ảnh, Mô tả -->
         <div class="product-main-content">
-            <!-- {{product_highlights}} -->
-            <div class="featured-highlights-card mb-4">
-                <div class="featured-highlights-card__image">
-
-                    <img src="TaiLen/san_pham/<?= htmlspecialchars($san_pham['image_url']) ?>" alt="Tính năng nổi bật của <?= htmlspecialchars($san_pham['name']) ?>" class="product-main-image">
-
+            <!-- BỘ SƯU TẬP ẢNH -->
+            <div class="product-gallery-container mb-4">
+                <div class="main-image-wrapper">
+                    <img src="TaiLen/san_pham/<?= htmlspecialchars($san_pham['image_url']) ?>" alt="Ảnh sản phẩm <?= htmlspecialchars($san_pham['name']) ?>" class="product-main-image" id="main-product-image">
                 </div>
-                <div class="featured-highlights-card__content">
-                    <h5 class="card-title">Tính năng nổi bật</h5>
-                    <ul> 
-                        <?php
-                        // Tự động phân tích chuỗi highlights thành danh sách
-                        $highlights_text = trim($san_pham['highlights'] ?? '');
-                        $highlights_lines = !empty($highlights_text) ? explode("\n", $highlights_text) : [];
-                        foreach ($highlights_lines as $line):
-                        ?>
-                            <li><i class="fas fa-check-circle"></i> <?= htmlspecialchars(trim($line)) ?></li>
-                        <?php endforeach; ?>
-                    </ul>
+                <div class="thumbnail-wrapper">
+                    <?php
+                        $gallery_images = !empty($san_pham['gallery_images_json']) ? json_decode($san_pham['gallery_images_json'], true) : [];
+                        // Gộp ảnh đại diện vào đầu danh sách thumbnail
+                        array_unshift($gallery_images, $san_pham['image_url']);
+                        $gallery_images = array_unique($gallery_images); // Loại bỏ ảnh trùng lặp
+                    ?>
+                    <?php foreach ($gallery_images as $index => $img): ?>
+                        <div class="thumbnail-item <?= $index === 0 ? 'active' : '' ?>">
+                            <img src="TaiLen/san_pham/<?= htmlspecialchars($img) ?>" alt="Thumbnail <?= $index + 1 ?>">
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
@@ -99,6 +97,7 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
                     <button id="toggle-specs-btn" class="specs-toggle-btn">Xem thêm</button>
                 </div>
             </div>
+
         </div>
 
         <!-- Cột phải: Giá, Tùy chọn, Mua hàng -->
@@ -170,6 +169,34 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
                     <li>Thu cũ đổi mới - Trợ giá đến 2 triệu.</li>
                     <li>Trả góp 0% qua thẻ tín dụng.</li>
                 </ul>
+            </div>
+
+            <!-- {{additional_info}} - Thông tin bổ sung -->
+            <div class="additional-info-box mb-4">
+                <div class="info-item">
+                    <i class="fas fa-truck"></i>
+                    <span>Giao hàng dự kiến: <strong>Thứ 4, 25/12</strong></span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-sync-alt"></i>
+                    <a href="index.php?act=thu_cu_doi_moi">
+                        <span>Thu cũ đổi mới - Lên đời siêu tiết kiệm</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- {{additional_info}} - Thông tin bổ sung -->
+            <div class="additional-info-box mb-4">
+                <div class="info-item">
+                    <i class="fas fa-truck"></i>
+                    <span>Giao hàng dự kiến: <strong>Thứ 4, 25/12</strong></span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-sync-alt"></i>
+                    <a href="index.php?act=thu_cu_doi_moi">
+                        <span>Thu cũ đổi mới - Lên đời siêu tiết kiệm</span>
+                    </a>
+                </div>
             </div>
 
             <!-- {{purchase_buttons}} --> 
@@ -542,7 +569,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const finalPriceEl = document.querySelector('.price-box .final-price');
     const stickyPriceEl = document.querySelector('.sticky-price');
     const formPriceInput = document.querySelector('#product-purchase-form input[name="price"]')
-    const mainImageEl = document.querySelector('.featured-highlights-card__image img');
+    const mainImageEl = document.getElementById('main-product-image');
     const stickyImageEl = document.querySelector('.sticky-product-info img');
 
     // --- DỮ LIỆU GIÁ CHO CÁC PHIÊN BẢN ---
@@ -582,6 +609,22 @@ document.addEventListener('DOMContentLoaded', function() {
         return new Intl.NumberFormat('vi-VN').format(price) + '₫';
     };
 
+    // Hàm cập nhật giá trên các nút dung lượng
+    function updateStoragePriceTags() {
+        const storageGroup = document.querySelector('.variant-options[data-group="storage"]');
+        if (!storageGroup) return;
+
+        storageGroup.querySelectorAll('.variant-tag').forEach(tag => {
+            const storageValue = tag.dataset.value;
+            // Tìm một phiên bản bất kỳ có dung lượng này để lấy giá đại diện
+            const representativeVariant = allVariants.find(v => v.storage === storageValue && v.price > 0);
+            const price = representativeVariant ? representativeVariant.price : basePrice;
+            
+            const priceEl = tag.querySelector('.option-price');
+            if (priceEl) priceEl.textContent = formatCurrency(price);
+        });
+    }
+
     // Hàm cập nhật giá dựa trên các lựa chọn hiện tại
     function updatePrice() {
         const selectedStorage = document.querySelector('.variant-options[data-group="storage"] .variant-tag.active')?.dataset.value;
@@ -601,8 +644,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Hàm cập nhật hình ảnh
     function updateImage(imageUrl) {
-        if (!imageUrl) return;
-        if (mainImageEl) mainImageEl.src = imageUrl;
+        if (!imageUrl || !mainImageEl) return;
+        mainImageEl.src = imageUrl;
         if (stickyImageEl) stickyImageEl.src = imageUrl;
     }
 
@@ -627,6 +670,24 @@ document.addEventListener('DOMContentLoaded', function() {
             if (group.dataset.group === 'color') {
                 const newImageUrl = clickedTag.dataset.image;
                 updateImage(newImageUrl);
+            }
+        });
+    });
+
+    // --- JS cho Gallery ảnh ---
+    const mainProductImage = document.getElementById('main-product-image');
+    const thumbnailItems = document.querySelectorAll('.thumbnail-item');
+
+    thumbnailItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Bỏ active tất cả thumbnail
+            thumbnailItems.forEach(thumb => thumb.classList.remove('active'));
+            // Active thumbnail được click
+            this.classList.add('active');
+            // Lấy src của ảnh trong thumbnail và cập nhật ảnh chính
+            const newImageSrc = this.querySelector('img').src;
+            if (mainProductImage) {
+                mainProductImage.src = newImageSrc;
             }
         });
     });

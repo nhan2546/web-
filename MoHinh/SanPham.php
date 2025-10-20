@@ -81,9 +81,9 @@ class sanpham {
 
     /*xử lý dữ liệu */
     // Cập nhật: Thêm tham số $variants_json
-    public function themsp($name, $description, $price, $image_url, $quantity, $category_id, $sale_price = null, $variants_json = null){
-        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `sale_price`, `image_url`, `quantity`, `category_id`, `variants_json`) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public function themsp($name, $description, $price, $image_url, $quantity, $category_id, $sale_price = null, $variants_json = null) {
+        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `sale_price`, `image_url`, `quantity`, `category_id`, `variants_json`, `highlights`) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$name, $description, $price, $sale_price, $image_url, $quantity, $category_id, $variants_json]);
     }
@@ -185,7 +185,6 @@ class sanpham {
     /*cap nhat san pham*/
     // Cập nhật: Thêm tham số $variants_json
     public function capnhatsp($id, $name, $description, $price, $image_url, $quantity, $category_id, $sale_price = null, $variants_json = null) {
-        // Sửa lại câu SQL để bao gồm cả trường 'highlights'
         $sql = "UPDATE products SET 
                     name = ?, 
                     description = ?, 
@@ -193,13 +192,11 @@ class sanpham {
                     sale_price = ?, 
                     image_url = ?, 
                     quantity = ?, 
-                    category_id = ?, 
-                    variants_json = ?, 
-                    highlights = ? 
+                    category_id = ?,
+                    variants_json = ?
                 WHERE id = ?";
         $stmt = $this->db->prepare($sql);
-        // Sửa lại thứ tự các biến trong mảng execute cho khớp với câu SQL
-        return $stmt->execute([$name, $description, $price, $sale_price, $image_url, $quantity, $category_id, $variants_json, $highlights, $id]);
+        return $stmt->execute([$name, $description, $price, $sale_price, $image_url, $quantity, $category_id, $variants_json, $id]);
     }
 
     /*xoa san pham*/
