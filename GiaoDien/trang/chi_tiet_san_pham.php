@@ -52,49 +52,51 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
     <div class="product-detail-layout">
         <!-- Cột trái: Hình ảnh, Mô tả -->
         <div class="product-main-content">
-            <!-- BỘ SƯU TẬP ẢNH -->
-            <div class="product-gallery-container mb-4">
-                <div class="main-image-wrapper">
-                    <img src="TaiLen/san_pham/<?= htmlspecialchars($san_pham['image_url']) ?>" alt="Ảnh sản phẩm <?= htmlspecialchars($san_pham['name']) ?>" class="product-main-image" id="main-product-image">
-                </div>
-                <div class="thumbnail-wrapper">
-                    <?php
-                        $gallery_images = !empty($san_pham['gallery_images_json']) ? json_decode($san_pham['gallery_images_json'], true) : [];
-                        // Gộp ảnh đại diện vào đầu danh sách thumbnail
-                        array_unshift($gallery_images, $san_pham['image_url']);
-                        $gallery_images = array_unique($gallery_images); // Loại bỏ ảnh trùng lặp
-                    ?>
-                    <?php foreach ($gallery_images as $index => $img): ?>
-                        <div class="thumbnail-item <?= $index === 0 ? 'active' : '' ?>">
-                            <img src="TaiLen/san_pham/<?= htmlspecialchars($img) ?>" alt="Thumbnail <?= $index + 1 ?>">
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-
-            <!-- {{product_description}} -->
-            <div class="product-specs-box mb-4">
-                <h4 class="mb-3">Thông số sản phẩm</h4>
-                <table class="specs-table">
-                    <tbody>
+            <!-- Bố cục mới: Ảnh bên trái, thông số bên phải -->
+            <div class="product-top-content-grid">
+                <!-- BỘ SƯU TẬP ẢNH -->
+                <div class="product-gallery-container">
+                    <div class="main-image-wrapper">
+                        <img src="TaiLen/san_pham/<?= htmlspecialchars($san_pham['image_url']) ?>" alt="Ảnh sản phẩm <?= htmlspecialchars($san_pham['name']) ?>" class="product-main-image" id="main-product-image">
+                    </div>
+                    <div class="thumbnail-wrapper">
                         <?php
-                        // Tự động phân tích chuỗi thông số thành bảng
-                        $specs_text = trim($san_pham['description']);
-                        $specs_lines = !empty($specs_text) ? explode("\n", $specs_text) : [];
-                        foreach ($specs_lines as $line) {
-                            $parts = explode(':', $line, 2); // Tách dòng bởi dấu ':'
-                            if (count($parts) === 2) {
-                                echo '<tr>';
-                                echo '<td>' . htmlspecialchars(trim($parts[0])) . '</td>';
-                                echo '<td>' . htmlspecialchars(trim($parts[1])) . '</td>';
-                                echo '</tr>';
-                            }
-                        }
+                            $gallery_images = !empty($san_pham['gallery_images_json']) ? json_decode($san_pham['gallery_images_json'], true) : [];
+                            array_unshift($gallery_images, $san_pham['image_url']);
+                            $gallery_images = array_unique($gallery_images);
                         ?>
-                    </tbody>
-                </table>
-                <div class="specs-toggle-wrapper">
-                    <button id="toggle-specs-btn" class="specs-toggle-btn">Xem thêm</button>
+                        <?php foreach ($gallery_images as $index => $img): ?>
+                            <div class="thumbnail-item <?= $index === 0 ? 'active' : '' ?>">
+                                <img src="TaiLen/san_pham/<?= htmlspecialchars($img) ?>" alt="Thumbnail <?= $index + 1 ?>">
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <!-- THÔNG SỐ SẢN PHẨM -->
+                <div class="product-specs-box">
+                    <h4 class="mb-3">Thông số sản phẩm</h4>
+                    <!-- Nội dung bảng thông số giữ nguyên -->
+                    <table class="specs-table">
+                        <tbody>
+                            <?php
+                            $specs_text = trim($san_pham['description']);
+                            $specs_lines = !empty($specs_text) ? explode("\n", $specs_text) : [];
+                            foreach ($specs_lines as $line) {
+                                $parts = explode(':', $line, 2);
+                                if (count($parts) === 2) {
+                                    echo '<tr>';
+                                    echo '<td>' . htmlspecialchars(trim($parts[0])) . '</td>';
+                                    echo '<td>' . htmlspecialchars(trim($parts[1])) . '</td>';
+                                    echo '</tr>';
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <div class="specs-toggle-wrapper">
+                        <button id="toggle-specs-btn" class="specs-toggle-btn">Xem thêm</button>
+                    </div>
                 </div>
             </div>
 
@@ -169,20 +171,6 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
                     <li>Thu cũ đổi mới - Trợ giá đến 2 triệu.</li>
                     <li>Trả góp 0% qua thẻ tín dụng.</li>
                 </ul>
-            </div>
-
-            <!-- {{additional_info}} - Thông tin bổ sung -->
-            <div class="additional-info-box mb-4">
-                <div class="info-item">
-                    <i class="fas fa-truck"></i>
-                    <span>Giao hàng dự kiến: <strong>Thứ 4, 25/12</strong></span>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-sync-alt"></i>
-                    <a href="index.php?act=thu_cu_doi_moi">
-                        <span>Thu cũ đổi mới - Lên đời siêu tiết kiệm</span>
-                    </a>
-                </div>
             </div>
 
             <!-- {{additional_info}} - Thông tin bổ sung -->
