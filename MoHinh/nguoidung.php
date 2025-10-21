@@ -302,4 +302,22 @@ class NguoiDung {
         $stmt->execute([$user_id]);
         return (float) $stmt->fetchColumn();
     }
+
+    /**
+     * Lấy danh sách sản phẩm yêu thích (wishlist) của người dùng.
+     * @param int $user_id ID của người dùng.
+     * @param int|null $limit Giới hạn số lượng sản phẩm.
+     * @return array Mảng các sản phẩm trong wishlist.
+     */
+    public function getWishlist($user_id, $limit = null) {
+        $sql = "SELECT p.* FROM products p
+                JOIN wishlist w ON p.id = w.product_id
+                WHERE w.user_id = ?";
+        if ($limit) {
+            $sql .= " LIMIT " . (int)$limit;
+        }
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$user_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

@@ -308,6 +308,15 @@ class controller {
         // Lấy thông tin voucher từ session nếu có
         $voucher_code = $_SESSION['voucher']['code'] ?? null;
         $discount_amount = $_SESSION['voucher']['discount_amount'] ?? 0;
+
+        // Lấy danh sách sản phẩm đã lưu (wishlist)
+        $saved_products = [];
+        if (isset($_SESSION['user_id'])) {
+            $userModel = new NguoiDung($this->pdo);
+            // Lấy 4 sản phẩm để hiển thị
+            $saved_products = $userModel->getWishlist($_SESSION['user_id'], 4);
+        }
+
         include __DIR__.'/../GiaoDien/trang/gio_hang.php';
     }
 

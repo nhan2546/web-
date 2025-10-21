@@ -105,26 +105,32 @@
                 </div>
             </div>
 
-            <!-- Mục sản phẩm đã lưu (Wishlist) -->
-            <div class="saved-items-section">
-                <h4>Sản phẩm đã lưu</h4>
-                <div class="cp-grid" style="grid-template-columns: repeat(4, 1fr);">
-                    <!-- Ví dụ một sản phẩm đã lưu -->
-                    <article class="cp-card">
-                        <div class="cp-card__image-container">
-                            <a href="#">
-                                <img src="TaiLen/san_pham/1760848327_apple-macbook-air-m2-2023-15-inch-startlight-600x600.jpg" alt="Macbook Air M2 2023">
-                            </a>
-                        </div>
-                        <div class="cp-card__content">
-                            <a href="#">
-                                <h4>Macbook Air M2 2023</h4>
-                            </a>
-                            <button type="button" class="cp-btn">Thêm lại vào giỏ</button>
-                        </div>
-                    </article>
+            <!-- Mục sản phẩm đã lưu (Wishlist) - Đã được làm động -->
+            <?php if (!empty($saved_products)): ?>
+                <div class="saved-items-section">
+                    <h4>Sản phẩm đã lưu</h4>
+                    <div class="cp-grid" style="grid-template-columns: repeat(4, 1fr);">
+                        <?php foreach ($saved_products as $product): ?>
+                            <div class="cp-card">
+                                <a href="index.php?act=chi_tiet_san_pham&id=<?= $product['id'] ?>">
+                                    <div class="cp-card__image-container">
+                                        <img src="TaiLen/san_pham/<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+                                    </div>
+                                    <div class="cp-card__content">
+                                        <h4><?= htmlspecialchars($product['name']) ?></h4>
+                                        <div class="cp-price">
+                                            <?php
+                                                $display_price = ($product['sale_price'] > 0) ? $product['sale_price'] : $product['price'];
+                                            ?>
+                                            <span class="now"><?= number_format($display_price, 0, ',', '.') ?>₫</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
         </form>
     <?php endif; ?>
 </div>
