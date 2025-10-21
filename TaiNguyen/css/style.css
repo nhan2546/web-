@@ -2379,8 +2379,45 @@ main.cp-container {
 .product-detail-layout {
     display: grid;
     grid-template-columns: 1fr; /* Mặc định 1 cột trên mobile */
-    gap: 30px;
+    gap: 40px;
 }
+/* Giao diện bộ sưu tập ảnh sản phẩm */
+.product-gallery-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid #f0f0f0;
+} 
+
+.main-image-wrapper {
+    margin-bottom: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+}
+.main-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1; /* Đặt lại tỷ lệ vuông để ảnh không bị quá cao */
+    object-fit: contain;
+    display: block;
+}
+.thumbnail-wrapper {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto; /* Cho phép cuộn ngang nếu có nhiều ảnh */
+    min-width: 0; /* Sửa lỗi tràn layout trong flexbox */
+}
+.thumbnail-item {
+    border: 2px solid #eee;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+.thumbnail-item.active, .thumbnail-item:hover { border-color: var(--red); }
+.thumbnail-item img { width: 60px; height: 60px; object-fit: cover; display: block; }
 
 /* Cột trái: Nội dung chính */
 .product-main-content .product-image-gallery {
@@ -2613,61 +2650,59 @@ main.cp-container {
 }
 
 /* giao diện khối tính năng nổi bật - cải tiến */
-.featured-highlights-card {
-    display: flex; /* Chuyển sang flex để sắp xếp 2 cột */
-    gap: 30px; /* Tăng khoảng cách giữa ảnh và nội dung */
-    /* Thay đổi: Nền gradient tối hơn để làm nổi bật chữ trắng */
-    background-image: linear-gradient(135deg, #fff1f2 0%, #fde6e1 100%);
-    border-radius: var(--radius);
-    padding: 30px; /* Tăng padding để làm cho card to hơn */
-    overflow: hidden;
-    align-items: center;
-    color: var(--text); /* Đổi lại màu chữ tối để dễ đọc trên nền sáng */
-}
-
-.featured-highlights-card__image {
-    flex-shrink: 0;
-    width: 180px; /* Tăng chiều rộng của khu vực chứa ảnh */
-    align-self: center; /* Căn ảnh vào giữa theo chiều dọc */
-}
-
-.featured-highlights-card__image img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    border-radius: 15px; /* Thêm bo tròn cho hình ảnh */
-    /* Giảm độ đậm của bóng đổ cho phù hợp với nền sáng */
-    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
-}
-
-.featured-highlights-card__content .card-title {
-    font-size: 20px;
-    font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: var(--text); /* Đảm bảo tiêu đề có màu tối */
-}
-
-.featured-highlights-card__content ul {
-    list-style: none; /* Đảm bảo không có dấu chấm đầu dòng */
-    padding: 0;
-    margin: 0;
-}
-
-.featured-highlights-card__content li {
-    display: flex;
-    align-items: flex-start; /* Căn icon và chữ theo lề trên */
-    gap: 10px;
-    margin-bottom: 12px;
-    font-size: 15px;
-    color: var(--muted); /* Sử dụng màu chữ xám nhẹ */
-}
-
-.featured-highlights-card__content li .fa-check-circle {
-    color: #28a745; /* Đổi lại màu xanh lá cây chuẩn */
-    margin-top: 4px;
-    flex-shrink: 0; /* Ngăn icon bị co lại */
-}
+ .featured-highlights-card {
+     display: flex; /* Chuyển sang flex để sắp xếp 2 cột */
+     gap: 30px; /* Tăng khoảng cách giữa ảnh và nội dung */
+     background-image: linear-gradient(135deg, #fff1f2 0%, #fde6e1 100%);
+     border-radius: var(--radius);
+     padding: 30px;
+     overflow: hidden;
+     align-items: center;
+     color: var(--text);
+ }
+ 
+ .featured-highlights-card__image {
+     flex-shrink: 0;
+     width: 180px;
+     align-self: center;
+ }
+ 
+ .featured-highlights-card__image img {
+     width: 100%;
+     height: auto;
+     object-fit: contain;
+     border-radius: 15px;
+     filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+ }
+ 
+ .featured-highlights-card__content .card-title {
+     font-size: 20px;
+     font-weight: 700;
+     margin-top: 0;
+     margin-bottom: 15px;
+     color: var(--text);
+ }
+ 
+ .featured-highlights-card__content ul {
+     list-style: none;
+     padding: 0;
+     margin: 0;
+ }
+ 
+ .featured-highlights-card__content li {
+     display: flex;
+     align-items: flex-start;
+     gap: 10px;
+     margin-bottom: 12px;
+     font-size: 15px;
+     color: var(--muted);
+ }
+ 
+ .featured-highlights-card__content li .fa-check-circle {
+     color: #28a745;
+     margin-top: 4px;
+     flex-shrink: 0;
+ }
 
 /* giao diện thanh theo dõi trạng thái đơn hàng */
 .order-tracking-container {
@@ -2775,6 +2810,7 @@ main.cp-container {
     padding: 25px;
     border-radius: var(--radius);
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 0; /* Xóa margin-bottom vì đã có gap */
 }
 .product-specs-box h4 {
     font-size: 20px;

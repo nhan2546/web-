@@ -51,13 +51,21 @@ if (!isset($san_pham) || !isset($danh_sach_danh_muc)) {
                 </div>
 
                 <div class="form-group-grid">
-                    <label class="form-label">Thông số sản phẩm</label>
-                    <textarea name="description" class="form-control" rows="5" placeholder="Nhập mỗi thông số trên một dòng, ví dụ: RAM: 8 GB"><?= htmlspecialchars($san_pham['description'] ?? '') ?></textarea>
+                    <label class="form-label">Ảnh đại diện chính</label>
+                    <div>
+                        <input type="file" name="image_url" class="form-control" accept="image/*">
+                        <?php if (!empty($san_pham['image_url'])): ?>
+                            <div class="variant-image-group mt-2">
+                                <img src="../TaiLen/san_pham/<?= htmlspecialchars($san_pham['image_url']) ?>" alt="Ảnh hiện tại" height="60">
+                                <span class="form-text">Ảnh hiện tại. Chọn tệp mới để thay thế.</span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <div class="form-group-grid">
-                    <label class="form-label">Tính năng nổi bật</label>
-                    <textarea name="highlights" class="form-control" rows="4" placeholder="Nhập mỗi tính năng trên một dòng..."><?= htmlspecialchars($san_pham['highlights'] ?? '') ?></textarea>
+                    <label class="form-label">Thông số sản phẩm</label>
+                    <textarea name="description" class="form-control" rows="5" placeholder="Nhập mỗi thông số trên một dòng, ví dụ: RAM: 8 GB"><?= htmlspecialchars($san_pham['description'] ?? '') ?></textarea>
                 </div>
 
                 <!-- Khu vực quản lý phiên bản màu sắc -->

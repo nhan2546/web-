@@ -135,7 +135,6 @@ class DieuKhienQuanTri {
         $description = $_POST['description'] ?? '';
         $quantity = $_POST['quantity'] ?? 0;
         $category_id = $_POST['category_id'] ?? 0;
-        $highlights = $_POST['highlights'] ?? null;
 
         // Kiểm tra dữ liệu cơ bản
         if (empty($name) || empty($price) || empty($category_id)) {
@@ -183,7 +182,7 @@ class DieuKhienQuanTri {
 
         // 3. Tạo đối tượng model và gọi hàm thêm
         $sanpham_model = new sanpham($this->pdo);
-        $sanpham_model->themsp($name, $description, $price, $image_url, $quantity, $category_id, $sale_price, !empty($variants_data) ? $variants_json : null, $highlights);
+        $sanpham_model->themsp($name, $description, $price, $image_url, $quantity, $category_id, $sale_price, !empty($variants_data) ? $variants_json : null);
 
         // 4. Chuyển hướng về trang danh sách sản phẩm của admin
         header('Location: admin.php?act=ds_sanpham&success=added');
@@ -220,7 +219,6 @@ class DieuKhienQuanTri {
             $category_id = $_POST['category_id'] ?? 0;
             $sale_price = $_POST['sale_price'] ?? null; // Lấy giá khuyến mãi
             $existing_image_url = $_POST['existing_image_url'] ?? '';
-            $highlights = $_POST['highlights'] ?? null;
 
             // Lấy dữ liệu phiên bản từ form
             $variant_colors = $_POST['variant_color'] ?? [];
@@ -263,7 +261,7 @@ class DieuKhienQuanTri {
             $variants_json = json_encode($variants_data);
 
             $sp_model = new sanpham($this->pdo);
-            $sp_model->capnhatsp($id, $name, $description, $price, $image_url, $quantity, $category_id, $sale_price, !empty($variants_data) ? $variants_json : null, $highlights);
+            $sp_model->capnhatsp($id, $name, $description, $price, $image_url, $quantity, $category_id, $sale_price, !empty($variants_data) ? $variants_json : null);
 
             header('Location: admin.php?act=ds_sanpham&success=updated');
             exit;

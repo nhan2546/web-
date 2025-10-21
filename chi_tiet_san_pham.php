@@ -560,6 +560,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // --- JS cho Gallery ảnh ---
+    const mainProductImage = document.getElementById('main-product-image');
+    const thumbnailItems = document.querySelectorAll('.thumbnail-item');
+
+    thumbnailItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Bỏ active tất cả thumbnail
+            thumbnailItems.forEach(thumb => thumb.classList.remove('active'));
+            
+            // Active thumbnail được click
+            this.classList.add('active');
+            
+            // Lấy src của ảnh trong thumbnail và cập nhật ảnh chính
+            const newImageSrc = this.querySelector('img').src;
+            if (mainProductImage) {
+                mainProductImage.src = newImageSrc;
+            }
+        });
+    });
     // --- JS cho nút xem thêm/thu gọn thông số ---
     const specsTable = document.querySelector('.specs-table');
     const toggleSpecsBtn = document.getElementById('toggle-specs-btn');
