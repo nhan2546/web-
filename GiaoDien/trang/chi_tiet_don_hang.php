@@ -22,46 +22,6 @@ $status_keys = array_keys($all_statuses);
 $current_status_index = array_search($current_status, $status_keys);
 ?>
 
-<style>
-    .order-detail-page { background-color: #f0f0f0; padding: 2rem 0; }
-    .order-detail-container { max-width: 1200px; margin: auto; padding: 0 15px; }
-    .order-detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-    .order-detail-title { font-size: 24px; font-weight: 600; margin: 0; }
-    .back-link { color: #007bff; text-decoration: none; font-weight: 500; }
-    .back-link:hover { text-decoration: underline; }
-    .detail-card { background-color: #fff; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .detail-card-header { font-size: 18px; font-weight: 600; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e9ecef; }
-    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-    .info-group p { margin-bottom: 0.5rem; }
-    .info-group p strong { display: inline-block; min-width: 120px; color: #6c757d; }
-    .order-tracking-steps { list-style: none; padding: 0; display: flex; justify-content: space-between; position: relative; }
-    .order-tracking-steps::before { content: ''; position: absolute; top: 18px; left: 0; right: 0; height: 4px; background-color: #e9ecef; z-index: 1; }
-    .step-item { text-align: center; position: relative; z-index: 2; width: 20%; }
-    .step-item { text-align: center; position: relative; z-index: 2; width: 25%; } /* Adjusted for 4 steps */
-    .step-marker { width: 40px; height: 40px; background-color: #fff; border: 4px solid #e9ecef; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 16px; color: #adb5bd; transition: all 0.3s ease; }
-    .step-name { font-weight: 500; font-size: 14px; color: #6c757d; }
-    .step-date { font-size: 12px; color: #adb5bd; }
-    .step-item.completed .step-marker, .step-item.current .step-marker { border-color: #28a745; background-color: #28a745; color: #fff; }
-    .step-item.current .step-marker { border-color: #007bff; background-color: #007bff; }
-    .step-item.completed .step-name, .step-item.current .step-name { color: #212529; }
-    .step-item.completed + .step-item::before, .step-item.current + .step-item::before {
-        content: ''; position: absolute; top: 18px; right: 50%; left: -50%; height: 4px; background-color: #28a745; z-index: 1;
-    }
-    .cancelled-alert { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 1rem; border-radius: 8px; text-align: center; font-weight: 500; }
-    .product-list .list-group-item { border: none; padding: 1rem 0; }
-    .product-list .list-group-item:not(:last-child) { border-bottom: 1px solid #e9ecef; }
-    .product-info { display: flex; align-items: center; gap: 15px; }
-    .product-info img { width: 70px; height: 70px; object-fit: cover; border-radius: 4px; }
-    .product-details p { margin: 0; }
-    .product-name { font-weight: 600; }
-    .product-quantity { color: #6c757d; font-size: 14px; }
-    .product-price { font-weight: 600; text-align: right; }
-    .order-summary { display: flex; flex-direction: column; gap: 0.75rem; }
-    .summary-row { display: flex; justify-content: space-between; }
-    .summary-row.total { font-size: 1.25rem; font-weight: bold; color: var(--primary-color); border-top: 1px solid #e9ecef; padding-top: 1rem; margin-top: 0.5rem; }
-    .cancel-button-container { margin-top: 1.5rem; text-align: center; }
-</style>
-
 <div class="order-detail-page">
     <div class="order-detail-container">
         <div class="order-detail-header">

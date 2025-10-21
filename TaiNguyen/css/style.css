@@ -3641,3 +3641,56 @@ main.cp-container {
     border: 1px solid #e5e5e5;
     box-shadow: var(--shadow);
 }
+
+/* ============================================= */
+/* === GIAO DIỆN PHÂN TRANG (PAGINATION) USER === */
+/* ============================================= */
+.cp-pagination {
+    display: flex;
+    justify-content: center; /* Căn giữa các nút phân trang */
+    margin-top: 40px; /* Tăng khoảng cách với lưới sản phẩm */
+    padding-bottom: 20px;
+}
+
+.cp-pagination .pagination-list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 10px; /* Bo tròn các góc */
+    overflow: hidden; /* Đảm bảo bo góc hoạt động */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.cp-pagination .pagination-link {
+    display: block;
+    padding: 10px 18px; /* Tăng kích thước nút */
+    text-decoration: none;
+    color: var(--text);
+    background-color: #fff;
+    border-right: 1px solid #f0f0f0;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.cp-pagination .pagination-list li:last-child .pagination-link {
+    border-right: none;
+}
+
+.cp-pagination .pagination-link:hover {
+    background-color: #f8f9fa;
+    color: var(--red);
+}
+
+.cp-pagination .pagination-item.active .pagination-link {
+    background-color: var(--red);
+    color: #fff;
+    font-weight: bold;
+    cursor: default;
+}
+
+.cp-pagination .pagination-item.disabled .pagination-link {
+    color: #ccc;
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}

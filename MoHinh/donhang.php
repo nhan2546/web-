@@ -26,10 +26,12 @@ class donhang {
     /**
      * Lấy danh sách đơn hàng có phân trang, lọc và tìm kiếm.
      * @param string $status Trạng thái cần lọc.
-     * @param string $searchTerm Từ khóa tìm kiếm.
+     * @param string $searchTerm Từ khóa tìm kiếm (mã đơn, tên khách hàng).
+     * @param int $limit Số lượng bản ghi mỗi trang.
+     * @param int $offset Vị trí bắt đầu lấy.
      * @return array Mảng chứa các đơn hàng.
      */
-    public function getOrders($status = '', $searchTerm = '') {
+    public function getOrders($status = '', $searchTerm = '', $limit = 10, $offset = 0) {
         $sql = "SELECT o.*, u.fullname as customer_name 
                 FROM orders o
                 JOIN users u ON o.user_id = u.id
@@ -50,10 +52,41 @@ class donhang {
             $params[] = $searchTerm;
         }
 
-        $sql .= " ORDER BY o.order_date DESC";
+        $sql .= " ORDER BY o.order_date DESC LIMIT ? OFFSET ?";
+        $params[] = $limit;
+        $params[] = $offset;
+
+        $stmt = $this->pdo->prepare($sql);
+        // PDO cần chỉ định kiểu dữ liệu cho LIMIT/OFFSET
+        foreach ($params as $key => &$val) {
+            if (is_int($val)) {
+                $stmt->bindParam($key + 1, $val, PDO::PARAM_INT);
+            } else {
+                $stmt->bindParam($key + 1, $val, PDO::PARAM_STR);
+            }
+        }
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Đếm tổng số đơn hàng phù hợp với điều kiện lọc.
+     * @param string $status Trạng thái cần lọc.
+     * @param string $searchTerm Từ khóa tìm kiếm.
+     * @return int Tổng số đơn hàng.
+     */
+    public function countOrders($status = '', $searchTerm = '') {
+        $sql = "SELECT COUNT(o.id) FROM orders o JOIN users u ON o.user_id = u.id WHERE 1=1";
+        $params = [];
+        if (!empty($status)) {
+            $sql .= " AND o.status = ?"; $params[] = $status;
+        }
+        if (!empty($searchTerm)) {
+            $sql .= " AND (u.fullname LIKE ? OR o.id = ?)"; $params[] = "%" . $searchTerm . "%"; $params[] = $searchTerm;
+        }
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return (int)$stmt->fetchColumn();
     }
 
     /**

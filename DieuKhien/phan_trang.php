@@ -1,32 +1,38 @@
-<?php 
-$base_url = "index.php?act=" . ($_GET['act'] ?? 'hienthi_sp');
-if (isset($_GET['id'])) $base_url .= "&id=" . $_GET['id'];
+<?php
+// Các biến $total_pages, $current_page được controller chuẩn bị.
+// Hàm generate_filter_url() sẽ được định nghĩa trong view (ví dụ: danh_sach_san_pham.php)
+// để giữ lại các bộ lọc khi chuyển trang.
+?>
 
-if (isset($total_pages) && $total_pages > 1): ?>
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center mt-5">
-        <!-- Nút Previous -->
+<?php if (isset($total_pages) && $total_pages > 1): ?>
+<nav class="cp-pagination" aria-label="Page navigation">
+    <ul class="pagination-list">
+        <!-- Nút Trang Trước -->
         <?php if ($current_page > 1): ?>
-            <li class="page-item">
-                <a class="page-link" href="<?= $base_url ?>&page=<?= $current_page - 1 ?>" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
+            <li class="pagination-item">
+                <a href="<?= generate_filter_url(['page' => $current_page - 1]) ?>" class="pagination-link">‹</a>
+            </li>
+        <?php else: ?>
+            <li class="pagination-item disabled">
+                <span class="pagination-link">‹</span>
             </li>
         <?php endif; ?>
 
         <!-- Các nút số trang -->
         <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
-                <a class="page-link" href="<?= $base_url ?>&page=<?= $i ?>"><?= $i ?></a>
+            <li class="pagination-item <?= ($i == $current_page) ? 'active' : '' ?>">
+                <a href="<?= generate_filter_url(['page' => $i]) ?>" class="pagination-link"><?= $i ?></a>
             </li>
         <?php endfor; ?>
 
-        <!-- Nút Next -->
+        <!-- Nút Trang Sau -->
         <?php if ($current_page < $total_pages): ?>
-            <li class="page-item">
-                <a class="page-link" href="<?= $base_url ?>&page=<?= $current_page + 1 ?>" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
+            <li class="pagination-item">
+                <a href="<?= generate_filter_url(['page' => $current_page + 1]) ?>" class="pagination-link">›</a>
+            </li>
+        <?php else: ?>
+            <li class="pagination-item disabled">
+                <span class="pagination-link">›</span>
             </li>
         <?php endif; ?>
     </ul>

@@ -481,3 +481,46 @@ body.admin-body {
 .admin-logout-link:hover {
     color: #c0392b;
 }
+
+/* ============================================= */
+/* === GIAO DIỆN PHÂN TRANG (PAGINATION) ADMIN === */
+/* ============================================= */
+.admin-pagination {
+    display: flex;
+    justify-content: flex-end; /* Căn phải */
+    margin-top: 20px;
+}
+
+.pagination-list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 6px;
+    overflow: hidden; /* Bo góc cho cả container */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.pagination-link {
+    display: block;
+    padding: 8px 14px;
+    text-decoration: none;
+    color: #34495e;
+    background-color: #fff;
+    border-right: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+}
+.pagination-list li:last-child .pagination-link {
+    border-right: none;
+}
+
+.pagination-link:hover {
+    background-color: #f8f9fa;
+}
+
+.pagination-link.active {
+    background-color: var(--primary-color);
+    color: #fff;
+    font-weight: bold;
+    cursor: default;
+}

@@ -60,8 +60,30 @@ $opts=['pending'=>'Chờ xác nhận','confirmed'=>'Xác nhận đơn hàng','sh
 </div>
 
 <!-- Phân trang -->
-<div style="display:flex; gap:8px; justify-content:flex-end; align-items:center;">
-  <!-- Logic phân trang sẽ được thêm ở đây -->
+<div class="admin-pagination">
+    <?php if (isset($total_pages) && $total_pages > 1): ?>
+        <ul class="pagination-list">
+            <!-- Nút Previous -->
+            <?php if ($current_page > 1): ?>
+                <li><a href="?act=ds_donhang&page=<?= $current_page - 1 ?>&<?= http_build_query(array_diff_key($_GET, ['page'=>'', 'act'=>''])) ?>" class="pagination-link">‹</a></li>
+            <?php endif; ?>
+
+            <!-- Các nút số trang -->
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <li>
+                    <a href="?act=ds_donhang&page=<?= $i ?>&<?= http_build_query(array_diff_key($_GET, ['page'=>'', 'act'=>''])) ?>" 
+                       class="pagination-link <?= ($i == $current_page) ? 'active' : '' ?>">
+                        <?= $i ?>
+                    </a>
+                </li>
+            <?php endfor; ?>
+
+            <!-- Nút Next -->
+            <?php if ($current_page < $total_pages): ?>
+                <li><a href="?act=ds_donhang&page=<?= $current_page + 1 ?>&<?= http_build_query(array_diff_key($_GET, ['page'=>'', 'act'=>''])) ?>" class="pagination-link">›</a></li>
+            <?php endif; ?>
+        </ul>
+    <?php endif; ?>
 </div>
 
 <!-- Modal chi tiết -->
