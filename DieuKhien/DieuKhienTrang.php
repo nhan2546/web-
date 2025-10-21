@@ -52,6 +52,7 @@ class controller {
         $available_brands = $dm_model->getDS_Danhmuc();
 
         include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
+        include __DIR__.'/../GiaoDien/trang/bo_cuc/pagination.php';
     }
 
     public function hienthi_sp_theo_danhmuc($return_data = false) {
@@ -97,6 +98,7 @@ class controller {
         $available_brands = $dm_model->getDS_Danhmuc();
 
         include __DIR__.'/../GiaoDien/trang/danh_sach_san_pham.php';
+        include __DIR__.'/../DieuKhien/phan_trang.php';
     }
 
     public function chi_tiet_san_pham($return_data = false) {

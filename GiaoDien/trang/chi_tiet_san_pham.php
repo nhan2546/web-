@@ -196,16 +196,17 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
                 <input type="hidden" name="quantity" value="1">
                 
                 <div class="purchase-buttons-group">
-                    <?php if ($is_in_stock): ?>
-                        <button type="submit" name="buy_now" class="btn-buy-now">
+                    <?php if ($is_in_stock): // Nếu sản phẩm còn hàng ?>
+                        <button type="submit" name="buy_now" class="btn-buy-now" <?php if (!$is_in_stock) echo 'disabled'; ?>>
                             <strong>MUA NGAY</strong>
                             <span>Giao hàng tận nơi hoặc nhận tại cửa hàng</span>
                         </button>
-                        <button type="submit" name="add_to_cart" class="btn-add-to-cart">
-                        <i class="fas fa-cart-plus"></i> Thêm vào giỏ
-                    </button>
-                    <?php else: ?>
-                        <button type="button" class="btn-add-to-cart" disabled>Hết hàng</button>
+                        <button type="submit" name="add_to_cart" class="btn-add-to-cart" <?php if (!$is_in_stock) echo 'disabled'; ?>>
+                            <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+                        </button>
+                    <?php else: // Nếu sản phẩm hết hàng ?>
+                        <button type="button" class="btn-buy-now" disabled>Hết hàng</button>
+                        <button type="button" class="btn-add-to-cart" disabled><i class="fas fa-cart-plus"></i> Hết hàng</button>
                     <?php endif; ?>
                 </div>
             </form>
@@ -403,19 +404,29 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
                         $display_price_rv = $is_on_sale_rv ? $product['sale_price'] : $product['price'];
                         $original_price_rv = $is_on_sale_rv ? $product['price'] : null;
                     ?>
-                    <div class="cp-card">
-                        <a href="index.php?act=chi_tiet_san_pham&id=<?= $product['id'] ?>">
+                    <div class="cp-card product-card">
+                        <a href="index.php?act=chi_tiet_san_pham&id=<?= $product['id'] ?>" class="product-card__link">
                             <div class="cp-card__image-container">
-                                <img src="TaiLen/san_pham/<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+                                <img src="TaiLen/san_pham/<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['name']) ?>" loading="lazy">
                             </div>
                             <div class="cp-card__content">
-                                <h4><?= htmlspecialchars($product['name']) ?></h4>
+                                <h4 class="product-card__name"><?= htmlspecialchars($product['name']) ?></h4>
                                 <div class="cp-price">
                                     <span class="now"><?= number_format($display_price_rv, 0, ',', '.') ?>₫</span>
                                     <?php if ($original_price_rv): ?><del><?= number_format($original_price_rv, 0, ',', '.') ?>₫</del><?php endif; ?>
                                 </div>
                             </div>
                         </a>
+                        <div class="product-card__actions">
+                            <form action="index.php?act=them_vao_gio" method="POST" class="add-to-cart-form">
+                                <input type="hidden" name="id" value="<?= (int)$product['id'] ?>">
+                                <input type="hidden" name="name" value="<?= htmlspecialchars($product['name']) ?>">
+                                <input type="hidden" name="image_url" value="<?= htmlspecialchars($product['image_url']) ?>">
+                                <input type="hidden" name="price" value="<?= $display_price_rv ?>">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="cp-btn-sm">Thêm vào giỏ</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -524,12 +535,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const actionUrl = this.getAttribute('action');
             const cartBadge = document.getElementById('cart-badge');
 
-            // Chỉ chạy hiệu ứng khi nhấn nút "Thêm vào giỏ"
-            if (event.submitter && event.submitter.name === 'add_to_cart') {
-                const productImage = document.querySelector('.product-main-image');
-                flyToCart(productImage);
-            }
-
             fetch(actionUrl, {
                 method: 'POST',
                 body: formData
@@ -538,15 +543,22 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success && cartBadge) {
                     cartBadge.textContent = data.new_total_quantity;
+                    // Hiển thị huy hiệu nếu nó đang bị ẩn
+                    if (cartBadge.style.transform === 'scale(0)') {
+                        cartBadge.style.transform = 'scale(1)';
+                    }
+                    // Tạo hiệu ứng nảy lên
                     cartBadge.style.transform = 'scale(1.3)';
                     setTimeout(() => { cartBadge.style.transform = 'scale(1)'; }, 200);
                 }
                 // Nếu là nút "Mua ngay", chuyển hướng đến trang thanh toán
                 if (event.submitter && event.submitter.name === 'buy_now') {
-                    // Sau khi thêm sản phẩm, chuyển thẳng đến trang giỏ hàng
+                    // Sau khi thêm sản phẩm thành công, chuyển thẳng đến trang giỏ hàng
                     window.location.href = 'index.php?act=gio_hang';
-                } else {
-                    // Không cần alert vì đã có hiệu ứng fly-to-cart
+                } else if (event.submitter && event.submitter.name === 'add_to_cart') {
+                    // Nếu là nút "Thêm vào giỏ", chạy hiệu ứng
+                    const productImage = document.querySelector('.product-main-image');
+                    flyToCart(productImage);
                 }
             })
             .catch(error => console.error('Lỗi khi thêm vào giỏ hàng:', error));
@@ -716,6 +728,41 @@ document.addEventListener('DOMContentLoaded', function() {
         // Không cần navigation và pagination cho slider này để gọn gàng hơn
         // navigation: { ... },
         // pagination: { ... },
+    });
+});
+
+// --- JS XỬ LÝ THÊM VÀO GIỎ HÀNG TỪ DANH SÁCH SẢN PHẨM ---
+document.querySelectorAll('.add-to-cart-form').forEach(form => {
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Ngăn form submit theo cách truyền thống
+
+        const formData = new FormData(this);
+        const actionUrl = this.getAttribute('action');
+        const cartBadge = document.getElementById('cart-badge');
+        const productImage = this.closest('.product-card').querySelector('.cp-card__image-container img');
+
+        fetch(actionUrl, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && cartBadge) {
+                // Cập nhật số lượng trên icon giỏ hàng
+                cartBadge.textContent = data.new_total_quantity;
+                if (cartBadge.style.transform === 'scale(0)') {
+                    cartBadge.style.transform = 'scale(1)';
+                }
+                cartBadge.style.transform = 'scale(1.3)';
+                setTimeout(() => { cartBadge.style.transform = 'scale(1)'; }, 200);
+
+                // Chạy hiệu ứng "bay tới giỏ hàng"
+                if (typeof flyToCart === 'function' && productImage) {
+                    flyToCart(productImage);
+                }
+            }
+        })
+        .catch(error => console.error('Lỗi khi thêm vào giỏ hàng:', error));
     });
 });
 </script>

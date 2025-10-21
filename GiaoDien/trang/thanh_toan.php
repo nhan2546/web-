@@ -171,25 +171,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const finalTotalEl = document.querySelector('.order-totals .final-total span:last-child');
     const voucherDiscountEl = document.querySelector('.order-totals .voucher-applied span:last-child');
 
-    // Dữ liệu giỏ hàng và voucher từ PHP
     const initialDiscount = <?= $discount_amount ?? 0 ?>;
-    const cartData = <?= json_encode(array_values($cart)) ?>; // Chuyển thành mảng để dễ lặp
+    const cartData = <?= json_encode($cart) ?>;
 
     function updateTotals() {
         let newSubtotal = 0;
-        const selectedItemIds = [];
-
-        // Lấy ID của các sản phẩm được chọn
-        itemCheckboxes.forEach(checkbox => {
-            if (checkbox.checked) {
-                selectedItemIds.push(checkbox.value);
-            }
-        });
         itemCheckboxes.forEach(checkbox => {
             if (checkbox.checked) {
                 const itemId = checkbox.value;
-                // Sửa lỗi: Tìm sản phẩm trong mảng cartData bằng ID thay vì dùng key
-                const item = cartData.find(p => p.id == itemId);
+                const item = cartData[itemId];
                 if (item) {
                     newSubtotal += item.price * item.quantity;
                 }
