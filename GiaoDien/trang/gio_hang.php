@@ -16,6 +16,31 @@
             <p>Chưa có sản phẩm nào trong giỏ hàng</p>
             <a href="index.php?act=hienthi_sp" class="cp-btn">Tiếp tục mua sắm</a>
         </div>
+
+        <!-- === BẮT ĐẦU: KHU VỰC SẢN PHẨM GỢI Ý === -->
+        <?php if (!empty($suggested_products)): ?>
+            <div class="suggested-products-section">
+                <h3>Có thể bạn sẽ thích</h3>
+                <div class="cp-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <?php foreach ($suggested_products as $sp): ?>
+                        <article class="cp-card">
+                            <a href="index.php?act=chi_tiet_san_pham&id=<?= (int)$sp['id'] ?>">
+                                <div class="cp-card__image-container">
+                                    <img src="TaiLen/san_pham/<?= htmlspecialchars($sp['image_url']) ?>" alt="<?= htmlspecialchars($sp['name']) ?>">
+                                </div>
+                                <div class="cp-card__content">
+                                    <h4><?= htmlspecialchars($sp['name']) ?></h4>
+                                    <div class="cp-price">
+                                        <span class="now"><?= number_format($sp['price'], 0, ',', '.') ?>₫</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+        <!-- === KẾT THÚC: KHU VỰC SẢN PHẨM GỢI Ý === -->
     <?php else: ?>
         <form id="cart-form" action="index.php?act=thanh_toan" method="post">
             <div class="cart-layout">

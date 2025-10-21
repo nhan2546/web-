@@ -317,6 +317,13 @@ class controller {
             $saved_products = $userModel->getWishlist($_SESSION['user_id'], 4);
         }
 
+        // --- BỔ SUNG: Lấy sản phẩm gợi ý nếu giỏ hàng trống ---
+        $suggested_products = [];
+        if (empty($cart)) {
+            $sp_model = new sanpham($this->pdo);
+            $suggested_products = $sp_model->getallsanpham(4); // Lấy 4 sản phẩm để gợi ý
+        }
+
         include __DIR__.'/../GiaoDien/trang/gio_hang.php';
     }
 

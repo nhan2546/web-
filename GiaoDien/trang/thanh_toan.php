@@ -41,9 +41,9 @@
                     <div class="payment-methods">
                         <!-- Thanh toán khi nhận hàng (COD) -->
                         <label class="payment-method-item">
-                            <input type="radio" name="payment_method" value="cod" checked>
-                            <img src="TaiNguyen/hinh_anh/icon/cod.svg" alt="COD" class="payment-method-icon">
+                            <img src="TaiNguyen/hinh_anh/cod-credit-debit-bank-transaction-32259.webp" alt="COD" class="payment-method-icon">
                             <div class="payment-method-content">
+                                <input type="radio" name="payment_method" value="cod" checked>
                                 <strong>Thanh toán khi nhận hàng (COD)</strong>
                                 <p>Bạn sẽ thanh toán bằng tiền mặt cho nhân viên giao hàng.</p>
                             </div>
@@ -51,9 +51,9 @@
 
                         <!-- Chuyển khoản ngân hàng -->
                         <label class="payment-method-item">
-                            <input type="radio" name="payment_method" value="bank_transfer">
-                            <img src="TaiNguyen/hinh_anh/icon/bank.svg" alt="Bank Transfer" class="payment-method-icon">
+                            <img src="TaiNguyen/hinh_anh/images.png" alt="Bank Transfer" class="payment-method-icon">
                             <div class="payment-method-content">
+                                <input type="radio" name="payment_method" value="bank_transfer">
                                 <strong>Chuyển khoản ngân hàng</strong>
                                 <p>Chúng tôi sẽ cung cấp thông tin chuyển khoản sau khi bạn đặt hàng.</p>
                             </div>
@@ -61,12 +61,36 @@
 
                         <!-- Ví MoMo -->
                         <label class="payment-method-item">
-                            <input type="radio" name="payment_method" value="momo">                            
-                            <img src="TaiNguyen/hinh_anh/icon/momo.svg" alt="MoMo" class="payment-method-icon">
+                            <img src="TaiNguyen/hinh_anh/tải xuống.png" alt="MoMo" class="payment-method-icon">
                             <div class="payment-method-content">
+                                <input type="radio" name="payment_method" value="momo">
                                 <strong>Thanh toán qua ví MoMo</strong>
                                 <p>Quét mã QR MoMo để thanh toán nhanh chóng và tiện lợi.</p>
                             </div>                            
+                        </label>
+
+                        <!-- Ví VNPay -->
+                        <label class="payment-method-item">
+                            <img src="TaiNguyen/hinh_anh/tải xuống (1).png" alt="VNPay" class="payment-method-icon">
+                            <div class="payment-method-content">
+                                <input type="radio" name="payment_method" value="vnpay">
+                                <strong>Thanh toán qua VNPay-QR</strong>
+                                <p>Thanh toán bằng ứng dụng ngân hàng và các ví điện tử hỗ trợ VNPay.</p>
+                            </div>
+                        </label>
+
+                        <!-- Thẻ quốc tế -->
+                        <label class="payment-method-item">
+                            <img src="TaiNguyen/hinh_anh/tải xuống (2).jpg" alt="Credit Card" class="payment-method-icon">
+                            <div class="payment-method-content">
+                                <input type="radio" name="payment_method" value="credit_card">
+                                <strong>Thẻ quốc tế Visa, Master, JCB</strong>
+                                <div class="card-logos">
+                                    <img src="TaiNguyen/hinh_anh/tải xuống (2).png" alt="Visa">
+                                    <img src="TaiNguyen/hinh_anh/tải xuống (1).jpg" alt="Mastercard">
+                                    <img src="TaiNguyen/hinh_anh/tải xuống (3).png" alt="JCB">
+                                </div>
+                            </div>
                         </label>
                     </div>
                 </div>

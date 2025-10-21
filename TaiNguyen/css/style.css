@@ -546,22 +546,23 @@ main.cp-container {
 .cp-card__content {
     padding: 15px;
     display: flex;
-    flex-direction: column;
-    flex-grow: 1; /* Giúp nội dung co giãn để đẩy nút xuống dưới */
+    flex-direction: column; /* Sắp xếp các mục con theo chiều dọc */
+    flex-grow: 1; /* Cho phép phần content này co giãn để lấp đầy không gian */
 }
 
 .cp-card h4 {
     margin: 4px 0 0 0;
     font-size: 15px;
     line-height: 1.35;
-    min-height: 40px;
-    margin-bottom: 8px; /* Thêm khoảng cách dưới tên sản phẩm */
+    margin-bottom: 8px;
+    flex-grow: 1; /* Đẩy phần giá tiền xuống dưới cùng */
 }
 
 .cp-price {
     display: flex;
     align-items: center;
-    gap: 8px
+    gap: 8px;
+    margin-top: auto; /* Quan trọng: Đẩy giá tiền xuống dưới cùng nếu tên sản phẩm ngắn */
 }
 
 .cp-price .now {
@@ -1688,20 +1689,46 @@ main.cp-container {
     margin-bottom: 30px;
 }
 
+/* Cải tiến giao diện giỏ hàng trống */
 .cart-empty-state {
     text-align: center;
-    padding: 50px 20px;
+    padding: 60px 30px; /* Tăng padding */
     background-color: #fff;
     border-radius: var(--radius);
+    box-shadow: var(--shadow); /* Thêm bóng đổ nhẹ */
+    border: 1px solid #f0f0f0; /* Thêm viền mảnh */
 }
 .cart-empty-state img {
-    max-width: 150px;
+    max-width: 200px; /* Tăng kích thước ảnh */
     margin-bottom: 20px;
+    opacity: 0.8; /* Giảm độ bão hòa của ảnh một chút */
 }
 .cart-empty-state p {
     font-size: 18px;
     color: var(--muted);
     margin-bottom: 25px;
+    max-width: 450px; /* Giới hạn chiều rộng của văn bản */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cart-empty-state .cp-btn {
+    padding: 12px 30px; /* Làm cho nút to và dễ bấm hơn */
+}
+
+/* Khu vực sản phẩm gợi ý trong giỏ hàng trống */
+.suggested-products-section {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.suggested-products-section h3 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: var(--text);
 }
 
 .cart-layout {
@@ -1981,41 +2008,47 @@ main.cp-container {
 }
 
 .payment-method-item {
-    display: flex;
-    align-items: center; /* Căn giữa các item theo chiều dọc */
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    display: grid; /* Chuyển sang grid để kiểm soát tốt hơn */
+    grid-template-columns: auto 1fr; /* Cột icon và cột nội dung */
+    align-items: center;
+    gap: 20px; /* Tăng khoảng cách giữa icon và nội dung */
+    padding: 20px; /* Tăng padding cho card */
+    border: 2px solid #e5e5e5; /* Viền dày hơn một chút */
+    border-radius: var(--radius); /* Sử dụng biến radius chung */
     cursor: pointer;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: all 0.2s ease-in-out;
 }
 
 .payment-method-icon {
-    width: 40px; /* Đặt chiều rộng cố định cho icon */
-    margin-right: 15px;
+    width: 48px; /* Tăng kích thước icon */
+    height: 48px;
+    grid-row: 1 / 3; /* Cho icon chiếm 2 hàng (nếu nội dung có 2 dòng) */
     flex-shrink: 0;
 }
 
 .payment-method-item:not(:last-child) {
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* Tăng khoảng cách giữa các card */
 }
 
 .payment-method-item input[type="radio"] {
-    margin-top: 5px;
-    margin-right: 15px;
-    flex-shrink: 0;
-    /* Sử dụng accent-color để đổi màu radio button cho hợp theme */
-    accent-color: var(--red);
+    display: none; /* Ẩn nút radio mặc định */
 }
 
 .payment-method-item:has(input:checked) {
-    border-color: var(--red);
-    box-shadow: 0 0 0 3px rgba(215, 0, 24, 0.1);
+    border-color: var(--red); /* Đổi màu viền khi được chọn */
+    background-color: #fff9f9; /* Thêm nền hồng rất nhạt */
+    box-shadow: 0 4px 12px rgba(215, 0, 24, 0.1); /* Thêm bóng đổ nhẹ */
+}
+
+.payment-method-item:hover {
+    border-color: var(--red-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
 }
 
 .payment-method-content strong {
     display: block;
-    font-size: 1rem;
+    font-size: 16px; /* Tăng kích thước chữ một chút */
     color: #333;
 }
 
@@ -2023,6 +2056,18 @@ main.cp-container {
     margin: 5px 0 0 0;
     font-size: 0.9rem;
     color: #666;
+}
+
+/* Khu vực hiển thị logo các loại thẻ */
+.card-logos {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.card-logos img {
+    height: 20px; /* Đặt chiều cao cố định cho các logo thẻ */
+    width: auto;
 }
 
 /* --- Tóm tắt đơn hàng (cột phải) --- */
