@@ -138,11 +138,11 @@ class donhang {
         $sql_details = "INSERT INTO order_details (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
         $stmt_details = $this->pdo->prepare($sql_details);
 
-        $sql_update_stock = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?";
+        $sql_update_stock = "UPDATE products SET quantity = quantity - ? WHERE id = ?";
         $stmt_update_stock = $this->pdo->prepare($sql_update_stock);
         
         // --- BẮT ĐẦU CẢI TIẾN ---
-        $sql_check_stock = "SELECT stock_quantity FROM products WHERE id = ?";
+        $sql_check_stock = "SELECT quantity FROM products WHERE id = ?";
         $stmt_check_stock = $this->pdo->prepare($sql_check_stock);
         // --- KẾT THÚC CẢI TIẾN ---
 
@@ -151,7 +151,7 @@ class donhang {
             $stmt_check_stock->execute([$item['id']]);
             $product = $stmt_check_stock->fetch(PDO::FETCH_ASSOC);
 
-            if (!$product || $product['stock_quantity'] < $item['quantity']) {
+            if (!$product || $product['quantity'] < $item['quantity']) {
                 // Nếu sản phẩm không tồn tại hoặc không đủ hàng, ném ra một Exception để hủy toàn bộ giao dịch
                 throw new Exception("Sản phẩm '" . ($item['name'] ?? 'ID: ' . $item['id']) . "' không đủ số lượng trong kho.");
             }
@@ -206,7 +206,7 @@ class donhang {
 
             // 3. Hoàn trả số lượng tồn kho
             $items = $this->getOrderDetail($orderId)['order_items'];
-            $stmt_stock = $this->pdo->prepare("UPDATE products SET stock_quantity = stock_quantity + ? WHERE id = ?");
+            $stmt_stock = $this->pdo->prepare("UPDATE products SET quantity = quantity + ? WHERE id = ?");
             foreach ($items as $item) {
                 $stmt_stock->execute([$item['quantity'], $item['product_id']]);
             }

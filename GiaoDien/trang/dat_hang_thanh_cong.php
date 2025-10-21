@@ -1,7 +1,81 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 // Dữ liệu $chi_tiet_don_hang được truyền từ controller
 $order_info = $chi_tiet_don_hang['order_info'];
 $order_items = $chi_tiet_don_hang['order_items'];
+
+// Gửi email xác nhận nếu có địa chỉ email
+// Lưu ý: Chức năng này hiện tại chỉ hoạt động cho khách hàng đã đăng ký tài khoản
+// vì khách vãng lai chưa được yêu cầu nhập email khi thanh toán.
+if (isset($order_info['email']) && !empty($order_info['email'])) {
+    
+    // Load PHPMailer
+    require 'vendor/autoload.php';
+    $mail = new PHPMailer(true);
+
+    try {
+        // Cấu hình server
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'nho265007@mail.com'; // Email của bạn
+        $mail->Password   = 'xykehewjkfgelynp';   // Mật khẩu ứng dụng của bạn
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port       = 465;
+        $mail->CharSet    = 'UTF-8';
+
+        // Người nhận
+        $mail->setFrom('nho265007@mail.com', 'Web-cua-ban'); // Thay 'Web-cua-ban' bằng tên cửa hàng của bạn
+        $mail->addAddress($order_info['email'], $order_info['fullname']);
+
+        // Nội dung email
+        $mail->isHTML(true);
+        $mail->Subject = 'Xác nhận đơn hàng thành công #' . htmlspecialchars($order_info['id']);
+        
+        // Tạo thân email
+        $email_body = '<div style="font-family: Arial, sans-serif; line-height: 1.6;">';
+        $email_body .= "<h2>Cảm ơn bạn đã đặt hàng tại Web-cua-ban!</h2>";
+        $email_body .= "<p>Xin chào <strong>" . htmlspecialchars($order_info['fullname']) . "</strong>,</p>";
+        $email_body .= "<p>Chúng tôi đã nhận được đơn hàng của bạn. Dưới đây là chi tiết đơn hàng:</p>";
+        $email_body .= '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">';
+        $email_body .= "<tr><td style='padding: 8px; border: 1px solid #ddd;'><strong>Mã đơn hàng:</strong></td><td style='padding: 8px; border: 1px solid #ddd;'>#" . htmlspecialchars($order_info['id']) . "</td></tr>";
+        $email_body .= "<tr><td style='padding: 8px; border: 1px solid #ddd;'><strong>Ngày đặt:</strong></td><td style='padding: 8px; border: 1px solid #ddd;'>" . date('d/m/Y H:i', strtotime($order_info['order_date'])) . "</td></tr>";
+        $email_body .= "<tr><td style='padding: 8px; border: 1px solid #ddd;'><strong>Tổng tiền:</strong></td><td style='padding: 8px; border: 1px solid #ddd;'><strong>" . number_format($order_info['total_amount'], 0, ',', '.') . "₫</strong></td></tr>";
+        $email_body .= "<tr><td style='padding: 8px; border: 1px solid #ddd;'><strong>Địa chỉ giao hàng:</strong></td><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($order_info['shipping_address']) . "</td></tr>";
+        $email_body .= '</table>';
+        
+        $email_body .= "<h3>Chi tiết sản phẩm:</h3>";
+        $email_body .= '<table style="width: 100%; border-collapse: collapse;">
+                            <thead style="background-color: #f2f2f2;">
+                                <tr>
+                                    <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Tên sản phẩm</th>
+                                    <th style="padding: 8px; border: 1px solid #ddd; text-align: center;">Số lượng</th>
+                                    <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Giá</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
+        foreach ($order_items as $item) {
+            $email_body .= "<tr>
+                                <td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($item['product_name']) . "</td>
+                                <td style='padding: 8px; border: 1px solid #ddd; text-align: center;'>" . htmlspecialchars($item['quantity']) . "</td>
+                                <td style='padding: 8px; border: 1px solid #ddd; text-align: right;'>" . number_format($item['price'], 0, ',', '.') . "₫</td>
+                            </tr>";
+        }
+        $email_body .= '</tbody></table>';
+        $email_body .= '<p style="margin-top: 20px;">Chúng tôi sẽ xử lý và giao đơn hàng của bạn trong thời gian sớm nhất.</p>';
+        $email_body .= '<p>Cảm ơn bạn đã tin tưởng và mua sắm!</p></div>';
+
+        $mail->Body = $email_body;
+        $mail->AltBody = strip_tags($email_body); // Fallback for non-HTML clients
+
+        $mail->send();
+    } catch (Exception $e) {
+        // Không gửi được email. Có thể ghi log lỗi để debug, nhưng không làm gián đoạn người dùng.
+        // error_log("Mailer Error: {$mail->ErrorInfo}");
+    }
+}
 ?>
 
 <div class="order-success-page-wrapper">

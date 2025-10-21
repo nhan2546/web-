@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit566b298913829ffc1df98fbece4f9631
+class ComposerStaticInit47a54cc70ae78f58059215dad1c055be
 {
     public static $files = array (
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
@@ -24,6 +24,7 @@ class ComposerStaticInit566b298913829ffc1df98fbece4f9631
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Cache\\' => 10,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'M' => 
         array (
@@ -59,6 +60,10 @@ class ComposerStaticInit566b298913829ffc1df98fbece4f9631
         'Psr\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'Monolog\\' => 
         array (
@@ -129,10 +134,10 @@ class ComposerStaticInit566b298913829ffc1df98fbece4f9631
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit566b298913829ffc1df98fbece4f9631::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit566b298913829ffc1df98fbece4f9631::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit566b298913829ffc1df98fbece4f9631::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit566b298913829ffc1df98fbece4f9631::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit47a54cc70ae78f58059215dad1c055be::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit47a54cc70ae78f58059215dad1c055be::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit47a54cc70ae78f58059215dad1c055be::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit47a54cc70ae78f58059215dad1c055be::$classMap;
 
         }, null, ClassLoader::class);
     }
