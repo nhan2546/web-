@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../MoHinh/Voucher.php';
 
 require_once __DIR__ . '/../MoHinh/DonHang.php';
-require_once __DIR__ . '/../MoHinh/NguoiDung.php';
+require_once __DIR__ . '/../MoHinh/nguoidung.php';
 require_once __DIR__ . '/../MoHinh/SanPham.php';
 require_once __DIR__ . '/../MoHinh/DanhMuc.php';
 require_once __DIR__ . '/../MoHinh/BinhLuan.php';
