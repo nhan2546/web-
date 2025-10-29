@@ -51,7 +51,7 @@
 
                         <!-- Chuyển khoản ngân hàng -->
                         <label class="payment-method-item">
-                            <img src="TaiNguyen/hinh_anh/images.png" alt="Bank Transfer" class="payment-method-icon">
+                            <i class="bi bi-bank payment-method-icon"></i>
                             <div class="payment-method-content">
                                 <input type="radio" name="payment_method" value="bank_transfer">
                                 <strong>Chuyển khoản ngân hàng</strong>
@@ -66,7 +66,7 @@
                                 <input type="radio" name="payment_method" value="momo">
                                 <strong>Thanh toán qua ví MoMo</strong>
                                 <p>Quét mã QR MoMo để thanh toán nhanh chóng và tiện lợi.</p>
-                            </div>                            
+                            </div>
                         </label>
 
                         <!-- Ví VNPay -->
@@ -81,20 +81,34 @@
 
                         <!-- Thẻ quốc tế -->
                         <label class="payment-method-item">
-                            <img src="TaiNguyen/hinh_anh/tải xuống (2).jpg" alt="Credit Card" class="payment-method-icon">
+                            <i class="bi bi-credit-card-2-front-fill payment-method-icon"></i>
                             <div class="payment-method-content">
                                 <input type="radio" name="payment_method" value="credit_card">
                                 <strong>Thẻ quốc tế Visa, Master, JCB</strong>
                                 <div class="card-logos">
-                                    <img src="TaiNguyen/hinh_anh/tải xuống (2).png" alt="Visa">
-                                    <img src="TaiNguyen/hinh_anh/tải xuống (1).jpg" alt="Mastercard">
-                                    <img src="TaiNguyen/hinh_anh/tải xuống (3).png" alt="JCB">
+                                    <i class="bi bi-visa"></i>
+                                    <i class="bi bi-mastercard"></i>
+            
                                 </div>
                             </div>
                         </label>
                     </div>
                 </div>
             </div>
+
+<style>
+    /* Tinh chỉnh nhỏ cho logo thẻ thanh toán */
+    .card-logos {
+        font-size: 24px; /* Tăng kích thước cho icon thẻ */
+        color: #555;
+    }
+    .card-logos .bi-visa { color: #1A1F71; }
+    .card-logos .bi-mastercard { color: #EB001B; }
+    .card-logos span {
+        font-weight: bold;
+        font-size: 16px;
+    }
+</style>
 
             <!-- Cột bên phải: Tóm tắt đơn hàng -->
             <div class="checkout-right">

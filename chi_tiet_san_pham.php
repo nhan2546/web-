@@ -52,26 +52,6 @@ $is_in_stock = ($san_pham['quantity'] ?? 0) > 0;
     <div class="product-detail-layout">
         <!-- Cột trái: Hình ảnh, Mô tả -->
         <div class="product-main-content">
-            <!-- {{product_highlights}} -->
-            <div class="featured-highlights-card mb-4">
-                <div class="featured-highlights-card__image">
-                    <img src="TaiLen/san_pham/<?= htmlspecialchars($san_pham['image_url']) ?>" alt="Tính năng nổi bật của <?= htmlspecialchars($san_pham['name']) ?>" class="product-main-image">
-                </div>
-                <div class="featured-highlights-card__content">
-                    <h5 class="card-title">Tính năng nổi bật</h5>
-                    <ul> 
-                        <?php
-                        // Tự động phân tích chuỗi highlights thành danh sách
-                        $highlights_text = trim($san_pham['highlights'] ?? '');
-                        $highlights_lines = !empty($highlights_text) ? explode("\n", $highlights_text) : [];
-                        foreach ($highlights_lines as $line):
-                        ?>
-                            <li><i class="fas fa-check-circle"></i> <?= htmlspecialchars(trim($line)) ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            </div>
-
             <!-- {{product_description}} -->
             <div class="product-specs-box mb-4">
                 <h4 class="mb-3">Thông số sản phẩm</h4>
@@ -602,19 +582,5 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleSpecsBtn.style.display = 'none'; // Ẩn nút nếu không đủ dòng
         }
     }
-
-    // --- JS cho slider sản phẩm đã xem ---
-    var recentlyViewedSwiper = new Swiper(".recently-viewed-slider", {
-        slidesPerView: 2,
-        spaceBetween: 15,
-        breakpoints: {
-            640: { slidesPerView: 3, spaceBetween: 20 },
-            768: { slidesPerView: 4, spaceBetween: 20 },
-            1024: { slidesPerView: 5, spaceBetween: 20 },
-        },
-        // Không cần navigation và pagination cho slider này để gọn gàng hơn
-        // navigation: { ... },
-        // pagination: { ... },
-    });
 });
 </script>

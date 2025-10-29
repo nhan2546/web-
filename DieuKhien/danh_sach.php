@@ -7,7 +7,8 @@
         <span>Danh sách Yêu cầu Bảo hành</span>
     </div>
     <div class="admin-card-body">
-        <table class="admin-table">
+        <div class="table-responsive-wrapper">
+            <table class="admin-table">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -22,10 +23,10 @@
                 <?php if (!empty($danh_sach_bao_hanh)): ?>
                     <?php foreach ($danh_sach_bao_hanh as $bao_hanh): ?>
                         <tr>
-                            <td>#<?php echo htmlspecialchars($bao_hanh['id']); ?></td>
-                            <td><?php echo htmlspecialchars($bao_hanh['customer_name']); ?></td>
-                            <td><?php echo htmlspecialchars($bao_hanh['product_name']); ?></td>
-                            <td><?php echo date('d/m/Y H:i', strtotime($bao_hanh['claim_date'])); ?></td>
+                            <td data-label="ID">#<?php echo htmlspecialchars($bao_hanh['id']); ?></td>
+                            <td data-label="Khách hàng"><?php echo htmlspecialchars($bao_hanh['customer_name']); ?></td>
+                            <td data-label="Sản phẩm"><?php echo htmlspecialchars($bao_hanh['product_name']); ?></td>
+                            <td data-label="Ngày yêu cầu"><?php echo date('d/m/Y H:i', strtotime($bao_hanh['claim_date'])); ?></td>
                             <td>
                                 <?php 
                                     $status_class = 'badge-secondary';
@@ -36,17 +37,18 @@
                                 ?>
                                 <span class="badge <?php echo $status_class; ?>"><?php echo htmlspecialchars($bao_hanh['status']); ?></span>
                             </td>
-                            <td class="action-buttons">
+                            <td data-label="Hành động" class="action-buttons">
                                 <a href="admin.php?act=ct_baohanh&id=<?php echo $bao_hanh['id']; ?>" class="admin-btn">Xem chi tiết</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <tr>
+                    <tr class="no-data-row">
                         <td colspan="6" style="text-align: center;">Chưa có yêu cầu bảo hành nào.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
+        </div>
     </div>
 </div>

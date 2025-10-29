@@ -2020,10 +2020,16 @@ main.cp-container {
 }
 
 .payment-method-icon {
-    width: 48px; /* Tăng kích thước icon */
-    height: 48px;
+    width: 52px; /* Tăng kích thước icon */
+    height: 52px;
     grid-row: 1 / 3; /* Cho icon chiếm 2 hàng (nếu nội dung có 2 dòng) */
     flex-shrink: 0;
+    /* Căn giữa cho các icon font */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem; /* Kích thước của icon */
+    color: var(--red); /* Màu của icon */
 }
 
 .payment-method-item:not(:last-child) {

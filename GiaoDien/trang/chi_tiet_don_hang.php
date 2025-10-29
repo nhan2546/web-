@@ -71,11 +71,11 @@ $current_status_index = array_search($current_status, $status_keys);
                     <h2 class="detail-card-header">Thông tin giao hàng</h2>
                     <div class="info-grid">
                         <div class="info-group">
-                            <p><strong>Người nhận:</strong> <?= htmlspecialchars($order_info['fullname'] ?? '') ?></p>
-                            <p><strong>Số điện thoại:</strong> <?= htmlspecialchars($order_info['phone_number'] ?? '') ?></p>
+                            <p><strong>Người nhận:</strong> <?= htmlspecialchars($order_info['fullname'] ?? '') ?></p> <!-- This line is fine, but for consistency I'll check others -->
+                            <p><strong>Số điện thoại:</strong> <?= htmlspecialchars($order_info['phone_number'] ?? '') ?></p> <!-- This line is fine -->
                         </div>
                         <div class="info-group">
-                            <p><strong>Email:</strong> <?= htmlspecialchars($order_info['email'] ?? '') ?></p>
+                            <p><strong>Email:</strong> <?= htmlspecialchars($order_info['email'] ?? '') ?></p> <!-- This line is fine -->
                             <p><strong>Địa chỉ:</strong> <?= htmlspecialchars($order_info['address'] ?? '') ?></p>
                         </div>
                     </div>

@@ -101,7 +101,7 @@ if (isset($order_info['email']) && !empty($order_info['email'])) {
                     <span>Giao đến:</span>
                     <span class="text-end">
                         <?= htmlspecialchars($order_info['fullname']) ?><br>
-                        <?= htmlspecialchars($order_info['address']) ?>
+                     <?= htmlspecialchars($order_info['shipping_address'] ?? '') ?>
                     </span>
                 </div>
                 <div class="summary-row">

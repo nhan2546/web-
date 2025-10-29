@@ -524,3 +524,89 @@ body.admin-body {
     font-weight: bold;
     cursor: default;
 }
+
+/* Responsive adjustments for admin tables */
+@media (max-width: 768px) {
+    .admin-table {
+        border: 0; /* Remove table border */
+        width: 100%; /* Ensure it takes full width */
+    }
+
+    .admin-table thead {
+        display: none; /* Hide table headers */
+    }
+
+    .admin-table tbody {
+        display: block; /* Make tbody behave like a block */
+        width: 100%;
+    }
+
+    .admin-table tr {
+        display: block; /* Make table rows behave like blocks */
+        margin-bottom: 15px; /* Add space between "cards" */
+        border: 1px solid var(--border-color); /* Add border to make them look like cards */
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .admin-table td {
+        display: block; /* Make table cells behave like blocks */
+        text-align: right; /* Align content to the right */
+        padding-left: 50%; /* Make space for the data-label */
+        position: relative;
+        border-bottom: 1px solid #eee; /* Separator for cells within a card */
+        padding-top: 10px; /* Adjust padding */
+        padding-bottom: 10px;
+    }
+
+    .admin-table td:last-child {
+        border-bottom: 0; /* No border for the last cell */
+    }
+
+    .admin-table td::before {
+        content: attr(data-label); /* Display the data-label as a pseudo-element */
+        position: absolute;
+        left: 15px; /* Position the label on the left */
+        width: calc(50% - 30px); /* Adjust width for label */
+        padding-right: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 600;
+        color: #555;
+        text-align: left; /* Ensure label text is left-aligned */
+    }
+
+    .admin-table .action-buttons {
+        text-align: right; /* Ensure buttons are aligned right */
+        padding-top: 15px;
+        padding-bottom: 15px;
+        display: flex; /* Use flexbox for action buttons */
+        justify-content: flex-end; /* Align to the right */
+        gap: 10px; /* Space between buttons */
+        padding-left: 15px; /* Ensure padding on left for action buttons */
+        padding-right: 15px; /* Ensure padding on right for action buttons */
+    }
+    .admin-table .action-buttons a.admin-btn {
+        margin-right: 0; /* Remove default margin */
+    }
+
+    /* Special handling for the "No data" row */
+    .admin-table .no-data-row {
+        background-color: transparent; /* Remove card background */
+        border: none; /* Remove card border */
+        box-shadow: none; /* Remove card shadow */
+        margin-bottom: 0; /* Remove card margin */
+    }
+    .admin-table .no-data-row td {
+        text-align: center; /* Center the text */
+        padding-left: 15px; /* Reset padding */
+        border-bottom: none; /* Remove border */
+        padding-top: 20px; /* Add some vertical padding */
+        padding-bottom: 20px;
+    }
+    .admin-table .no-data-row td::before {
+        content: none; /* Hide the data-label for this specific cell */
+    }
+}
