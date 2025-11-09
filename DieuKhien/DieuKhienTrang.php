@@ -1,11 +1,11 @@
 <?php
 // Tệp: DieuKhien/DieuKhienTrang.php
-require_once __DIR__ . '/../mohinh/voucher.php';
-require_once __DIR__ . '/../mohinh/donhang.php';
-require_once __DIR__ . '/../mohinh/nguoidung.php';
-require_once __DIR__ . '/../mohinh/sanpham.php';
-require_once __DIR__ . '/../mohinh/danhmuc.php';
-require_once __DIR__ . '/../mohinh/binhluan.php';
+require_once __DIR__ . '/../MoHinh/Voucher.php';
+require_once __DIR__ . '/../MoHinh/donhang.php';
+require_once __DIR__ . '/../MoHinh/nguoidung.php';
+require_once __DIR__ . '/../MoHinh/SanPham.php';
+require_once __DIR__ . '/../MoHinh/danhmuc.php';
+require_once __DIR__ . '/../MoHinh/BinhLuan.php';
 class controller {
     private $pdo;
 
