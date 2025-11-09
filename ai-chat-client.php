@@ -8,7 +8,7 @@ class StoreAIClient {
     
     public function __construct($serverUrl = null, $timeout = 30) {
         // Kết nối đến app.py của bạn
-        $this->apiUrl = $serverUrl ?: 'http://localhost:5000/api/chat';
+        $this->apiUrl = $serverUrl ?: 'https://web-chat-bot-1.onrender.com/api/chat';
         $this->timeout = $timeout;
     }
     
@@ -244,4 +244,5 @@ if (php_sapi_name() === 'cli' && isset($argv[1]) && $argv[1] === 'test') {
     
     echo "4. Response Time: " . ($response['response_time'] ?? 'N/A') . "ms\n";
 }
+
 ?>
