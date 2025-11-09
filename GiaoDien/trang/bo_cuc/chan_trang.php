@@ -103,7 +103,7 @@
             chatDiv.classList.add('chat-message', className);
 
             let chatContent = '';
-            if (className === 'bot') { // Tin nhắn của Bot (có avatar)
+            if (className === 'botoutgoing') { // Tin nhắn của Bot (có avatar)
                 chatContent = `
                     <div class="bot-avatar">
                         <img src="${BOT_AVATAR_URL}" alt="AI Avatar">
@@ -119,48 +119,57 @@
         }
 
         // ----- Logic gửi và nhận tin nhắn -----
-        const handleSendMessage = async () => {
-            const userMessage = inputField.value.trim();
-            if (!userMessage) return;
+       // Tệp: GiaoDien/trang/bo_cuc/chan_trang.php
 
-            displayMessage(userMessage, 'user');
-            inputField.value = '';
-            inputField.style.height = 'auto'; // Reset chiều cao textarea
+// ----- Logic gửi và nhận tin nhắn -----
+const handleSendMessage = async () => {
+    // (Kiểm tra CSS của bạn dùng class 'user' hay 'incoming' cho người dùng)
+    const USER_CLASS = 'incoming'; 
+    // (Kiểm tra CSS của bạn dùng class 'bot' hay 'outgoing' cho bot)
+    const BOT_CLASS = 'outgoing';
 
-            // Hiển thị tin nhắn chờ của bot
-            displayMessage("...", 'bot');
+    const userMessage = inputField.value.trim();
+    if (!userMessage) return;
 
-            try {
-                const response = await fetch(RASA_SERVER_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sender: 'user', message: userMessage })
-                });
+    displayMessage(userMessage, USER_CLASS);
+    inputField.value = '';
+    inputField.style.height = 'auto';
 
-                // Xóa tin nhắn chờ "..."
-                chatbotBox.removeChild(chatbotBox.lastChild);
+    displayMessage("...", BOT_CLASS); // Hiển thị tin nhắn chờ
 
-                // Kiểm tra xem yêu cầu có thành công không (status 200-299)
-                if (!response.ok) {
-                    // Nếu có lỗi (ví dụ: 404, 500), hiển thị thông báo lỗi chung
-                    console.error("Lỗi từ Rasa server:", response.status, response.statusText);
-                    displayMessage("Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng thử lại sau.", 'bot');
-                    return; // Dừng hàm tại đây
-                }
+    try {
+        // 3. Gọi đến tệp api.php (thay vì Rasa Server)
+        const response = await fetch('api.php', { // <-- THAY ĐỔI QUAN TRỌNG
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMessage }) // Gửi dữ liệu theo định dạng api.php cần
+        });
 
-                const botResponses = await response.json();
-                // Đảm bảo botResponses là một mảng trước khi lặp
-                if (Array.isArray(botResponses)) {
-                    botResponses.forEach(botMessage => {
-                        displayMessage(botMessage.text || "Tôi chưa hiểu ý bạn.", 'bot');
-                    });
-                }
-            } catch (error) {
-                chatbotBox.removeChild(chatbotBox.lastChild); // Xóa tin nhắn chờ "..."
-                console.error("Lỗi khi kết nối đến Rasa server:", error);
-                displayMessage("Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng thử lại sau.", 'bot');
-            }
+        // Xóa tin nhắn chờ "..."
+        chatbotBox.removeChild(chatbotBox.lastChild);
+
+        if (!response.ok) {
+            displayMessage("Xin lỗi, tôi đang gặp sự cố kết nối (máy chủ PHP).", BOT_CLASS);
+            return;
         }
+
+        const botResponseData = await response.json();
+
+        // 4. Hiển thị phản hồi từ api.php
+        if (botResponseData && botResponseData.response) {
+            // Chuyển đổi ký tự xuống dòng \n từ JSON thành thẻ <br>
+            const formattedResponse = botResponseData.response.replace(/\n/g, '<br>');
+            displayMessage(formattedResponse, BOT_CLASS);
+        } else {
+            displayMessage("Tôi chưa hiểu ý bạn.", BOT_CLASS);
+        }
+
+    } catch (error) {
+        chatbotBox.removeChild(chatbotBox.lastChild); 
+        console.error("Lỗi khi kết nối đến api.php:", error);
+        displayMessage("Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng thử lại sau.", BOT_CLASS);
+    }
+}
 
         sendBtn.addEventListener('click', handleSendMessage);
         inputField.addEventListener('keypress', (e) => {
