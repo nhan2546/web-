@@ -1,23 +1,34 @@
 <?php
 // Tệp: CSDL.php - Dùng cho Railway (Cloud MySQL)
+// PHIÊN BẢN ĐÃ SỬA LỖI: "Constant expression" (Lỗi của tôi)
 
 class CSDL {
-    // --- Lấy cấu hình từ Biến Môi trường của Render ---
-    // (Chúng ta sẽ KHÔNG gõ cứng mật khẩu vào code)
-    private $host = getenv('DB_HOST');
-    private $port = getenv('DB_PORT') ?: '3306';
-    private $dbname = getenv('DB_NAME');
-    private $user = getenv('DB_USER');
-    private $pass = getenv('DB_PASSWORD');
+    // --- 1. Khai báo thuộc tính (KHÔNG gán giá trị) ---
+    private $host;
+    private $port;
+    private $dbname;
+    private $user;
+    private $pass;
     public $conn;
 
     public function __construct() {
+        // --- 2. Gán giá trị (từ Biến Môi trường) BÊN TRONG constructor ---
+        $this->host = getenv('DB_HOST');
+        $this->port = getenv('DB_PORT') ?: '3306'; // Mặc định cổng 3306 nếu không có
+        $this->dbname = getenv('DB_NAME');
+        $this->user = getenv('DB_USER');
+        $this->pass = getenv('DB_PASSWORD');
+        
+        // Kiểm tra xem biến đã được thiết lập chưa
         if (!$this->host) {
-            die("Lỗi: Biến môi trường DB_HOST chưa được cài đặt.");
+            die("Lỗi nghiêm trọng: Biến môi trường DB_HOST chưa được cài đặt trên Render.");
+        }
+        if (!$this->user) {
+            die("Lỗi nghiêm trọng: Biến môi trường DB_USER chưa được cài đặt trên Render.");
         }
         
         try {
-            // Chuỗi kết nối MySQL với Cổng (Port)
+            // --- 3. Kết nối bằng các thuộc tính đã gán ---
             $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4";
             
             $this->conn = new PDO($dsn, $this->user, $this->pass);
@@ -28,14 +39,20 @@ class CSDL {
         }
     }
     
-    // ... (Các hàm read() và write() của bạn giữ nguyên) ...
+    // ... (Các hàm read() và write() giữ nguyên) ...
     
-    public function read($sql, $params = []) {
+    /**
+     * Executes a SELECT query and returns all results.
+     */
+    public_function read($sql, $params = []) {
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
+    /**
+     * Executes an INSERT, UPDATE, or DELETE query.
+     */
     public function write($sql, $params = []) {
          try {
             $stmt = $this->conn->prepare($sql);
