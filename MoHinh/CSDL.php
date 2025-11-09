@@ -1,6 +1,6 @@
 <?php
 // Tệp: CSDL.php - Dùng cho Railway (Cloud MySQL)
-// PHIÊN BẢN ĐÃ SỬA LỖI: "Constant expression" (Lỗi của tôi)
+// PHIÊN BẢN ĐÃ SỬA LỖI: "public_function" (Lỗi của tôi)
 
 class CSDL {
     // --- 1. Khai báo thuộc tính (KHÔNG gán giá trị) ---
@@ -39,12 +39,10 @@ class CSDL {
         }
     }
     
-    // ... (Các hàm read() và write() giữ nguyên) ...
-    
     /**
      * Executes a SELECT query and returns all results.
      */
-    public_function read($sql, $params = []) {
+    public function read($sql, $params = []) { // <-- ĐÃ SỬA LỖI TẠI ĐÂY
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
