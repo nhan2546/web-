@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/../MoHinh/NguoiDung.php';
+include_once __DIR__ . '/../MoHinh/nguoidung.php';
 
 class DieuKhienXacThuc {
     private $db;
