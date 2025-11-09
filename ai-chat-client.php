@@ -55,9 +55,9 @@ class StoreAIClient {
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => $jsonPayload,
             CURLOPT_HTTPHEADER => [
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($jsonPayload),
-                'User-Agent: StoreAI-ChatClient/1.0'
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 90, // <-- Tăng lên 90 giây
+            CURLOPT_CONNECTTIMEOUT => 20, // <-- Tăng lên 20 giây
             ],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => $this->timeout,
@@ -246,3 +246,4 @@ if (php_sapi_name() === 'cli' && isset($argv[1]) && $argv[1] === 'test') {
 }
 
 ?>
+
