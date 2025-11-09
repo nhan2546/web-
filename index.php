@@ -7,7 +7,7 @@ session_start();
 // 1. KHỞI TẠO (Merged includes)
 require_once __DIR__ . '/MoHinh/CSDL.php';
 require_once __DIR__ . '/DieuKhien/DieuKhienTrang.php';
-require_once __DIR__ . '/DieuKhien/DieuKhienXacThuc.php';
+require_once __DIR__ . '/DieuKhien/dieukhienxacthuc.php';
 require_once __DIR__ . '/GiaoDien/trang/bo_cuc/breadcrumb_helper.php';
 // Initialize Database
 $db = new CSDL();
