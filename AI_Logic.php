@@ -7,7 +7,7 @@ require_once 'MoHinh/CSDL.php';
 // --- CẤU HÌNH AI (VÍ DỤ VỚI GEMINI) ---
 // BẠN PHẢI LẤY API KEY CỦA RIÊNG MÌNH TỪ GOOGLE AI STUDIO
 define('GEMINI_API_KEY', 'AIzaSyBw-IquFRHDKFpdbHT3Kdl60qoF0pBsKiA'); 
-define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' . GEMINI_API_KEY);
+define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:generateContent?key=' . GEMINI_API_KEY);
 
 /**
  * Hàm chính để xử lý tin nhắn
@@ -124,4 +124,5 @@ function getAIReply($userMessage) {
     }
 }
 ?>
+
 
