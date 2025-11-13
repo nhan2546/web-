@@ -2,7 +2,7 @@
 // Tệp: AI_Logic.php
 // Bộ não xử lý trung tâm, dùng cho cả web-chat và telegram.
 
-require_once 'CSDL.php';
+require_once 'MoHinh/CSDL.php';
 
 // --- CẤU HÌNH AI (VÍ DỤ VỚI GEMINI) ---
 // BẠN PHẢI LẤY API KEY CỦA RIÊNG MÌNH TỪ GOOGLE AI STUDIO
@@ -125,6 +125,7 @@ function getAIReply($userMessage) {
     }
 }
 ?>
+
 
 
 
