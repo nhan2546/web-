@@ -6,9 +6,10 @@ require_once 'CSDL.php';
 
 // --- CẤU HÌNH AI (VÍ DỤ VỚI GEMINI) ---
 // BẠN PHẢI LẤY API KEY CỦA RIÊNG MÌNH TỪ GOOGLE AI STUDIO
-define('GEMINI_API_KEY', getenv('GEMINI_API_KEY'));
-// DÒNG CẬP NHẬT (Dùng API v1 ổn định và model Flash mới nhất)
-define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=' . GEMINI_API_KEY);
+define('GEMINI_API_KEY', 'YOUR_GEMINI_API_KEY_HERE');
+define('GEMINI_API_URL',
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' . GEMINI_API_KEY);
+
 /**
  * Hàm chính để xử lý tin nhắn
  * @param string $userMessage Tin nhắn từ người dùng
@@ -124,6 +125,7 @@ function getAIReply($userMessage) {
     }
 }
 ?>
+
 
 
 
