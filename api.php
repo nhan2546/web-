@@ -1,30 +1,35 @@
 <?php
-// File: api.php
+// File: api.php - PHIÊN BẢN HOÀN CHỈNH
 
 // --- BẮT ĐẦU: MÃ SỬA LỖI CORS ---
-header("Access-Control-Allow-Origin: https://web-chat-bot-php.onrender.com"); // URL của chatbot trên Render
+// URL này phải khớp chính xác với URL của chatbot trên Render
+header("Access-Control-Allow-Origin: https://web-chat-bot-php.onrender.com");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 
+// Trình duyệt sẽ gửi một yêu cầu OPTIONS trước (preflight). Chúng ta cần xử lý nó.
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    http_response_code(200);
-    exit();
+    http_response_code(200); // Trả về mã thành công
+    exit(); // Dừng thực thi ngay lập tức, không chạy code bên dưới
 }
 // --- KẾT THÚC: MÃ SỬA LỖI CORS ---
 
 
 // --- BẮT ĐẦU: ĐỌC API KEY TỪ BIẾN MÔI TRƯỜNG (AN TOÀN) ---
-// Lấy key từ biến môi trường mà bạn đã thiết lập trên Render
+// Thay thế bằng cách đọc key trực tiếp nếu getenv không hoạt động trên hosting của bạn
+// Ví dụ: $apiKey = 'AIzaSy...';
 $apiKey = getenv('GEMINI_API_KEY');
 
-// Kiểm tra xem key có tồn tại không
+// Tạm thời, để kiểm tra, bạn có thể hardcode key vào đây.
+// Nếu chạy được, chứng tỏ hosting của bạn không hỗ trợ getenv().
+// $apiKey = 'DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY_ĐỂ_TEST';
+
 if (!$apiKey) {
     http_response_code(500);
-    // Gửi thông báo lỗi cho frontend để dễ dàng gỡ rối
     echo json_encode(['error' => 'GEMINI_API_KEY is not set on the server environment.']);
     exit;
 }
-// --- KẾT THÚC: ĐỌC API KEY TỪ BIẾN MÔI TRƯỜDNG ---
+// --- KẾT THÚC: ĐỌC API KEY ---
 
 
 // --- Cấu hình ---
@@ -50,13 +55,7 @@ if (json_last_error() !== JSON_ERROR_NONE || !isset($data['messages']) || !is_ar
 
 // --- Chuyển đổi lịch sử tin nhắn sang định dạng của Gemini ---
 $contents = [];
-$messageHistory = $data['messages'];
-
-if (end($messageHistory)['role'] === 'model' && empty(end($messageHistory)['content'])) {
-    array_pop($messageHistory);
-}
-
-foreach ($messageHistory as $message) {
+foreach ($data['messages'] as $message) {
     if (!empty($message['content'])) {
          $contents[] = [
             'role' => $message['role'],
@@ -68,9 +67,7 @@ foreach ($messageHistory as $message) {
 // --- Gửi yêu cầu đến Gemini API ---
 $payload = [
     'contents' => $contents,
-    'systemInstruction' => [
-        'parts' => [['text' => $systemInstruction]]
-    ]
+    'systemInstruction' => [ 'parts' => [['text' => $systemInstruction]] ]
 ];
 
 $ch = curl_init($geminiApiUrl);
