@@ -2,20 +2,30 @@
 // File: api.php
 
 // --- BẮT ĐẦU: MÃ SỬA LỖI CORS ---
-// URL này phải khớp chính xác với URL của chatbot trên Render
-header("Access-Control-Allow-Origin: https://web-chat-bot-php.onrender.com");
+header("Access-Control-Allow-Origin: https://web-chat-bot-php.onrender.com"); // URL của chatbot trên Render
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 
-// Trình duyệt sẽ gửi một yêu cầu OPTIONS trước. Chúng ta cần xử lý nó.
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    http_response_code(200); // Trả về mã thành công
-    exit(); // Dừng thực thi ngay lập tức
+    http_response_code(200);
+    exit();
 }
 // --- KẾT THÚC: MÃ SỬA LỖI CORS ---
 
-// **QUAN TRỌNG: Hãy chắc chắn bạn đã dán API Key của mình vào đây**
-$apiKey = 'AIzaSyAgRxllarqyRthaqXMRU9aoFdASTWDz1ns'; // <--- DÁN KEY CỦA BẠN VÀO ĐÂY
+
+// --- BẮT ĐẦU: ĐỌC API KEY TỪ BIẾN MÔI TRƯỜNG (AN TOÀN) ---
+// Lấy key từ biến môi trường mà bạn đã thiết lập trên Render
+$apiKey = getenv('GEMINI_API_KEY');
+
+// Kiểm tra xem key có tồn tại không
+if (!$apiKey) {
+    http_response_code(500);
+    // Gửi thông báo lỗi cho frontend để dễ dàng gỡ rối
+    echo json_encode(['error' => 'GEMINI_API_KEY is not set on the server environment.']);
+    exit;
+}
+// --- KẾT THÚC: ĐỌC API KEY TỪ BIẾN MÔI TRƯỜDNG ---
+
 
 // --- Cấu hình ---
 header('Content-Type: application/json');
@@ -42,7 +52,6 @@ if (json_last_error() !== JSON_ERROR_NONE || !isset($data['messages']) || !is_ar
 $contents = [];
 $messageHistory = $data['messages'];
 
-// Bỏ qua tin nhắn cuối cùng nếu nó là tin nhắn chờ (typing indicator)
 if (end($messageHistory)['role'] === 'model' && empty(end($messageHistory)['content'])) {
     array_pop($messageHistory);
 }
@@ -89,4 +98,3 @@ $modelText = $responseData['candidates'][0]['content']['parts'][0]['text'] ?? 'S
 echo json_encode(['response' => $modelText]);
 
 ?>
-
