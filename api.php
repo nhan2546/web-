@@ -32,14 +32,14 @@ if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
         // --- PHẦN 2: CÂU LỆNH SQL (BẠN CẦN SỬA PHẦN NÀY) ---
         // QUAN TRỌNG: Hãy thay thế `products`, `name`, `price`, `description`
         // bằng tên bảng và tên các cột tương ứng trong cơ sở dữ liệu của bạn.
-        $stmt = $conn->prepare("SELECT 
-                                    name, 
-                                    price, 
-                                    description 
-                                FROM 
-                                    products 
-                                WHERE 
-                                    name LIKE :query");
+        $stmt = $conn->prepare("SELECT
+                            ten_sp AS name,         -- Lấy cột ten_sp và đổi tên thành 'name'
+                            gia_ban AS price,       -- Lấy cột gia_ban và đổi tên thành 'price'
+                            mo_ta_ngan AS description -- Lấy cột mo_ta_ngan và đổi tên thành 'description'
+                        FROM
+                            san_pham                -- Từ bảng san_pham
+                        WHERE
+                            ten_sp LIKE :query");    -- Tìm kiếm 
 
         // Dùng LIKE để tìm kiếm tương đối (ví dụ: tìm "iphone" sẽ ra "iphone 15 pro")
         $like_query = "%" . $search_query . "%";
@@ -72,3 +72,4 @@ if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
 echo json_encode($response);
 
 ?>
+
