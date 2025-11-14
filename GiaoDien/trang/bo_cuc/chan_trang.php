@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 // --- KẾT THÚC: MÃ SỬA LỖI CORS ---
 
 // **QUAN TRỌNG: Dán API Key của bạn vào đây**
-$apiKey = 'AIzaSyAgRxllarqyRthaqXMRU9aoFdASTWDz1ns';     
+$apiKey = 'AIzaSyBlicAgtt8ctbSZCAUF6xfi7xB95TScDXU';     
 ?>
 <script>
         // --- JAVASCRIPT CHO TÌM KIẾM TRỰC TIẾP ---
