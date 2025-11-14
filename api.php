@@ -25,9 +25,10 @@ $userMessage = trim($payload['message']);
 /* -----------------------------------------------------------
    5. Gọi bot (có thể đổi tên hàm tùy bạn)
    ---------------------------------------------------------- */
-$botResponse = getAIReply($userMessage);   // hàm được định nghĩa trong AI_Logic.php
+$botResponse = getBotReply($userMessage);   // hàm được định nghĩa trong AI_Logic.php
 
 // ---- 6. Trả về JSON cho front‑end ---------------------------
 echo json_encode(['response' => $botResponse]);
 exit;
 ?>
+
