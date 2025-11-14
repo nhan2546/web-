@@ -66,25 +66,6 @@ $apiKey = 'AIzaSyAgRxllarqyRthaqXMRU9aoFdASTWDz1ns';
 
     <!-- JAVASCRIPT CHO AI CHATBOT -->
  <!-- TÍCH HỢP AI CHATBOT MỚI (ỨNG DỤNG REACT) -->
-<iframe 
-    src="https://gemini-chat-web.onrender.com" 
-    style="
-        position: fixed; 
-        bottom: 20px; 
-        right: 20px; 
-        width: 400px; 
-        max-width: 90vw;
-        height: 600px; 
-        max-height: 80vh;
-        border: none; 
-        border-radius: 15px; 
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); 
-        z-index: 9999;
-        overflow: hidden;
-    "
-    title="AI Sales Assistant"
-    allow="microphone">
-</iframe>
     <!-- JAVASCRIPT CHO SLIDER SẢN PHẨM -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
