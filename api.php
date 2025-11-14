@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 // --- KẾT THÚC: MÃ SỬA LỖI CORS ---
 
 // **QUAN TRỌNG: Hãy chắc chắn bạn đã dán API Key của mình vào đây**
-$apiKey = 'YOUR_GEMINI_API_KEY'; // <--- DÁN KEY CỦA BẠN VÀO ĐÂY
+$apiKey = 'AIzaSyAgRxllarqyRthaqXMRU9aoFdASTWDz1ns'; // <--- DÁN KEY CỦA BẠN VÀO ĐÂY
 
 // --- Cấu hình ---
 header('Content-Type: application/json');
@@ -89,3 +89,4 @@ $modelText = $responseData['candidates'][0]['content']['parts'][0]['text'] ?? 'S
 echo json_encode(['response' => $modelText]);
 
 ?>
+
