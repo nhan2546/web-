@@ -1,19 +1,26 @@
 <?php
-// File: api/chat.php
+// File: api.php
 
-// **QUAN TRỌNG: Dán API Key của bạn vào đây**
-// Để an toàn hơn trong môi trường production, hãy sử dụng biến môi trường.
-$apiKey = 'AIzaSyAgRxllarqyRthaqXMRU9aoFdASTWDz1ns'; 
+// --- BẮT ĐẦU: MÃ SỬA LỖI CORS ---
+// URL này phải khớp chính xác với URL của chatbot trên Render
+header("Access-Control-Allow-Origin: https://web-chat-bot-php.onrender.com");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+
+// Trình duyệt sẽ gửi một yêu cầu OPTIONS trước. Chúng ta cần xử lý nó.
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200); // Trả về mã thành công
+    exit(); // Dừng thực thi ngay lập tức
+}
+// --- KẾT THÚC: MÃ SỬA LỖI CORS ---
+
+// **QUAN TRỌNG: Hãy chắc chắn bạn đã dán API Key của mình vào đây**
+$apiKey = 'YOUR_GEMINI_API_KEY'; // <--- DÁN KEY CỦA BẠN VÀO ĐÂY
 
 // --- Cấu hình ---
 header('Content-Type: application/json');
 $geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' . $apiKey;
-$systemInstruction = "You are an AI assistant for an e-commerce website. 
-Your role is to help users by answering their questions about products. 
-You also manage the product database, so you are always up-to-date with the latest additions. 
-Respond in a helpful and friendly manner. 
-Your original instruction in Vietnamese was: 'ai tự động cập nhật thông tin cơ sở dữ liệu của trang web bán hàng khi admin thêm sản phẩm mới và trả lời câu hỏi từ phía người dùng'. 
-Always remember this context.";
+$systemInstruction = "You are an AI assistant for an e-commerce website named 'Shop Táo Ngon'. Your role is to help users by answering their questions about Apple products. Always be helpful, friendly, and professional. Respond in Vietnamese.";
 
 // --- Xử lý yêu cầu ---
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -35,13 +42,12 @@ if (json_last_error() !== JSON_ERROR_NONE || !isset($data['messages']) || !is_ar
 $contents = [];
 $messageHistory = $data['messages'];
 
-// Bỏ qua tin nhắn cuối cùng nếu nó là tin nhắn rỗng từ model (typing indicator)
+// Bỏ qua tin nhắn cuối cùng nếu nó là tin nhắn chờ (typing indicator)
 if (end($messageHistory)['role'] === 'model' && empty(end($messageHistory)['content'])) {
     array_pop($messageHistory);
 }
 
 foreach ($messageHistory as $message) {
-    // Chỉ thêm các tin nhắn có nội dung
     if (!empty($message['content'])) {
          $contents[] = [
             'role' => $message['role'],
@@ -49,7 +55,6 @@ foreach ($messageHistory as $message) {
         ];
     }
 }
-
 
 // --- Gửi yêu cầu đến Gemini API ---
 $payload = [
@@ -64,7 +69,7 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true); // Bật xác thực SSL
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 
 $response = curl_exec($ch);
 $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -79,8 +84,6 @@ if ($response === false || $httpcode >= 400) {
 }
 
 $responseData = json_decode($response, true);
-
-// Trích xuất nội dung text từ phản hồi
 $modelText = $responseData['candidates'][0]['content']['parts'][0]['text'] ?? 'Sorry, I could not process the response.';
 
 echo json_encode(['response' => $modelText]);
