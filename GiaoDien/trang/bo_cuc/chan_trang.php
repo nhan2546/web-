@@ -112,6 +112,24 @@ $apiKey = 'AIzaSyAgRxllarqyRthaqXMRU9aoFdASTWDz1ns';
 
 <script src="TaiNguyen/js/main.js"></script>
 <!-- AI Chatbot (React App) -->
-
+<iframe 
+    src="https://gemini-chat-web.onrender.com" 
+    style="
+        position: fixed; 
+        bottom: 20px; 
+        right: 20px; 
+        width: 400px; 
+        max-width: 90vw;
+        height: 600px; 
+        max-height: 80vh;
+        border: none; 
+        border-radius: 15px; 
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); 
+        z-index: 9999;
+        overflow: hidden;
+    "
+    title="AI Sales Assistant"
+    allow="microphone">
+</iframe>
 </body>
 </html>
