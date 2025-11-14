@@ -4,7 +4,6 @@
 
 // --- BẮT ĐẦU: THÊM MÃ NÀY ĐỂ SỬA LỖI CORS ---
 // Thay thế 'https://gemini-chat-vtqc.onrender.com' bằng URL Render của bạn
-header("Access-Control-Allow-Origin: https://gemini-chat-vtqc.onrender.com");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 
@@ -113,19 +112,6 @@ $apiKey = 'AIzaSyAgRxllarqyRthaqXMRU9aoFdASTWDz1ns';
 
 <script src="TaiNguyen/js/main.js"></script>
 <!-- AI Chatbot (React App) -->
-<style>
-  .ai-chatbot-iframe {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 400px;
-    height: 600px;
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
-    transition: transform 0.3s ease-in-out;
-  }
-</style>
+
 </body>
 </html>
