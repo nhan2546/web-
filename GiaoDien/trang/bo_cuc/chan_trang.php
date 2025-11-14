@@ -68,7 +68,7 @@ $apiKey = 'AIzaSyAgRxllarqyRthaqXMRU9aoFdASTWDz1ns';
     <!-- JAVASCRIPT CHO AI CHATBOT -->
  <!-- TÍCH HỢP AI CHATBOT MỚI (ỨNG DỤNG REACT) -->
 <iframe 
-    src="https://web-chat-bot-php.onrender.com" 
+    src="https://gemini-chat-n0e7.onrender.com" 
     style="position: fixed; bottom: 20px; right: 20px; width: 400px; height: 600px; border: none; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 9999;"
     title="AI Sales Assistant"
     allow="microphone">
