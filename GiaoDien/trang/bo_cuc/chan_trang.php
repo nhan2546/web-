@@ -1,9 +1,25 @@
 <!-- GIAO DIỆN AI CHATBOT TÙY CHỈNH -->
+<?php
+// File: api/chat.php
 
+// --- BẮT ĐẦU: THÊM MÃ NÀY ĐỂ SỬA LỖI CORS ---
+// Thay thế 'https://gemini-chat-vtqc.onrender.com' bằng URL Render của bạn
+header("Access-Control-Allow-Origin: https://gemini-chat-vtqc.onrender.com");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+
+// Xử lý yêu cầu OPTIONS (trình duyệt gửi trước khi gửi POST)
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    exit(0);
+}
+// --- KẾT THÚC: MÃ SỬA LỖI CORS ---
+
+// **QUAN TRỌNG: Dán API Key của bạn vào đây**
+$apiKey = 'AIzaSyAgRxllarqyRthaqXMRU9aoFdASTWDz1ns'; 
 
     <!-- CÁC NÚT LIÊN HỆ NỔI -->
     
-
+?>
 <script>
         // --- JAVASCRIPT CHO TÌM KIẾM TRỰC TIẾP ---
         const searchInput = document.getElementById('search-input');
