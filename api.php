@@ -2,20 +2,24 @@
 // File: api.php
 
 // --- QUAN TRỌNG: CHO PHÉP CHATBOT GỌI ĐẾN API NÀY (SỬA LỖI CORS) ---
-// Thay thế bằng URL chatbot của bạn nếu khác
+// URL này phải khớp chính xác với URL của ứng dụng chatbot trên Render
 header("Access-Control-Allow-Origin: https://gemini-chat-web.onrender.com");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET");
+header("Access-Control-Allow-Methods: GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-// --- PHẦN 1: KẾT NỐI CƠ SỞ DỮ LIỆU (ĐÃ ĐIỀN SẴN TỪ ẢNH CỦA BẠN) ---
-$db_host = "switchyard.proxy.rlwy.net";
-$db_name = "railway";
-$db_user = "root";
-$db_pass = "pNGodoOoiBfmwiaLmwE1FEyTjqELORte";
-$db_port = "27755";
+// Trình duyệt sẽ gửi một yêu cầu OPTIONS trước, chúng ta cần xử lý nó
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
-
+// --- PHẦN 1: KẾT NỐI CƠ SỞ DỮ LIỆU (Lấy từ biến môi trường của Render) ---
+$db_host = getenv('DB_HOST');
+$db_name = getenv('DB_NAME');
+$db_user = getenv('DB_USER');
+$db_pass = getenv('DB_PASSWORD');
+$db_port = getenv('DB_PORT');
 // Khởi tạo một mảng để chứa kết quả trả về
 $response = ['products' => []];
 
@@ -23,48 +27,56 @@ $response = ['products' => []];
 if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
     $search_query = trim($_GET['q']);
 
-    try {
-        // Tạo chuỗi kết nối PDO (Data Source Name)
-        $dsn = "mysql:host=$db_host;port=$db_port;dbname=$db_name;charset=utf8mb4";
-        $conn = new PDO($dsn, $db_user, $db_pass);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Kiểm tra xem các biến môi trường có tồn tại không
+    if (!$db_host || !$db_name || !$db_user || !$db_pass || !$db_port) {
+        http_response_code(500);
+        $response['error'] = "Database configuration is missing on the server.";
+    } else {
+        try {
+            // Tạo chuỗi kết nối PDO (Data Source Name)
+            $dsn = "mysql:host=$db_host;port=$db_port;dbname=$db_name;charset=utf8mb4";
+            $conn = new PDO($dsn, $db_user, $db_pass);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // --- PHẦN 2: CÂU LỆNH SQL (BẠN CẦN SỬA PHẦN NÀY) ---
-        // QUAN TRỌNG: Hãy thay thế `products`, `name`, `price`, `description`
-        // bằng tên bảng và tên các cột tương ứng trong cơ sở dữ liệu của bạn.
-        $stmt = $conn->prepare("SELECT
-                            ten_sp AS name,         -- Lấy cột ten_sp và đổi tên thành 'name'
-                            gia_ban AS price,       -- Lấy cột gia_ban và đổi tên thành 'price'
-                            mo_ta_ngan AS description -- Lấy cột mo_ta_ngan và đổi tên thành 'description'
-                        FROM
-                            san_pham                -- Từ bảng san_pham
-                        WHERE
-                            ten_sp LIKE :query");    -- Tìm kiếm 
+           // --- PHẦN 2: CÂU LỆNH SQL (ĐÃ ĐƯỢC CẢI THIỆN) ---
+// Câu lệnh này lấy tất cả thông tin quan trọng mà AI cần
 
-        // Dùng LIKE để tìm kiếm tương đối (ví dụ: tìm "iphone" sẽ ra "iphone 15 pro")
-        $like_query = "%" . $search_query . "%";
-        $stmt->bindParam(':query', $like_query);
-        
-        $stmt->execute();
+$sql = "SELECT
+            p.id,
+            p.name,
+            p.price,
+            p.sale_price,
+            p.description,
+            p.stock_quantity,
+            c.name AS category_name
+        FROM
+            products p
+        LEFT JOIN
+            categories c ON p.category_id = c.id
+        WHERE
+            (p.name LIKE :query OR p.description LIKE :query)
+            AND p.stock_quantity > 0
+        LIMIT 10"; // Giới hạn 10 kết quả để AI không bị quá tải
 
-        // Lấy tất cả kết quả dưới dạng mảng kết hợp (associative array)
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $conn->prepare($sql);
+            $like_query = "%" . $search_query . "%";
+            $stmt->bindParam(':query', $like_query);
+            $stmt->execute();
 
-        if ($results) {
-            $response['products'] = $results;
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($results) {
+                $response['products'] = $results;
+            }
+
+        } catch(PDOException $e) {
+            http_response_code(500);
+            $response['error'] = "Database error: " . $e->getMessage();
         }
-
-    } catch(PDOException $e) {
-        // Trả về lỗi nếu không kết nối được hoặc có lỗi SQL
-        http_response_code(500); // Internal Server Error
-        $response['error'] = "Database error: " . $e->getMessage();
+        $conn = null;
     }
-
-    $conn = null; // Đóng kết nối
-
 } else {
-    // Trả về lỗi nếu không có từ khóa tìm kiếm
-    http_response_code(400); // Bad Request
+    http_response_code(400);
     $response['error'] = "Missing search query parameter 'q'.";
 }
 
@@ -72,4 +84,3 @@ if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
 echo json_encode($response);
 
 ?>
-
