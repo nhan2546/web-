@@ -2,8 +2,7 @@
 FROM php:8.2-apache
 
 # Bước 2: Cập nhật và cài đặt các thư viện hệ thống cần thiết
-# - libzip-dev: Cần cho extension 'zip'
-# - libpng-dev, libjpeg-dev, libfreetype-dev: Cần cho extension 'gd' (xử lý ảnh)
+# (Cần cho các extension bên dưới)
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     libpng-dev \
@@ -11,13 +10,17 @@ RUN apt-get update && apt-get install -y \
     libfreetype-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Bước 3: Cài đặt các extension PHP phổ biến
-# - pdo_mysql: Bắt buộc để kết nối MySQL (bạn đã có)
-# - mbstring: Thường dùng để xử lý chuỗi UTF-8
-# - zip: Thường dùng để xử lý các tệp nén (composer hay dùng)
-# - gd: Thường dùng để xử lý hình ảnh
+# Bước 3: Cài đặt các extension PHP
+# *** PHẦN SỬA LỖI BẮT ĐẦU TỪ ĐÂY ***
+
+# Tách riêng cài đặt 'gd' (xử lý ảnh) vì nó cần 'configure'
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install pdo pdo_mysql mbstring zip gd
+RUN docker-php-ext-install gd
+
+# Cài đặt các extension còn lại
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip
+
+# *** HẾT PHẦN SỬA LỖI ***
 
 # Bước 4: Cài đặt Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -25,12 +28,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Bước 5: Đặt thư mục làm việc
 WORKDIR /var/www/html
 
-# Bước 6: Sao chép tệp composer
-# Chúng ta sao chép riêng để tận dụng cache của Docker
+# Bước 6: Sao chép tệp composer để tận dụng cache
 COPY composer.json composer.lock ./
 
 # Bước 7: Chạy composer install
-# Đây là bước có khả năng thất bại ở tệp Dockerfile cũ của bạn
 RUN composer install --no-interaction --no-dev --optimize-autoloader
 
 # Bước 8: Sao chép toàn bộ mã nguồn còn lại của dự án
