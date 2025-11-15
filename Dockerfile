@@ -1,32 +1,40 @@
 # Bước 1: Sử dụng image chính thức của PHP 8.2 với máy chủ Apache
 FROM php:8.2-apache
 
-# Bước 2: Cài đặt các extension PHP cần thiết
-# pdo_mysql là bắt buộc để kết nối cơ sở dữ liệu của bạn
-RUN docker-php-ext-install pdo pdo_mysql
+# Bước 2: Cập nhật và cài đặt các thư viện hệ thống cần thiết
+# - libzip-dev: Cần cho extension 'zip'
+# - libpng-dev, libjpeg-dev, libfreetype-dev: Cần cho extension 'gd' (xử lý ảnh)
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Bước 3: Cài đặt Composer (trình quản lý gói của PHP)
-# Chúng ta lấy tệp thực thi Composer từ một image chính thức khác
+# Bước 3: Cài đặt các extension PHP phổ biến
+# - pdo_mysql: Bắt buộc để kết nối MySQL (bạn đã có)
+# - mbstring: Thường dùng để xử lý chuỗi UTF-8
+# - zip: Thường dùng để xử lý các tệp nén (composer hay dùng)
+# - gd: Thường dùng để xử lý hình ảnh
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip gd
+
+# Bước 4: Cài đặt Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Bước 4: Đặt thư mục làm việc bên trong container
+# Bước 5: Đặt thư mục làm việc
 WORKDIR /var/www/html
 
-# Bước 5: Sao chép tệp composer trước để tận dụng cache
-# Điều này giúp build nhanh hơn nếu các gói không thay đổi
+# Bước 6: Sao chép tệp composer
+# Chúng ta sao chép riêng để tận dụng cache của Docker
 COPY composer.json composer.lock ./
 
-# Bước 6: Chạy composer install để tải về thư mục 'vendor'
-# --no-interaction: Không đặt câu hỏi
-# --no-dev: Bỏ qua các gói chỉ dùng cho phát triển (tốt cho production)
-# --optimize-autoloader: Tối ưu hóa trình tải tự động
+# Bước 7: Chạy composer install
+# Đây là bước có khả năng thất bại ở tệp Dockerfile cũ của bạn
 RUN composer install --no-interaction --no-dev --optimize-autoloader
 
-# Bước 7: Sao chép toàn bộ mã nguồn còn lại của dự án vào
-# Dấu "." đầu tiên là thư mục hiện tại (dự án của bạn)
-# Dấu "." thứ hai là thư mục làm việc trong container (/var/www/html)
+# Bước 8: Sao chép toàn bộ mã nguồn còn lại của dự án
 COPY . .
 
-# Bước 8: (Tùy chọn) Đặt quyền sở hữu cho máy chủ web
-# Điều này có thể cần thiết nếu ứng dụng cần ghi tệp (ví dụ: tải lên ảnh)
+# Bước 9: Đặt quyền sở hữu cho máy chủ web
 RUN chown -R www-data:www-data /var/www/html
