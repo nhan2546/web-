@@ -1,14 +1,19 @@
 <?php
-/* ---- CORS (giữ nguyên) ---- */
-header('Access-Control-Allow-Origin: *');
+/* --------------------------------------------------------------
+ *  CORS – cho phép frontend (origin khác) gọi API
+ * -------------------------------------------------------------- */
+header('Access-Control-Allow-Origin: *');          // Production: ghi domain frontend thay *
 header('Access-Control-Allow-Methods: GET,OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
 
-/* ---- KẾT NỐI DATABASE BẰNG CÁC BIẾN DB_*** ---- */
+/* --------------------------------------------------------------
+ *  ĐỌC CÁC BIẾN MÔI TRƯỜNG MYSQL
+ * -------------------------------------------------------------- */
 $host = getenv('DB_HOST');
 $port = getenv('DB_PORT');
 $db   = getenv('DB_NAME');
@@ -21,7 +26,9 @@ if (!$host || !$port || !$db || !$user) {
     exit;
 }
 
-// Đối với MySQL PDO DSN
+/* --------------------------------------------------------------
+ *  TẠO DSN PDO cho MySQL
+ * -------------------------------------------------------------- */
 $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
 
 $options = [
@@ -37,7 +44,9 @@ try {
     exit;
 }
 
-/* ---- ĐỌC PARAMETERS – ?q=… (giữ nguyên) ---- */
+/* --------------------------------------------------------------
+ *  LẤY TỪ KHÓA ?q=…
+ * -------------------------------------------------------------- */
 $search = isset($_GET['q']) ? trim($_GET['q']) : '';
 
 if ($search === '') {
@@ -46,11 +55,13 @@ if ($search === '') {
     exit;
 }
 
-/* ---- TRUY VẤN DATABASE ---- */
+/* --------------------------------------------------------------
+ *  TRUY VẤN DATABASE (MySQL không có ILIKE – dùng LIKE)
+ * -------------------------------------------------------------- */
 $sql = <<<SQL
 SELECT id, name, price, description
 FROM products
-WHERE name LIKE :q         -- MySQL không có ILIKE, dùng LIKE (case‑insensitive nếu collation là utf8_general_ci)
+WHERE name LIKE :q               -- % ký tự sẽ được thêm ở dưới
 ORDER BY name
 LIMIT 10
 SQL;
