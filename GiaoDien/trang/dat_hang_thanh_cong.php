@@ -12,7 +12,6 @@ $order_items = $chi_tiet_don_hang['order_items'];
 if (isset($order_info['email']) && !empty($order_info['email'])) {
     
     // Load PHPMailer
-    require 'vendor/autoload.php';
     $mail = new PHPMailer(true);
 
     try {
