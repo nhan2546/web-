@@ -1,6 +1,6 @@
 <?php
 // File: index.php
-require_once __DIR__ . '/vendor/autoload.php';
+
 // Start session
 session_start();
 
