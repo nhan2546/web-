@@ -58,10 +58,12 @@ if ($search === '') {
 /* --------------------------------------------------------------
  *  TRUY VẤN DATABASE (MySQL không có ILIKE – dùng LIKE)
  * -------------------------------------------------------------- */
+// *** ĐÂY LÀ DÒNG ĐÃ ĐƯỢC CẬP NHẬT ***
+// Thêm `sale_price` và `promotion` để AI có thể đọc được thông tin khuyến mãi
 $sql = <<<SQL
-SELECT id, name, price, description
+SELECT id, name, price, sale_price, description, promotion
 FROM products
-WHERE name LIKE :q               -- % ký tự sẽ được thêm ở dưới
+WHERE name LIKE :q
 ORDER BY name
 LIMIT 10
 SQL;
