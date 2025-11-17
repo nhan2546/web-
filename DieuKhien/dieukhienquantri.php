@@ -135,7 +135,9 @@ class DieuKhienQuanTri {
         $description = $_POST['description'] ?? '';
         $quantity = $_POST['quantity'] ?? 0;
         $category_id = $_POST['category_id'] ?? 0;
-
+        if ($sale_price === '') {
+            $sale_price = null;
+        }
         // Kiểm tra dữ liệu cơ bản
         if (empty($name) || empty($price) || empty($category_id)) {
             // Nếu thiếu dữ liệu, quay lại form với thông báo lỗi
