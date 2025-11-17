@@ -1,74 +1,57 @@
 <?php
-/* --------------------------------------------------------------
- *  CORS – cho phép frontend (origin khác) gọi API
- * -------------------------------------------------------------- */
-header('Access-Control-Allow-Origin: *');          // Production: ghi domain frontend thay *
-header('Access-Control-Allow-Methods: GET,OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+// File: api.php
+// API endpoint cho Gemini AI tìm kiếm sản phẩm
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
+// 1. Set header là JSON để frontend hiểu
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *'); // Cho phép gọi từ domain khác (Vite dev server)
 
-/* --------------------------------------------------------------
- *  ĐỌC CÁC BIẾN MÔI TRƯỜNG MYSQL
- * -------------------------------------------------------------- */
-$host = getenv('DB_HOST');
-$port = getenv('DB_PORT');
-$db   = getenv('DB_NAME');
-$user = getenv('DB_USER');
-$pass = getenv('DB_PASSWORD');
-
-if (!$host || !$port || !$db || !$user) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Missing DB environment variables']);
-    exit;
-}
-
-/* --------------------------------------------------------------
- *  TẠO DSN PDO cho MySQL
- * -------------------------------------------------------------- */
-$dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
-
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
+// 2. Tải lớp CSDL
+// (Sử dụng đường dẫn tương đối giống như file index.php của bạn)
+require_once __DIR__ . '/MoHinh/CSDL.php';
 
 try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
+    // 3. Khởi tạo kết nối CSDL
+    $db = new CSDL();
+
+    // 4. Lấy tham số từ frontend (geminiService.ts)
+    $query = $_GET['q'] ?? ''; // Tên sản phẩm, ví dụ: "iphone"
+    $filter = $_GET['filter'] ?? ''; // Lọc, ví dụ: "discounted"
+
+    // 5. Xây dựng câu truy vấn SQL
+    // Chọn các cột mà AI cần để trả lời
+    $sql = "SELECT id, name, description, price, sale_price, image_url FROM products WHERE 1=1";
+    $params = [];
+
+    // 5a. Thêm điều kiện tìm kiếm theo tên (nếu có)
+    if (!empty($query)) {
+        // Dùng cột 'name' từ bảng 'products'
+        $sql .= " AND name LIKE ?";
+        $params[] = '%' . $query . '%';
+    }
+
+    // 5b. Thêm điều kiện lọc sản phẩm giảm giá (nếu có)
+    if ($filter === 'discounted') {
+        // Dựa trên cấu trúc bảng 'products'
+        // Sản phẩm giảm giá là sản phẩm có sale_price > 0 VÀ sale_price < price
+        // (Ví dụ: AirPods 4 có price=3790000 và sale_price=3500000)
+        $sql .= " AND sale_price > 0 AND sale_price < price";
+    }
+
+    // 6. Thực thi truy vấn bằng phương thức read() của lớp CSDL
+    $products = $db->read($sql, $params);
+    
+    // 7. Trả về kết quả dưới dạng JSON mà frontend mong đợi
+    echo json_encode(['products' => $products]);
+
 } catch (PDOException $e) {
+    // Xử lý lỗi CSDL
     http_response_code(500);
-    echo json_encode(['error' => 'DB connection failed: ' . $e->getMessage()]);
-    exit;
+    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+} catch (Exception $e) {
+    // Xử lý các lỗi chung khác
+    http_response_code(500);
+    echo json_encode(['error' => 'An error occurred: ' . $e->getMessage()]);
 }
 
-/* --------------------------------------------------------------
- *  LẤY TỪ KHÓA ?q=…
- * -------------------------------------------------------------- */
-$search = isset($_GET['q']) ? trim($_GET['q']) : '';
-
-if ($search === '') {
-    header('Content-Type: application/json');
-    echo json_encode(['products' => []]);
-    exit;
-}
-
-/* --------------------------------------------------------------
- *  TRUY VẤN DATABASE (MySQL không có ILIKE – dùng LIKE)
- * -------------------------------------------------------------- */
-$sql = <<<SQL
-SELECT id, name, price, description
-FROM products
-WHERE name LIKE :q               -- % ký tự sẽ được thêm ở dưới
-ORDER BY name
-LIMIT 10
-SQL;
-
-$stmt = $pdo->prepare($sql);
-$stmt->execute([':q' => "%$search%"]);
-$rows = $stmt->fetchAll();
-
-header('Content-Type: application/json');
-echo json_encode(['products' => $rows]);
+?>
