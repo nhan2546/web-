@@ -151,14 +151,18 @@ class DieuKhienQuanTri {
         $variants_data = [];
 
         // Xử lý upload ảnh cho từng phiên bản
-        $target_dir = __DIR__ . "/../TaiLen/san_pham/";
+        // $target_dir = __DIR__ . "/../TaiLen/san_pham/"; // Không cần dòng này nữa
         foreach ($variant_colors as $index => $color) {
             $image_url = '';
             // Kiểm tra xem có file được tải lên cho phiên bản này không
             if (isset($variant_images['name'][$index]) && $variant_images['error'][$index] == 0) {
-                $image_url = time() . '_' . basename($variant_images["name"][$index]);
-                $target_file = $target_dir . $image_url;
-                move_uploaded_file($variant_images['tmp_name'][$index], $target_file);
+                
+                // === CODE CLOUDINARY THAY THẾ ===
+                $hinhanh_tmp = $variant_images['tmp_name'][$index];
+                $uploadResult = (new \Cloudinary\Api\Upload\UploadApi())->upload($hinhanh_tmp);
+                $image_url = $uploadResult['secure_url'];
+                // === KẾT THÚC THAY THẾ ===
+
             }
 
             if (!empty($color) && !empty($image_url)) {
@@ -172,9 +176,13 @@ class DieuKhienQuanTri {
         // Xử lý ảnh đại diện chính
         $image_url = ''; 
         if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] == 0) {
-            $image_url = time() . '_main_' . basename($_FILES["image_url"]["name"]);
-            $target_file = $target_dir . $image_url;
-            move_uploaded_file($_FILES["image_url"]["tmp_name"], $target_file);
+            
+            // === CODE CLOUDINARY THAY THẾ ===
+            $hinhanh_tmp = $_FILES["image_url"]["tmp_name"];
+            $uploadResult = (new \Cloudinary\Api\Upload\UploadApi())->upload($hinhanh_tmp);
+            $image_url = $uploadResult['secure_url'];
+            // === KẾT THÚC THAY THẾ ===
+
         } 
         // Nếu không có ảnh đại diện chính, tự động lấy ảnh của phiên bản đầu tiên
         elseif (!empty($variants_data)) {
@@ -228,15 +236,19 @@ class DieuKhienQuanTri {
             $new_variant_images = $_FILES['variant_image'] ?? [];
             $variants_data = [];
 
-            $target_dir = __DIR__ . "/../TaiLen/san_pham/";
+            // $target_dir = __DIR__ . "/../TaiLen/san_pham/"; // Không cần dòng này nữa
             foreach ($variant_colors as $index => $color) {
                 $image_url_for_variant = $existing_variant_images[$index] ?? ''; // Giữ ảnh cũ làm mặc định
 
                 // Nếu có ảnh mới được tải lên cho vị trí này, xử lý nó
                 if (isset($new_variant_images['name'][$index]) && $new_variant_images['error'][$index] == 0) {
-                    $image_url_for_variant = time() . '_' . basename($new_variant_images["name"][$index]);
-                    $target_file = $target_dir . $image_url_for_variant;
-                    move_uploaded_file($new_variant_images["tmp_name"][$index], $target_file);
+                    
+                    // === CODE CLOUDINARY THAY THẾ ===
+                    $hinhanh_tmp = $new_variant_images["tmp_name"][$index];
+                    $uploadResult = (new \Cloudinary\Api\Upload\UploadApi())->upload($hinhanh_tmp);
+                    $image_url_for_variant = $uploadResult['secure_url'];
+                    // === KẾT THÚC THAY THẾ ===
+
                 }
 
                 if (!empty($color) && !empty($image_url_for_variant)) {
@@ -251,9 +263,13 @@ class DieuKhienQuanTri {
             $image_url = $existing_image_url; // Mặc định giữ lại ảnh cũ
             if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] == 0) {
                 // Nếu có ảnh mới, tải lên và ghi đè
-                $image_url = time() . '_main_' . basename($_FILES["image_url"]["name"]);
-                $target_file = $target_dir . $image_url;
-                move_uploaded_file($_FILES["image_url"]["tmp_name"], $target_file);
+                
+                // === CODE CLOUDINARY THAY THẾ ===
+                $hinhanh_tmp = $_FILES["image_url"]["tmp_name"];
+                $uploadResult = (new \Cloudinary\Api\Upload\UploadApi())->upload($hinhanh_tmp);
+                $image_url = $uploadResult['secure_url'];
+                // === KẾT THÚC THAY THẾ ===
+
             } 
             // Nếu không có ảnh đại diện chính và không có ảnh cũ, lấy ảnh của phiên bản đầu tiên
             elseif (empty($image_url) && !empty($variants_data)) {
