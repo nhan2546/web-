@@ -56,14 +56,12 @@ if ($search === '') {
 }
 
 /* --------------------------------------------------------------
- *  TRUY VẤN DATABASE ĐỂ LẤY CẢ THÔNG TIN KHUYẾN MÃI
+ *  TRUY VẤN DATABASE (MySQL không có ILIKE – dùng LIKE)
  * -------------------------------------------------------------- */
-// *** ĐÂY LÀ PHẦN QUAN TRỌNG NHẤT ***
-// Câu lệnh SQL này lấy tất cả các cột cần thiết, bao gồm cả sale_price và promotion
 $sql = <<<SQL
-SELECT id, name, price, sale_price, description, promotion
+SELECT id, name, price, description
 FROM products
-WHERE name LIKE :q
+WHERE name LIKE :q               -- % ký tự sẽ được thêm ở dưới
 ORDER BY name
 LIMIT 10
 SQL;
