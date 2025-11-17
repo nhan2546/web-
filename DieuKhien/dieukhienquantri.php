@@ -127,21 +127,31 @@ class DieuKhienQuanTri {
      * Xử lý dữ liệu từ form thêm sản phẩm.
      * Được gọi bởi them_sp() khi request là POST.
      */
-    private function xu_ly_them_sp_post() {
-        // 1. Lấy dữ liệu từ form
-        $name = $_POST['name'] ?? '';
-        $price = $_POST['price'] ?? 0;
-        $sale_price = $_POST['sale_price'] ?? null; // Lấy giá khuyến mãi
-        $description = $_POST['description'] ?? '';
-        $quantity = $_POST['quantity'] ?? 0;
-        $category_id = $_POST['category_id'] ?? 0;
+    private function xu_ly_them_sp_post()
+{
+    // 1. Lấy dữ liệu từ form
+    $name        = trim($_POST['name'] ?? '');
+    $price       = $_POST['price'] ?? 0;
+    $description = trim($_POST['description'] ?? '');
+    $quantity    = $_POST['quantity'] ?? 0;
+    $category_id = $_POST['category_id'] ?? 0;
 
-        // Kiểm tra dữ liệu cơ bản
-        if (empty($name) || empty($price) || empty($category_id)) {
-            // Nếu thiếu dữ liệu, quay lại form với thông báo lỗi
-            header('Location: admin.php?act=them_sp&error=empty_fields');
-            exit;
-        }
+    // ------------  ĐOẠN QUAN TRỌNG  -----------------
+    // Lấy raw value (có thể là '' hoặc null)
+    $sale_price_raw = $_POST['sale_price'] ?? null;
+
+    // Nếu người dùng để trống thì chuyển thành NULL,
+    // nếu có giá trị (có thể có khoảng trắng) thì lấy giá trị thật
+    $sale_price = (isset($sale_price_raw) && trim($sale_price_raw) !== '')
+                  ? trim($sale_price_raw)   // giữ lại số (hoặc chuỗi số)
+                  : null;                   // NULL sẽ được MySQL chấp nhận
+    // ------------------------------------------------
+
+    // 2. Kiểm tra dữ liệu cơ bản …
+    if ($name === '' || $price === '' || $category_id == 0) {
+        header('Location: admin.php?act=them_sp&error=empty_fields');
+        exit;
+    }
 
         // 2. Lấy dữ liệu JSON của các phiên bản và xác định ảnh đại diện
         $variant_colors = $_POST['variant_color'] ?? [];
