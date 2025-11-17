@@ -10,7 +10,7 @@ $order_items = $chi_tiet_don_hang['order_items'];
 // Lưu ý: Chức năng này hiện tại chỉ hoạt động cho khách hàng đã đăng ký tài khoản
 // vì khách vãng lai chưa được yêu cầu nhập email khi thanh toán.
 if (isset($order_info['email']) && !empty($order_info['email'])) {
-    
+    require 'vendor/autoload.php';
     // Load PHPMailer
     $mail = new PHPMailer(true);
 
