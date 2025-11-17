@@ -4,3 +4,8 @@
         "phpmailer/phpmailer": "*"
     }
 }
+{
+    "require": {
+        "cloudinary/cloudinary_php": "^2"
+    }
+}
