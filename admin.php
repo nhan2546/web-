@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], $allowed
 // 2. KHỞI TẠO
 // Tải các tệp cần thiết và khởi tạo đối tượng.
 require_once __DIR__ . '/MoHinh/CSDL.php';
-require_once __DIR__ . '/DieuKhien/DieuKhienQuanTri.php';
+require_once __DIR__ . '/DieuKhien/dieukhienquantri.php';
 
 $db = new CSDL();
 $pdo = $db->conn;
