@@ -81,12 +81,45 @@ class sanpham {
 
     /*xử lý dữ liệu */
     // Cập nhật: Thêm tham số $variants_json
-    public function themsp($name, $description, $price, $image_url, $quantity, $category_id, $sale_price = null, $variants_json = null) {
-        $sql = "INSERT INTO `products` (`name`, `description`, `price`, `sale_price`, `image_url`, `quantity`, `category_id`, `variants_json`, `highlights`) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$name, $description, $price, $sale_price, $image_url, $quantity, $category_id, $variants_json]);
+    public function themsp(
+    $name,
+    $description,
+    $price,
+    $image_url,
+    $quantity,
+    $category_id,
+    $sale_price = null,
+    $variants_json = null
+) {
+    /* -------------------------------------------------------------
+     *  Bảo vệ: nếu $sale_price là chuỗi rỗng hoặc không phải số,
+     *  chuyển thành NULL để MySQL không báo lỗi.
+     * ------------------------------------------------------------- */
+    if ($sale_price === '' || $sale_price === null) {
+        $sale_price = null;               // NULL hợp lệ cho cột DECIMAL
+    } else {
+        // (Tùy chọn) ép sang kiểu số – bỏ qua nếu muốn lưu nguyên chuỗi
+        $sale_price = floatval(str_replace(',', '', $sale_price));
     }
+
+    $sql = "INSERT INTO `products`
+            (`name`, `description`, `price`, `sale_price`,
+             `image_url`, `quantity`, `category_id`,
+             `variants_json`, `highlights`)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)";
+
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([
+        $name,
+        $description,
+        $price,
+        $sale_price,   // đã được chuẩn hoá
+        $image_url,
+        $quantity,
+        $category_id,
+        $variants_json
+    ]);
+}
 
     /*lấy sản phẩm từ bản product*/
     public function getallsanpham($limit = null, $offset = 0){
