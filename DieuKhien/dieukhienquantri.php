@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . '/../MoHinh/CSDL.php';
 require_once __DIR__ . '/../MoHinh/SanPham.php';
-require_once __DIR__ . '/../MoHinh/DanhMuc.php';
-require_once __DIR__ . '/../MoHinh/DonHang.php';
-require_once __DIR__ . '/../MoHinh/NguoiDung.php';
+require_once __DIR__ . '/../MoHinh/danhmuc.php';
+require_once __DIR__ . '/../MoHinh/donhang.php';
+require_once __DIR__ . '/../MoHinh/nguoidung.php';
 require_once __DIR__ . '/../MoHinh/Voucher.php'; // Thêm model Voucher
 require_once __DIR__ . '/../MoHinh/ThongKe.php'; // Thêm model thống kê
 require_once __DIR__ . '/../MoHinh/BaoHanh.php'; // Thêm model bảo hành
