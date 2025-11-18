@@ -1,6 +1,7 @@
 <?php
 // File: api.php
 // API endpoint TOÀN DIỆN cho Gemini AI
+// ĐÃ SỬA LỖI: $_GET['q'] thành $_GET['query']
 
 // 1. Thiết lập Headers
 header('Content-Type: application/json');
@@ -46,10 +47,12 @@ switch ($action) {
 
 /**
  * CÔNG CỤ 1: TÌM SẢN PHẨM
- * (Đã nâng cấp để trả về stock_quantity)
  */
 function findProducts($db) {
-    $query = $_GET['q'] ?? '';
+    // SỬA LỖI TẠI ĐÂY:
+    // Thay vì "$_GET['q']", chúng ta dùng "$_GET['query']"
+    // để khớp với tham số 'query' từ geminiService.ts
+    $query = $_GET['query'] ?? '';
     $filter = $_GET['filter'] ?? '';
 
     // NÂNG CẤP: Lấy cả 'stock_quantity'
@@ -62,7 +65,6 @@ function findProducts($db) {
     }
 
     if ($filter === 'discounted') {
-        //
         $sql .= " AND sale_price > 0 AND sale_price < price";
     }
 
@@ -74,6 +76,7 @@ function findProducts($db) {
  * CÔNG CỤ 2: KIỂM TRA ĐƠN HÀNG
  */
 function checkOrderStatus($db) {
+    // Tên tham số này là 'order_id' (đã khớp)
     $order_id = $_GET['order_id'] ?? '';
 
     if (empty($order_id)) {
@@ -82,7 +85,6 @@ function checkOrderStatus($db) {
         return;
     }
 
-    //
     $sql = "SELECT id, status, order_date, total_amount, payment_method FROM orders WHERE id = ?";
     $params = [$order_id];
     
@@ -91,7 +93,6 @@ function checkOrderStatus($db) {
     if (empty($order)) {
         echo json_encode(['error' => 'Không tìm thấy đơn hàng với mã này.']);
     } else {
-        // Trả về một mảng (mặc dù chỉ có 1)
         echo json_encode(['order' => $order[0]]);
     }
 }
@@ -100,6 +101,7 @@ function checkOrderStatus($db) {
  * CÔNG CỤ 3: TÌM SẢN PHẨM THEO DANH MỤC
  */
 function findProductsByCategory($db) {
+    // Tên tham số này là 'category_slug' (đã khớp)
     $category_slug = $_GET['category_slug'] ?? '';
 
     if (empty($category_slug)) {
@@ -108,12 +110,11 @@ function findProductsByCategory($db) {
         return;
     }
 
-    //
     $sql = "SELECT p.id, p.name, p.price, p.sale_price, p.image_url, p.stock_quantity 
             FROM products p
             JOIN categories c ON p.category_id = c.id
             WHERE c.slug = ? AND p.stock_quantity > 0
-            LIMIT 5"; // Giới hạn 5 phụ kiện
+            LIMIT 5";
     $params = [$category_slug];
 
     $products = $db->read($sql, $params);
