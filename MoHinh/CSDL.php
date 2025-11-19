@@ -14,7 +14,7 @@ class CSDL {
     public function __construct() {
         // --- 2. Gán giá trị (từ Biến Môi trường) BÊN TRONG constructor ---
         $this->host = getenv('DB_HOST');
-        $this->port = getenv('DB_PORT') ?: '3306'; // Mặc định cổng 3306 nếu không có
+        $this->port = getenv('DB_PORT'); // Mặc định cổng 3306 nếu không có
         $this->dbname = getenv('DB_NAME');
         $this->user = getenv('DB_USER');
         $this->pass = getenv('DB_PASSWORD');
