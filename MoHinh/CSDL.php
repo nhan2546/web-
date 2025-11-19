@@ -1,9 +1,7 @@
 <?php
-// Tệp: CSDL.php - Dùng cho Railway (Cloud MySQL)
-// PHIÊN BẢN ĐÃ SỬA LỖI: "public_function" (Lỗi của tôi)
+// Tệp: CSDL.php - Đã tối ưu hóa để fix lỗi khoảng trắng (trim)
 
 class CSDL {
-    // --- 1. Khai báo thuộc tính (KHÔNG gán giá trị) ---
     private $host;
     private $port;
     private $dbname;
@@ -12,40 +10,55 @@ class CSDL {
     public $conn;
 
     public function __construct() {
-        // --- 2. Gán giá trị (từ Biến Môi trường) BÊN TRONG constructor ---
-        $this->host = getenv('DB_HOST');
-        $this->port = getenv('DB_PORT') ?: '3306'; // Mặc định cổng 3306 nếu không có
-        $this->dbname = getenv('DB_NAME');
-        $this->user = getenv('DB_USER');
-        $this->pass = getenv('DB_PASSWORD');
+        // --- QUAN TRỌNG: Dùng trim() để xóa khoảng trắng thừa do copy/paste ---
+        // Nhiều khi copy từ Railway sang Render sẽ bị dính dấu cách ở cuối
+        $this->host   = trim(getenv('DB_HOST'));
+        $this->port   = trim(getenv('DB_PORT')) ?: '3306';
+        $this->dbname = trim(getenv('DB_NAME'));
+        $this->user   = trim(getenv('DB_USER'));
+        $this->pass   = trim(getenv('DB_PASSWORD'));
         
-        // Kiểm tra xem biến đã được thiết lập chưa
-        if (!$this->host) {
-            die("Lỗi nghiêm trọng: Biến môi trường DB_HOST chưa được cài đặt trên Render.");
-        }
-        if (!$this->user) {
-            die("Lỗi nghiêm trọng: Biến môi trường DB_USER chưa được cài đặt trên Render.");
+        // Kiểm tra kỹ xem biến có rỗng không sau khi trim
+        if (empty($this->host) || empty($this->user)) {
+            // In ra màn hình để debug nếu thiếu biến
+            die("Lỗi Cấu hình: Biến môi trường DB_HOST hoặc DB_USER đang trống trên Render.");
         }
         
         try {
-            // --- 3. Kết nối bằng các thuộc tính đã gán ---
+            // Tạo chuỗi DSN (Data Source Name)
+            // Lưu ý: charset=utf8mb4 quan trọng để hiển thị tiếng Việt không bị lỗi font
             $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4";
             
-            $this->conn = new PDO($dsn, $this->user, $this->pass);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $options = [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES   => false,
+                PDO::ATTR_TIMEOUT            => 5, // Timeout sau 5s nếu mạng lag (đặc biệt khi kết nối cross-cloud)
+            ];
+
+            $this->conn = new PDO($dsn, $this->user, $this->pass, $options);
             
         } catch (PDOException $e) {
-            die("Không thể kết nối đến cơ sở dữ liệu Railway: " . $e->getMessage());
+            // Hiển thị lỗi chi tiết để debug
+            // In giá trị host trong dấu ngoặc [] để bạn nhìn thấy nếu có khoảng trắng thừa
+            $errorMsg = "Lỗi kết nối Database Railway: " . $e->getMessage();
+            $errorMsg .= " | Host đang nhận: [" . $this->host . "]"; 
+            die($errorMsg);
         }
     }
     
     /**
      * Executes a SELECT query and returns all results.
      */
-    public function read($sql, $params = []) { // <-- ĐÃ SỬA LỖI TẠI ĐÂY
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    public function read($sql, $params = []) {
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            error_log("Lỗi SQL (Read): " . $e->getMessage());
+            return [];
+        }
     }
     
     /**
@@ -56,7 +69,7 @@ class CSDL {
             $stmt = $this->conn->prepare($sql);
             return $stmt->execute($params);
          } catch (PDOException $e) {
-             error_log("Lỗi CSDL (write): " . $e->getMessage());
+             error_log("Lỗi SQL (Write): " . $e->getMessage());
              return false;
          }
     }
