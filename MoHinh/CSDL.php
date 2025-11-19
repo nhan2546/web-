@@ -1,7 +1,9 @@
 <?php
-// Tệp: CSDL.php - Phiên bản Hardcode (Điền trực tiếp) để Test Kết Nối
+// Tệp: CSDL.php - Dùng cho Railway (Cloud MySQL)
+// PHIÊN BẢN ĐÃ SỬA LỖI: "public_function" (Lỗi của tôi)
 
 class CSDL {
+    // --- 1. Khai báo thuộc tính (KHÔNG gán giá trị) ---
     private $host;
     private $port;
     private $dbname;
@@ -10,58 +12,51 @@ class CSDL {
     public $conn;
 
     public function __construct() {
-        // --- TEST KẾT NỐI TRỰC TIẾP (HARDCODE) ---
-        // Bỏ qua getenv, dùng trực tiếp thông tin bạn cung cấp
+        // --- 2. Gán giá trị (từ Biến Môi trường) BÊN TRONG constructor ---
+        $this->host = getenv('DB_HOST');
+        $this->port = getenv('DB_PORT') ?: '3306'; // Mặc định cổng 3306 nếu không có
+        $this->dbname = getenv('DB_NAME');
+        $this->user = getenv('DB_USER');
+        $this->pass = getenv('DB_PASSWORD');
         
-        $this->host   = 'nozomi.proxy.rlw.net';
-        $this->port   = '15793';
-        $this->dbname = 'railway';
-        $this->user   = 'root';
-        $this->pass   = 'kbHkzejsqMfjxVRxWmEkUTbVjPjafvas';
-
-        // Debug: In ra màn hình để chắc chắn đang dùng đúng thông tin
-        // (Xóa dòng này khi đã chạy ổn)
-        // echo "Đang kết nối tới: {$this->host}:{$this->port} ... <br>";
-
+        // Kiểm tra xem biến đã được thiết lập chưa
+        if (!$this->host) {
+            die("Lỗi nghiêm trọng: Biến môi trường DB_HOST chưa được cài đặt trên Render.");
+        }
+        if (!$this->user) {
+            die("Lỗi nghiêm trọng: Biến môi trường DB_USER chưa được cài đặt trên Render.");
+        }
+        
         try {
-            // Chuỗi kết nối DSN
+            // --- 3. Kết nối bằng các thuộc tính đã gán ---
             $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4";
             
-            $options = [
-                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES   => false,
-                PDO::ATTR_TIMEOUT            => 10, // Tăng timeout lên 10s cho chắc
-            ];
-
-            $this->conn = new PDO($dsn, $this->user, $this->pass, $options);
-            
-            // Nếu code chạy đến đây nghĩa là thành công!
-            // echo "Kết nối thành công!"; 
+            $this->conn = new PDO($dsn, $this->user, $this->pass);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             
         } catch (PDOException $e) {
-            // Nếu vẫn lỗi thì in ra chi tiết
-            die("Lỗi kết nối (Hardcode): " . $e->getMessage());
+            die("Không thể kết nối đến cơ sở dữ liệu Railway: " . $e->getMessage());
         }
     }
     
-    public function read($sql, $params = []) {
-        try {
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute($params);
-            return $stmt->fetchAll();
-        } catch (PDOException $e) {
-            error_log("Lỗi SQL (Read): " . $e->getMessage());
-            return [];
-        }
+    /**
+     * Executes a SELECT query and returns all results.
+     */
+    public function read($sql, $params = []) { // <-- ĐÃ SỬA LỖI TẠI ĐÂY
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
+    /**
+     * Executes an INSERT, UPDATE, or DELETE query.
+     */
     public function write($sql, $params = []) {
          try {
             $stmt = $this->conn->prepare($sql);
             return $stmt->execute($params);
          } catch (PDOException $e) {
-             error_log("Lỗi SQL (Write): " . $e->getMessage());
+             error_log("Lỗi CSDL (write): " . $e->getMessage());
              return false;
          }
     }
